@@ -2,7 +2,7 @@
 
 <p align="center">
   <a href="https://github.com/oddfar/campus-imaotai/stargazers"><img src="https://img.shields.io/github/stars/oddfar/campus-imaotai.svg"></a>
-	<a href="https://github.com/oddfar/campus-imaotai/blob/master/LICENSE"><img src="https://img.shields.io/github/license/oddfar/campus-imaotai"></a>
+	<a href="https://github.com/oddfar/campus-imaotai/blob/master/LICENSE"><img src="https://img.shields.io/github/license/oddfar/campus-imaotai.svg"></a>
 </p>
 
 
@@ -15,7 +15,11 @@
 
 ## 项目介绍
 
-i茅台app，每日自动预约茅台，可批量添加用户，可选本市出货量最大的门店，或预约你的位置附近门店
+i茅台app，每日自动预约茅台，可添加多个用户，可选本市出货量最大的门店，或预约你的位置附近门店
+
+软件会在每日9点05开始批量预约
+
+此项目使用 **Campus** 进行编写：<https://github.com/oddfar/campus>
 
 ## 使用教程
 
@@ -23,13 +27,25 @@ i茅台app，每日自动预约茅台，可批量添加用户，可选本市出�
 
 在 [release](https://github.com/oddfar/campus-imaotai/releases) 页面下载压缩包并解压。
 
-- 运行容器: `docker-compose up -d`
+- 构建docker服务：`docker-compose build`
+
+- 启动docker容器： `docker-compose up -d`
 
   打开浏览器，输入：([http://localhost:80](http://localhost/))，若能正确展示页面，则表明环境搭建成功。
+
+  第一次启动可能会失败，是因为 mysql 服务还没启动完成，campus-imt 就启动了，等mysql启动完毕后再启动一次即可 `docker-compose up -d`
+
+  一共4个服务
+
+  ![](.github/be983240837a2d5deb082157e4772d0f.png)
 
 使用端口，mysql：3306，redis：6379，nginx：80，campus-service：8160
 
 若端口被占用，修改`docker-compose.yml`里的端口配置，例：`3306:3306` 改成 `3307:3306`
+
+### 本地部署
+
+<https://oddfar.github.io/campus-doc/pages/3c5985/>
 
 ### 配置
 
@@ -43,7 +59,7 @@ i茅台->用户管理->添加账号（若你有token，可直接点击“直接�
 
 - 修改预约项目
 
-  查看`预约项目列表`，商品预约code，用@间隔，例如：`10213@10214`、`10213`
+  查看 `预约项目列表`，商品预约code，用@间隔，例如：`10213@10214`、`10213`
 
 - 修改经纬度、省份、城市
 
@@ -51,9 +67,11 @@ i茅台->用户管理->添加账号（若你有token，可直接点击“直接�
 
   返回的key中：province省份、city城市、 "location": "116.326759,40.003304"左边是经度，右边是纬度
 
-- 类型
+- 类型：1或2
 
   1：预约本市出货量最大的门店，2：预约你的位置附近门店
+
+  若不需要预约，留空即可
 
 ## 贡献代码
 
@@ -67,9 +85,9 @@ i茅台->用户管理->添加账号（若你有token，可直接点击“直接�
 
 | i茅台预约                                                    |                                                              |
 | ------------------------------------------------------------ | ------------------------------------------------------------ |
-| ![image-20230707144241399](/Users/ningzhiyuan/Java/MyProject/新-campus/oddfar-imaotai/README.assets/image-20230707144241399.png) | ![image-20230707144404638](/Users/ningzhiyuan/Java/MyProject/新-campus/oddfar-imaotai/README.assets/image-20230707144404638.png) |
+| ![image-20230707144241399](.github/image-20230707144241399.png) | ![image-20230707144404638](.github/image-20230707144404638.png) |
 |                                                              |                                                              |
-| ![image-20230707144703842](/Users/ningzhiyuan/Java/MyProject/新-campus/oddfar-imaotai/README.assets/image-20230707144703842.png) | ![image-20230707145525709](/Users/ningzhiyuan/Java/MyProject/新-campus/oddfar-imaotai/README.assets/image-20230707145525709.png) |
+| ![image-20230707144703842](.github/image-20230707144703842.png) | ![image-20230707145525709](.github/image-20230707145525709.png) |
 
 
 
