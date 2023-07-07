@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.oddfar.campus.framework.mapper.SysResourceMapper">
+
+    <select id="selectResourceCodeByRoleId" resultType="java.lang.String">
+        select sr.resource_code
+        from sys_role_resource sr
+                 left join sys_role r on r.role_id = sr.role_id
+        where sr.role_id = #{roleId}
+          AND r.status = 0
+    </select>
+
+
+    <select id="selectResourceListByRoleId" resultType="java.lang.Long">
+        select r.resource_id
+        from sys_resource r
+                 left join sys_role_resource rr on r.resource_code = rr.resource_code
+        where rr.role_id = #{roleId}
+    </select>
+
+    <sql id="selectResourceVo">
+        select resource_id,
+               app_code,
+               resource_code,
+               resource_name,
+               class_name,
+               method_name,
+               modular_name,
+               url,
+               http_method,
+               resource_biz_type,
+               required_permission_flag,
+               create_time
+        from sys_resource
+    </sql>
+
+    <select id="selectResourceList" resultType="SysResourceEntity">
+        <include refid="selectResourceVo"/>
+        <where>
+            <if test="resourceCode != null and resourceCode != ''">
+                AND resource_code = #{resourceCode}
+            </if>
+            <if test="className != null and className != ''">
+                AND class_name = #{className}
+            </if>
+            <if test="requiredPermissionFlag != null and requiredPermissionFlag != ''">
+                AND required_permission_flag = #{requiredPermissionFlag}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectResourceListByUserId" resultType="SysResourceEntity">
+        select distinct r.resource_id, r.app_code, r.resource_code, r.resource_name, r.class_name, r.method_name,
+        r.modular_name, r.url, r.http_method, r.resource_biz_type, r.required_permission_flag,r.create_time
+        from sys_resource r
+        left join sys_role_resource rr on r.resource_code = rr.resource_code
+        left join sys_user_role ur on rr.role_id = ur.role_id
+        left join sys_role ro on ur.role_id = ro.role_id
+        where ur.user_id = #{params.userId}
+        <if test="resourceCode != null and resourceCode != ''">
+            AND resource_code = #{resourceCode}
+        </if>
+        <if test="className != null and className != ''">
+            AND class_name = #{className}
+        </if>
+        <if test="requiredPermissionFlag != null and requiredPermissionFlag != ''">
+            AND required_permission_flag = #{requiredPermissionFlag}
+        </if>
+
+    </select>
+
+
+</mapper>

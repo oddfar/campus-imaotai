@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.oddfar.campus</groupId>
+    <artifactId>campus</artifactId>
+    <version>1.1.3</version>
+    <packaging>pom</packaging>
+
+    <name>campus</name>
+    <url>http://campus.oddfar.com</url>
+    <description>校园信息墙</description>
+
+    <modules>
+        <module>campus-common</module>
+        <module>campus-framework</module>
+        <module>campus-admin</module>
+        <module>campus-modular</module>
+    </modules>
+
+    <properties>
+        <campus.version>1.1.3</campus.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <java.version>1.8</java.version>
+        <bitwalker.version>1.21</bitwalker.version>
+        <mybatis.plus.boot.version>3.5.2</mybatis.plus.boot.version>
+        <swagger.version>3.0.0</swagger.version>
+        <fastjson.version>2.0.14</fastjson.version>
+        <hutool.version>5.8.8</hutool.version>
+        <commons.fileupload.version>1.4</commons.fileupload.version>
+        <mapstruct.version>1.5.3.Final</mapstruct.version>
+        <kaptcha.version>2.3.2</kaptcha.version>
+        <jwt.version>0.9.1</jwt.version>
+        <poi.version>4.1.2</poi.version>
+        <pagehelper.boot.version>1.4.3</pagehelper.boot.version>
+        <sunmail.version>1.6.2</sunmail.version>
+    </properties>
+
+    <!-- 依赖声明 -->
+    <dependencyManagement>
+        <dependencies>
+            <!-- SpringBoot的依赖配置-->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-dependencies</artifactId>
+                <version>2.5.14</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <!-- mybatis-plus框架 -->
+            <dependency>
+                <groupId>com.baomidou</groupId>
+                <artifactId>mybatis-plus-boot-starter</artifactId>
+                <version>${mybatis.plus.boot.version}</version>
+            </dependency>
+
+            <!-- mybatis pagehelper 分页插件 -->
+            <dependency>
+                <groupId>com.github.pagehelper</groupId>
+                <artifactId>pagehelper-spring-boot-starter</artifactId>
+                <version>${pagehelper.boot.version}</version>
+            </dependency>
+
+            <!-- Swagger3依赖 -->
+            <dependency>
+                <groupId>io.springfox</groupId>
+                <artifactId>springfox-boot-starter</artifactId>
+                <version>${swagger.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>io.swagger</groupId>
+                        <artifactId>swagger-models</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+
+            <!-- 解析客户端操作系统、浏览器等 -->
+            <dependency>
+                <groupId>eu.bitwalker</groupId>
+                <artifactId>UserAgentUtils</artifactId>
+                <version>${bitwalker.version}</version>
+            </dependency>
+
+            <!-- 验证码 -->
+            <dependency>
+                <groupId>com.github.penggle</groupId>
+                <artifactId>kaptcha</artifactId>
+                <version>${kaptcha.version}</version>
+            </dependency>
+
+            <!-- excel工具 -->
+            <dependency>
+                <groupId>org.apache.poi</groupId>
+                <artifactId>poi-ooxml</artifactId>
+                <version>${poi.version}</version>
+            </dependency>
+
+            <!-- Token生成与解析-->
+            <dependency>
+                <groupId>io.jsonwebtoken</groupId>
+                <artifactId>jjwt</artifactId>
+                <version>${jwt.version}</version>
+            </dependency>
+
+            <!-- 文件上传工具类 -->
+            <dependency>
+                <groupId>commons-fileupload</groupId>
+                <artifactId>commons-fileupload</artifactId>
+                <version>${commons.fileupload.version}</version>
+            </dependency>
+
+            <!-- 阿里JSON解析器 -->
+            <dependency>
+                <groupId>com.alibaba.fastjson2</groupId>
+                <artifactId>fastjson2</artifactId>
+                <version>${fastjson.version}</version>
+            </dependency>
+
+            <!--hutool-->
+            <dependency>
+                <groupId>cn.hutool</groupId>
+                <artifactId>hutool-all</artifactId>
+                <version>${hutool.version}</version>
+            </dependency>
+
+            <!--mapstruct-->
+            <dependency>
+                <groupId>org.mapstruct</groupId>
+                <artifactId>mapstruct</artifactId>
+                <version>${mapstruct.version}</version>
+            </dependency>
+
+            <!-- 邮件服务-->
+            <dependency>
+                <groupId>com.sun.mail</groupId>
+                <artifactId>javax.mail</artifactId>
+                <version>${sunmail.version}</version>
+            </dependency>
+            <!--            &lt;!&ndash; Mysql驱动包 &ndash;&gt;-->
+            <!--            <dependency>-->
+            <!--                <groupId>mysql</groupId>-->
+            <!--                <artifactId>mysql-connector-java</artifactId>-->
+            <!--            </dependency>-->
+
+            <!-- 通用工具-->
+            <dependency>
+                <groupId>com.oddfar.campus</groupId>
+                <artifactId>campus-common</artifactId>
+                <version>${campus.version}</version>
+            </dependency>
+            <!-- 系统模块-->
+            <dependency>
+                <groupId>com.oddfar.campus</groupId>
+                <artifactId>campus-framework</artifactId>
+                <version>${campus.version}</version>
+            </dependency>
+            <!--后台管理-->
+            <dependency>
+                <groupId>com.oddfar.campus</groupId>
+                <artifactId>campus-admin</artifactId>
+                <version>${campus.version}</version>
+            </dependency>
+        </dependencies>
+
+    </dependencyManagement>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.1</version>
+                <configuration>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
+                    <encoding>${project.build.sourceEncoding}</encoding>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+
+</project>

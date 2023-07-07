@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.oddfar.campus.framework.mapper.SysUserMapper">
+
+    <resultMap type="SysUserEntity" id="SysUserResult">
+        <id     property="userId"       column="user_id"      />
+        <result property="userName"     column="user_name"    />
+        <result property="nickName"     column="nick_name"    />
+        <result property="email"        column="email"        />
+        <result property="phonenumber"  column="phonenumber"  />
+        <result property="sex"          column="sex"          />
+        <result property="avatar"       column="avatar"       />
+        <result property="password"     column="password"     />
+        <result property="status"       column="status"       />
+        <result property="delFlag"      column="del_flag"     />
+        <result property="loginIp"      column="login_ip"     />
+        <result property="loginDate"    column="login_date"   />
+        <result property="createUser"     column="create_user"    />
+        <result property="createTime"   column="create_time"  />
+        <result property="updateUser"     column="update_user"    />
+        <result property="updateTime"   column="update_time"  />
+        <result property="remark"       column="remark"       />
+        <collection  property="roles"   javaType="java.util.List"   resultMap="RoleResult" />
+    </resultMap>
+
+    <resultMap id="RoleResult" type="SysRoleEntity">
+        <id     property="roleId"       column="role_id"        />
+        <result property="roleName"     column="role_name"      />
+        <result property="roleKey"      column="role_key"       />
+        <result property="roleSort"     column="role_sort"      />
+        <result property="status"       column="role_status"    />
+    </resultMap>
+
+
+
+    <sql id="selectUserVo">
+        select u.user_id, u.user_name, u.nick_name, u.email, u.avatar, u.phonenumber, u.password, u.sex, u.status, u.del_flag, u.login_ip, u.login_date, u.create_user, u.create_time, u.remark,
+               r.role_id, r.role_name, r.role_key, r.role_sort, r.status as role_status
+        from sys_user u
+                 left join sys_user_role ur on u.user_id = ur.user_id
+                 left join sys_role r on r.role_id = ur.role_id
+    </sql>
+
+
+    <update id="resetUserPwd" parameterType="SysUserEntity">
+        update sys_user set password = #{password} where user_name = #{userName}
+    </update>
+
+    <update id="updateUserAvatar" parameterType="SysUserEntity">
+        update sys_user set avatar = #{avatar} where user_name = #{userName}
+    </update>
+
+
+    <select id="selectUserByUserName" parameterType="String" resultMap="SysUserResult">
+        <include refid="selectUserVo"/>
+        where u.user_name = #{userName} and u.del_flag = '0'
+    </select>
+
+    <select id="selectUserById" parameterType="Long" resultMap="SysUserResult">
+        <include refid="selectUserVo"/>
+        where u.user_id = #{userId}
+    </select>
+
+    <select id="selectAllocatedList" parameterType="SysUserEntity" resultMap="SysUserResult">
+        select distinct u.user_id, u.user_name, u.nick_name, u.email, u.phonenumber, u.status, u.create_time
+        from sys_user u
+        left join sys_user_role ur on u.user_id = ur.user_id
+        left join sys_role r on r.role_id = ur.role_id
+        where u.del_flag = '0' and r.role_id = #{roleId}
+        <if test="userName != null and userName != ''">
+            AND u.user_name like concat('%', #{userName}, '%')
+        </if>
+        <if test="phonenumber != null and phonenumber != ''">
+            AND u.phonenumber like concat('%', #{phonenumber}, '%')
+        </if>
+    </select>
+
+    <select id="selectUnallocatedList" parameterType="SysUserEntity" resultMap="SysUserResult">
+        select distinct u.user_id, u.user_name, u.nick_name, u.email, u.phonenumber, u.status, u.create_time
+        from sys_user u
+        left join sys_user_role ur on u.user_id = ur.user_id
+        left join sys_role r on r.role_id = ur.role_id
+        where u.del_flag = '0' and (r.role_id != #{roleId} or r.role_id IS NULL)
+        and u.user_id not in (select u.user_id from sys_user u inner join sys_user_role ur on u.user_id = ur.user_id and ur.role_id = #{roleId})
+        <if test="userName != null and userName != ''">
+            AND u.user_name like concat('%', #{userName}, '%')
+        </if>
+        <if test="phonenumber != null and phonenumber != ''">
+            AND u.phonenumber like concat('%', #{phonenumber}, '%')
+        </if>
+    </select>
+
+
+</mapper>

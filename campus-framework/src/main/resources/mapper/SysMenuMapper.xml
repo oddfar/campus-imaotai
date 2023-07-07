@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.oddfar.campus.framework.mapper.SysMenuMapper">
+
+    <resultMap type="com.oddfar.campus.common.domain.entity.SysMenuEntity" id="SysMenuResult">
+        <id property="menuId" column="menu_id"/>
+        <result property="menuName" column="menu_name"/>
+        <result property="parentName" column="parent_name"/>
+        <result property="parentId" column="parent_id"/>
+        <result property="orderNum" column="order_num"/>
+        <result property="path" column="path"/>
+        <result property="component" column="component"/>
+        <result property="query" column="query"/>
+        <result property="isFrame" column="is_frame"/>
+        <result property="isCache" column="is_cache"/>
+        <result property="menuType" column="menu_type"/>
+        <result property="visible" column="visible"/>
+        <result property="status" column="status"/>
+        <result property="perms" column="perms"/>
+        <result property="icon" column="icon"/>
+        <result property="createUser" column="create_user"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="updateUser" column="update_by"/>
+        <result property="remark" column="remark"/>
+    </resultMap>
+
+    <resultMap id="RoleAuthResult" type="com.oddfar.campus.common.domain.model.SysRoleAuth">
+        <result property="roleID" column="role_id"/>
+        <result property="perms" column="perms"/>
+        <result property="resourceCode" column="resource_code"/>
+    </resultMap>
+
+    <select id="selectMenuTreeAll" resultType="SysMenuEntity">
+        select distinct m.menu_id,
+                        m.parent_id,
+                        m.menu_name,
+                        m.path,
+                        m.component,
+                        m.`query`,
+                        m.visible,
+                        m.status,
+                        ifnull(m.perms, '') as perms,
+                        m.is_frame,
+                        m.is_cache,
+                        m.menu_type,
+                        m.icon,
+                        m.order_num,
+                        m.create_time
+        from sys_menu m
+        where m.menu_type in ('M', 'C')
+          and m.status = 0
+          and m.del_flag = '0'
+        order by m.parent_id, m.order_num
+    </select>
+
+    <select id="selectMenuTreeByUserId" parameterType="Long" resultMap="SysMenuResult">
+        select distinct m.menu_id,
+                        m.parent_id,
+                        m.menu_name,
+                        m.path,
+                        m.component,
+                        m.`query`,
+                        m.visible,
+                        m.status,
+                        ifnull(m.perms, '') as perms,
+                        m.is_frame,
+                        m.is_cache,
+                        m.menu_type,
+                        m.icon,
+                        m.order_num,
+                        m.create_time
+        from sys_menu m
+                 left join sys_role_menu rm on m.menu_id = rm.menu_id
+                 left join sys_user_role ur on rm.role_id = ur.role_id
+                 left join sys_role ro on ur.role_id = ro.role_id
+                 left join sys_user u on ur.user_id = u.user_id
+        where u.user_id = #{userId}
+          and m.menu_type in ('M', 'C')
+          and m.status = 0
+          and m.del_flag = '0'
+          AND ro.status = 0
+          and ro.del_flag = '0'
+        order by m.parent_id, m.order_num
+    </select>
+
+    <select id="selectMenuPermsByRoleId" parameterType="Long" resultType="String">
+        select distinct m.perms
+        from sys_menu m
+                 left join sys_role_menu rm on m.menu_id = rm.menu_id
+        where m.status = '0'
+          and m.del_flag = '0'
+          and rm.role_id = #{roleId}
+    </select>
+
+    <select id="getMenuPermsAll" resultMap="RoleAuthResult">
+        select m.perms, rm.role_id
+        from sys_menu m
+                 left join sys_role_menu rm on m.menu_id = rm.menu_id
+        where m.status = '0'
+          AND m.del_flag = '0'
+          AND rm.role_id IS NOT NULL
+    </select>
+
+    <select id="selectMenuPermsByUserId" parameterType="Long" resultType="String">
+        select distinct m.perms
+        from sys_menu m
+                 left join sys_role_menu rm on m.menu_id = rm.menu_id
+                 left join sys_user_role ur on rm.role_id = ur.role_id
+                 left join sys_role r on r.role_id = ur.role_id
+        where m.status = '0'
+          and r.status = '0'
+          and r.del_flag = '0'
+          and m.del_flag = '0'
+          and ur.user_id = #{userId}
+    </select>
+
+    <select id="selectMenuListByUserId" parameterType="SysMenuEntity" resultMap="SysMenuResult">
+        select distinct m.menu_id, m.parent_id, m.menu_name, m.path, m.component, m.`query`, m.visible, m.status,
+        ifnull(m.perms,'') as perms, m.is_frame, m.is_cache, m.menu_type, m.icon, m.order_num, m.create_time
+        from sys_menu m
+        left join sys_role_menu rm on m.menu_id = rm.menu_id
+        left join sys_user_role ur on rm.role_id = ur.role_id
+        left join sys_role ro on ur.role_id = ro.role_id
+        where ur.user_id = #{params.userId}
+        and m.del_flag = '0'
+        and ro.del_flag = '0'
+        <if test="menuName != null and menuName != ''">
+            AND m.menu_name like concat('%', #{menuName}, '%')
+        </if>
+        <if test="visible != null and visible != ''">
+            AND m.visible = #{visible}
+        </if>
+        <if test="status != null and status != ''">
+            AND m.status = #{status}
+        </if>
+        order by m.parent_id, m.order_num
+    </select>
+
+    <select id="selectMenuListByRoleId" resultType="Long">
+        select m.menu_id
+        from sys_menu m
+        left join sys_role_menu rm on m.menu_id = rm.menu_id
+        where rm.role_id = #{roleId}
+        and m.del_flag = '0'
+        <if test="menuCheckStrictly">
+            and m.menu_id not in (select m.parent_id from sys_menu m inner join sys_role_menu rm on m.menu_id =
+            rm.menu_id and rm.role_id = #{roleId})
+        </if>
+        order by m.parent_id, m.order_num
+    </select>
+
+
+</mapper>

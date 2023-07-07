@@ -1,0 +1,101 @@
+# 项目相关配置
+campus:
+  # 名称
+  name: oddfar-campus
+  # 版本
+  version: 1.1.3
+
+server:
+  port: 8160
+
+
+spring:
+  application:
+    name: oddfar
+  #数据源配置
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+#    url: jdbc:mysql://campus-mysql:3306/campus_imaotai?characterEncoding=utf-8&useSSL=true&serverTimezone=GMT%2B8
+    url: jdbc:mysql://localhost:3306/campus_imaotai?characterEncoding=utf-8&useSSL=true&serverTimezone=GMT%2B8
+    username: root
+    password: 123456789
+  #redis配置
+  redis:
+#    host: campus-redis
+    host: 127.0.0.1
+    port: 6379
+    database: 0
+    timeout: 1800000
+    lettuce:
+      pool:
+        max-active: 20
+        #最大阻塞等待时间(负数表示没限制)
+        max-wait: -1
+        max-idle: 5
+        min-idle: 0
+  # 文件上传
+  servlet:
+    multipart:
+      # 单个文件大小
+      max-file-size: 20MB
+      # 设置总上传的文件大小
+      max-request-size: 20MB
+  #MyWebMvcConfig中开启@EnableWebMvc则失效
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+#    # 对象字段为null不显示
+#    default-property-inclusion: non_null
+
+  # 资源信息
+  messages:
+    # 国际化资源文件路径
+    basename: i18n/messages
+
+# token配置
+token:
+  # 令牌自定义标识
+  header: Authorization
+  # 令牌密钥
+  secret: abcdefghijklmnopqrstuvwxyz
+  # 令牌有效期（单位分钟）
+  expireTime: 1440
+
+# 用户配置
+user:
+  password:
+    # 密码最大错误次数
+    maxRetryCount: 5
+    # 密码锁定时间（默认10分钟）
+    lockTime: 10
+
+# 日志配置
+logging:
+  level:
+    com.oddfar: debug
+    org.springframework: warn
+
+#mybatis-plus配置
+mybatis-plus:
+  # 配置mapper的扫描，找到所有的mapper.xml映射文件
+  mapper-locations: classpath*:mapper/**/*Mapper.xml
+  #mybatis-plus日志
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  global-config:
+    #逻辑删除
+    db-config:
+      logic-delete-value: 1
+      logic-not-delete-value: 0
+  type-aliases-package: com.oddfar.**.domain
+
+# PageHelper分页插件
+pagehelper:
+  helperDialect: mysql
+  support-methods-arguments: false
+
+# Swagger配置
+swagger:
+  # 是否开启swagger
+  enabled: true
+
