@@ -1,0 +1,29 @@
+spring:
+  #数据源配置
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://campus-mysql:3306/campus_imaotai?characterEncoding=utf-8&useSSL=true&serverTimezone=GMT%2B8
+    username: root
+    password: 123456789
+  #redis配置
+  redis:
+    host: campus-redis
+    port: 6379
+    database: 0
+    timeout: 1800000
+    lettuce:
+      pool:
+        max-active: 20
+        #最大阻塞等待时间(负数表示没限制)
+        max-wait: -1
+        max-idle: 5
+        min-idle: 0
+
+#mybatis-plus配置
+mybatis-plus:
+  #mybatis-plus日志
+  configuration:
+    #开启打印
+    #log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    #关闭打印
+    log-impl: org.apache.ibatis.logging.nologging.NoLoggingImpl

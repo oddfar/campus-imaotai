@@ -23,10 +23,11 @@ public class IMTLogFactory {
         operLog.setOperTime(new Date());
         operLog.setAppName("i茅台预约");
 
-        if (json.getString("code").equals("2000")){
+        if (json.getString("code").equals("2000")) {
             operLog.setLogName("预约成功");
-        }else {
+        } else {
             operLog.setLogName("预约失败");
+            operLog.setStatus(1);
         }
         operLog.setOperUserId(iUser.getMobile());
         String str = String.format("[userId]:%s\n[shopId]:%s", iUser.getUserId().toString(), shopId);
@@ -47,8 +48,25 @@ public class IMTLogFactory {
         operLog.setOperUserId(iUser.getMobile());
         String str = String.format("[userId]:%s\n[shopId]:%s\nshopId为空", iUser.getUserId().toString(), shopId);
         operLog.setLogContent(str);
-
+        operLog.setStatus(1);
 
         AsyncManager.me().execute(AsyncFactory.recordOper(operLog));
     }
+
+    public static void reservation(IUser iUser, Exception e) {
+        SysOperLogEntity operLog = new SysOperLogEntity();
+
+        operLog.setOperTime(new Date());
+        operLog.setAppName("i茅台预约");
+
+        operLog.setLogName("预约失败");
+        operLog.setOperUserId(iUser.getMobile());
+        String str = String.format("执行报错");
+        operLog.setLogContent(str);
+        operLog.setStatus(1);
+        operLog.setErrorMsg(e.getMessage());
+
+        AsyncManager.me().execute(AsyncFactory.recordOper(operLog));
+    }
+
 }

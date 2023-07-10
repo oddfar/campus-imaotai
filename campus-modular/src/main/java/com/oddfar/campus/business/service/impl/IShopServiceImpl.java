@@ -51,6 +51,11 @@ public class IShopServiceImpl implements IShopService {
             return shopList;
         }
         shopList = iShopMapper.selectList();
+        if (ObjectUtil.isEmpty(shopList)) {
+            refreshShop();
+            shopList = iShopMapper.selectList();
+        }
+
         redisCache.setCacheList("mt_shop_list", shopList);
         return shopList;
     }
@@ -126,6 +131,7 @@ public class IShopServiceImpl implements IShopService {
         long dayTime = LocalDate.now().atStartOfDay().toInstant(ZoneOffset.of("+8")).toEpochMilli();
 
         String url = "https://static.moutai519.com.cn/mt-backend/xhr/front/mall/shop/list/slim/v3/" + getCurrentSessionId() + "/" + province + "/" + itemId + "/" + dayTime;
+        //TODO
         JSONObject res = JSONObject.parseObject(HttpUtil.get(url));
         List<IMTItemInfo> imtItemInfoList = new ArrayList<>();
         if (!res.getString("code").equals("2000")) {

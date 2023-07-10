@@ -274,12 +274,19 @@
           <el-input v-model="form.jsonResult" type="textarea" placeholder="请输入内容" />
         </el-form-item> -->
         <el-form-item label="到期时间" prop="expireTime">
-          <el-date-picker
+          <!-- <el-date-picker
             clearable
             v-model="form.expireTime"
             type="date"
             value-format="yyyy-MM-dd"
             placeholder="请选择到期时间"
+          >
+          </el-date-picker> -->
+          <el-date-picker
+            v-model="form.expireTime"
+            type="datetime"
+            value-format="yyyy-MM-dd HH:mm:ss"
+            placeholder="选择日期时间"
           >
           </el-date-picker>
         </el-form-item>
@@ -354,7 +361,7 @@ export default {
       title: "",
       // 是否显示弹出层
       open: false,
-      openUser:false,
+      openUser: false,
       // 查询参数
       queryParams: {
         pageNum: 1,

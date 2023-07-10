@@ -1,9 +1,9 @@
 # 项目相关配置
 campus:
   # 名称
-  name: oddfar-campus
+  name: campus-imaotai
   # 版本
-  version: 1.1.3
+  version: 1.0.1
 
 server:
   port: 8160
@@ -12,16 +12,16 @@ server:
 spring:
   application:
     name: oddfar
+  profiles:
+    active: dev
   #数据源配置
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-#    url: jdbc:mysql://campus-mysql:3306/campus_imaotai?characterEncoding=utf-8&useSSL=true&serverTimezone=GMT%2B8
     url: jdbc:mysql://localhost:3306/campus_imaotai?characterEncoding=utf-8&useSSL=true&serverTimezone=GMT%2B8
     username: root
     password: 123456789
   #redis配置
   redis:
-#    host: campus-redis
     host: 127.0.0.1
     port: 6379
     database: 0
@@ -81,7 +81,10 @@ mybatis-plus:
   mapper-locations: classpath*:mapper/**/*Mapper.xml
   #mybatis-plus日志
   configuration:
+    #开启打印
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    #关闭打印
+#    log-impl: org.apache.ibatis.logging.nologging.NoLoggingImpl
   global-config:
     #逻辑删除
     db-config:

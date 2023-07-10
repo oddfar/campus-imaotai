@@ -52,16 +52,15 @@ public class IUserController {
     }
 
     /**
-     * 发送验证码
+     * 预约
      */
     @GetMapping("/reservation")
     public R reservation(String mobile) {
         IUser user = iUserMapper.selectById(mobile);
         if (user == null || StringUtils.isEmpty(user.getItemCode())) {
             return R.error("用户不存在或配置不对");
-        }else {
+        } else {
             imtService.reservation(user);
-
             return R.ok();
         }
 

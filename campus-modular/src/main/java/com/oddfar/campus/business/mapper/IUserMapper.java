@@ -22,6 +22,7 @@ public interface IUserMapper extends BaseMapperX<IUser> {
                         .eqIfPresent(IUser::getUserId, iUser.getUserId())
                         .eqIfPresent(IUser::getMobile, iUser.getMobile())
                         .eqIfPresent(IUser::getProvinceName, iUser.getProvinceName())
+                        .orderByAsc(IUser::getCreateTime)
 //                .betweenIfPresent(IUser::getCreateTime, iUser.getParams())
         );
 
@@ -30,10 +31,10 @@ public interface IUserMapper extends BaseMapperX<IUser> {
     default List<IUser> selectReservationUser() {
         return selectList(new LambdaQueryWrapperX<IUser>()
                 .gt(IUser::getExpireTime, new Date())
-                .ne(IUser::getLat,"")
-                .ne(IUser::getLng,"")
-                .ne(IUser::getShopType,"")
-                .ne(IUser::getItemCode,"")
+                .ne(IUser::getLat, "")
+                .ne(IUser::getLng, "")
+                .ne(IUser::getShopType, "")
+                .ne(IUser::getItemCode, "")
 
         );
 

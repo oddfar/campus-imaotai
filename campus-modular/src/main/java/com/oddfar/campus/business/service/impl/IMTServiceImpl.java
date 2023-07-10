@@ -184,7 +184,7 @@ public class IMTServiceImpl implements IMTService {
 //            return false;
         }
 
-        }
+    }
 
 
     @Override
@@ -214,10 +214,27 @@ public class IMTServiceImpl implements IMTService {
     @Override
     public void reservationBatch() {
         List<IUser> iUsers = iUserService.selectReservationUser();
-//        logger.info(iUsers.toString());
+
         for (IUser iUser : iUsers) {
-            reservation(iUser);
+            try {
+                logger.info("「开始预约用户」" + iUser.getMobile());
+                //预约
+                reservation(iUser);
+                //延时一秒
+//                TimeUnit.SECONDS.sleep(1);
+            } catch (Exception e) {
+                IMTLogFactory.reservation(iUser, e);
+                e.printStackTrace();
+            }
+
         }
+    }
+
+    @Override
+    public void refreshAll() {
+        refreshMTVersion();
+        iShopService.refreshShop();
+        iShopService.refreshItem();
     }
 
     public JSONObject reservation(IUser iUser, String itemId, String shopId) {
