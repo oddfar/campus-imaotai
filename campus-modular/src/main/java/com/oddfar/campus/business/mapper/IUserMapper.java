@@ -19,11 +19,12 @@ public interface IUserMapper extends BaseMapperX<IUser> {
     default PageResult<IUser> selectPage(IUser iUser) {
 
         return selectPage(new LambdaQueryWrapperX<IUser>()
-                        .eqIfPresent(IUser::getUserId, iUser.getUserId())
-                        .eqIfPresent(IUser::getMobile, iUser.getMobile())
-                        .eqIfPresent(IUser::getProvinceName, iUser.getProvinceName())
-                        .orderByAsc(IUser::getCreateTime)
-//                .betweenIfPresent(IUser::getCreateTime, iUser.getParams())
+                .eqIfPresent(IUser::getUserId, iUser.getUserId())
+                .eqIfPresent(IUser::getMobile, iUser.getMobile())
+                .eqIfPresent(IUser::getProvinceName, iUser.getProvinceName())
+                .betweenIfPresent(IUser::getExpireTime, iUser.getParams())
+                .orderByAsc(IUser::getCreateTime)
+
         );
 
     }

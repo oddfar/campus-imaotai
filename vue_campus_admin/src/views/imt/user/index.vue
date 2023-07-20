@@ -24,14 +24,6 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <!-- <el-form-item label="toekn" prop="token">
-        <el-input
-          v-model="queryParams.token"
-          placeholder="请输入用户toekn"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item> -->
       <!-- <el-form-item label="商品预约code，用@间隔" prop="itemCode">
         <el-input
           v-model="queryParams.itemCode"
@@ -80,16 +72,18 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item> -->
-      <!-- <el-form-item label="到期时间" prop="expireTime">
+      <el-form-item label="到期时间">
         <el-date-picker
-          clearable
-          v-model="queryParams.expireTime"
-          type="date"
+          v-model="dateRange"
+          style="width: 240px"
           value-format="yyyy-MM-dd"
-          placeholder="请选择到期时间"
-        >
-        </el-date-picker>
-      </el-form-item> -->
+          type="daterange"
+          range-separator="-"
+          start-placeholder="开始日期"
+          end-placeholder="结束日期"
+        ></el-date-picker>
+      </el-form-item>
+
       <el-form-item>
         <el-button
           type="primary"
@@ -165,12 +159,13 @@
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="手机号" align="center" prop="mobile" />
       <el-table-column label="I茅台用户id" align="center" prop="userId" />
-      <el-table-column
-        label="toekn"
-        align="center"
-        prop="token"
-        :show-overflow-tooltip="true"
-      />
+      <el-table-column label="token" align="center" prop="token">
+        <template slot-scope="scope">
+          <span v-if="scope.row.token">{{
+            scope.row.token.substring(0, 5) + "......"
+          }}</span>
+        </template>
+      </el-table-column>
       <el-table-column label="预约项目code" align="center" prop="itemCode" />
       <el-table-column label="省份" align="center" prop="provinceName" />
       <el-table-column label="城市" align="center" prop="cityName" />
@@ -178,7 +173,13 @@
       <el-table-column label="纬度" align="center" prop="lat" />
       <el-table-column label="经度" align="center" prop="lng" />
       <el-table-column label="类型" align="center" prop="shopType" />
-      <!-- <el-table-column label="返回参数" align="center" prop="jsonResult" /> -->
+      <el-table-column label="推送token" align="center" prop="pushPlusToken">
+        <template slot-scope="scope">
+          <span v-if="scope.row.pushPlusToken">{{
+            scope.row.pushPlusToken.substring(0, 5) + "......"
+          }}</span>
+        </template>
+      </el-table-column>
       <el-table-column
         label="到期时间"
         align="center"
@@ -270,9 +271,9 @@
         <el-form-item label="经度" prop="lng">
           <el-input v-model="form.lng" placeholder="请输入经度" />
         </el-form-item>
-        <!-- <el-form-item label="返回参数" prop="jsonResult">
-          <el-input v-model="form.jsonResult" type="textarea" placeholder="请输入内容" />
-        </el-form-item> -->
+        <el-form-item label="推送token" prop="jsonResult">
+          <el-input v-model="form.pushPlusToken" placeholder="请输入内容" />
+        </el-form-item>
         <el-form-item label="到期时间" prop="expireTime">
           <!-- <el-date-picker
             clearable
@@ -357,6 +358,8 @@ export default {
       total: 0,
       // I茅台用户表格数据
       userList: [],
+      // 日期范围
+      dateRange: [],
       // 弹出层标题
       title: "",
       // 是否显示弹出层
@@ -398,11 +401,13 @@ export default {
     /** 查询I茅台用户列表 */
     getList() {
       this.loading = true;
-      listUser(this.queryParams).then((response) => {
-        this.userList = response.rows;
-        this.total = response.total;
-        this.loading = false;
-      });
+      listUser(this.addDateRange(this.queryParams, this.dateRange)).then(
+        (response) => {
+          this.userList = response.rows;
+          this.total = response.total;
+          this.loading = false;
+        }
+      );
     },
     // 取消按钮
     cancel() {
@@ -436,6 +441,7 @@ export default {
     },
     /** 重置按钮操作 */
     resetQuery() {
+      this.dateRange = [];
       this.resetForm("queryForm");
       this.handleQuery();
     },

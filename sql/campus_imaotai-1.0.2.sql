@@ -1,4 +1,3 @@
-
 SET NAMES utf8;
 SET FOREIGN_KEY_CHECKS = 0;
 
@@ -61,17 +60,13 @@ CREATE TABLE `i_user` (
   `lat` varchar(50) DEFAULT NULL COMMENT '纬度',
   `lng` varchar(50) DEFAULT NULL COMMENT '经度',
   `shop_type` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '1:预约本市出货量最大的门店;2:预约你的位置(经纬度)附近门店;',
+  `push_plus_token` varchar(50) DEFAULT NULL COMMENT 'push_plus_token',
   `json_result` varchar(2000) DEFAULT NULL COMMENT '返回参数',
   `create_time` datetime DEFAULT NULL COMMENT '创建时间',
   `expire_time` datetime DEFAULT NULL COMMENT '到期时间',
   PRIMARY KEY (`mobile`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci COMMENT='I茅台用户表';
 
--- ----------------------------
--- Records of i_user
--- ----------------------------
-BEGIN;
-COMMIT;
 
 -- ----------------------------
 -- Table structure for sys_config
@@ -205,8 +200,13 @@ CREATE TABLE `sys_log_login` (
   `msg` varchar(255) DEFAULT '' COMMENT '提示消息',
   `login_time` datetime DEFAULT NULL COMMENT '访问时间',
   PRIMARY KEY (`info_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1676846836129824770 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci COMMENT='系统访问记录';
+) ENGINE=InnoDB AUTO_INCREMENT=1682003222308331523 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci COMMENT='系统访问记录';
 
+-- ----------------------------
+-- Records of sys_log_login
+-- ----------------------------
+BEGIN;
+COMMIT;
 
 -- ----------------------------
 -- Table structure for sys_log_oper
@@ -228,9 +228,13 @@ CREATE TABLE `sys_log_oper` (
   `error_msg` varchar(2000) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '错误消息',
   `oper_time` datetime DEFAULT NULL COMMENT '操作时间',
   PRIMARY KEY (`oper_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1677121504527036418 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci COMMENT='操作日志记录';
+) ENGINE=InnoDB AUTO_INCREMENT=1682020188803141634 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci COMMENT='操作日志记录';
 
-
+-- ----------------------------
+-- Records of sys_log_oper
+-- ----------------------------
+BEGIN;
+COMMIT;
 
 -- ----------------------------
 -- Table structure for sys_menu
@@ -492,8 +496,8 @@ CREATE TABLE `sys_user` (
 -- Records of sys_user
 -- ----------------------------
 BEGIN;
-INSERT INTO `sys_user` (`user_id`, `user_name`, `nick_name`, `user_type`, `email`, `phonenumber`, `sex`, `avatar`, `password`, `status`, `login_ip`, `login_date`, `remark`, `create_user`, `create_time`, `update_user`, `update_time`, `del_flag`) VALUES (1, 'admin', 'admin', '00', 'oddfar@163.com', '15888888888', '0', '', '$2a$10$7JB720yubVSZvUI0rEqK/.VqGOZTH.ulu33dHOiBE8ByOhJIrdAu2', '0', '127.0.0.1', '2023-07-06 14:53:35', '管理员', 0, '2022-10-05 15:28:43', 1, '2023-07-06 14:53:35', b'0');
-INSERT INTO `sys_user` (`user_id`, `user_name`, `nick_name`, `user_type`, `email`, `phonenumber`, `sex`, `avatar`, `password`, `status`, `login_ip`, `login_date`, `remark`, `create_user`, `create_time`, `update_user`, `update_time`, `del_flag`) VALUES (2, 'zhiyuan', '致远', '00', 'a_zhiyuan@163.com', '15666666666', '1', '', '$2a$10$LtM4R7ovl31aBeT8yLrb.uoMFjU4TisUHHSZk4/PsLVkkyZT.Fgf.', '0', '127.0.0.1', '2023-02-25 23:01:16', '测试', 0, '2022-10-05 15:28:43', 2, '2023-02-25 23:01:16', b'0');
+INSERT INTO `sys_user` (`user_id`, `user_name`, `nick_name`, `user_type`, `email`, `phonenumber`, `sex`, `avatar`, `password`, `status`, `login_ip`, `login_date`, `remark`, `create_user`, `create_time`, `update_user`, `update_time`, `del_flag`) VALUES (1, 'admin', 'admin', '00', 'oddfar@163.com', '15888888888', '0', '', '$2a$10$7JB720yubVSZvUI0rEqK/.VqGOZTH.ulu33dHOiBE8ByOhJIrdAu2', '0', '127.0.0.1', '2023-07-20 20:23:13', '管理员', 0, '2022-10-05 15:28:43', 1, '2023-07-20 20:23:13', b'0');
+INSERT INTO `sys_user` (`user_id`, `user_name`, `nick_name`, `user_type`, `email`, `phonenumber`, `sex`, `avatar`, `password`, `status`, `login_ip`, `login_date`, `remark`, `create_user`, `create_time`, `update_user`, `update_time`, `del_flag`) VALUES (2, 'zhiyuan', '致远', '00', 'a_zhiyuan@163.com', '15666666666', '1', 'https://img0.baidu.com/it/u=1183896628,1403534286&fm=253&fmt=auto&app=138&f=PNG', '$2a$10$0522gOEarwIDNCk57dsrNeGqXTDwx2Zpy447d8R7W5MbH4/j1rcQi', '0', '127.0.0.1', '2023-02-25 23:01:16', '测试1', 0, '2022-10-05 15:28:43', 1, '2023-07-15 23:18:08', b'0');
 COMMIT;
 
 -- ----------------------------

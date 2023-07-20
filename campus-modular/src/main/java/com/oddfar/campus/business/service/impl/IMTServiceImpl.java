@@ -25,6 +25,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
@@ -53,6 +54,21 @@ public class IMTServiceImpl implements IMTService {
 
     private final static String AES_KEY = "qbhajinldepmucsonaaaccgypwuvcjaa";
     private final static String AES_IV = "2018534749963515";
+
+    /**
+     * 项目启动时，初始化数据
+     */
+    @PostConstruct
+    public void init() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                refreshAll();
+            }
+        }).start();
+
+    }
+
 
     @Override
     public String getMTVersion() {

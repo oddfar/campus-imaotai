@@ -4,7 +4,7 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://campus-mysql:3306/campus_imaotai?characterEncoding=utf-8&useSSL=true&serverTimezone=GMT%2B8
     username: root
-    password: 123456789
+    password: oddfar_imaotai
   #redis配置
   redis:
     host: campus-redis
@@ -18,6 +18,7 @@ spring:
         max-wait: -1
         max-idle: 5
         min-idle: 0
+    password: oddfar_imaotai
 
 #mybatis-plus配置
 mybatis-plus:

@@ -2,6 +2,7 @@ package com.oddfar.campus.business.service;
 
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
+import com.oddfar.campus.business.api.PushPlusApi;
 import com.oddfar.campus.business.entity.IUser;
 import com.oddfar.campus.common.domain.entity.SysOperLogEntity;
 import com.oddfar.campus.common.utils.StringUtils;
@@ -36,6 +37,8 @@ public class IMTLogFactory {
         operLog.setJsonResult(StringUtils.substring(JSON.toJSONString(json), 0, 2000));
 
         AsyncManager.me().execute(AsyncFactory.recordOper(operLog));
+        //推送
+        PushPlusApi.sendNotice(iUser,operLog);
     }
 
     public static void reservation(IUser iUser, String shopId) {
@@ -51,6 +54,8 @@ public class IMTLogFactory {
         operLog.setStatus(1);
 
         AsyncManager.me().execute(AsyncFactory.recordOper(operLog));
+        //推送
+        PushPlusApi.sendNotice(iUser,operLog);
     }
 
     public static void reservation(IUser iUser, Exception e) {
@@ -67,6 +72,8 @@ public class IMTLogFactory {
         operLog.setErrorMsg(e.getMessage());
 
         AsyncManager.me().execute(AsyncFactory.recordOper(operLog));
+        //推送
+        PushPlusApi.sendNotice(iUser,operLog);
     }
 
 }

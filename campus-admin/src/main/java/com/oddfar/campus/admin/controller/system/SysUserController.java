@@ -92,7 +92,7 @@ public class SysUserController {
                 && !(userService.checkEmailUnique(user))) {
             return R.error("修改用户'" + user.getUserName() + "'失败，邮箱账号已存在");
         }
-
+        user.setPassword(null);
 
         return R.ok(userService.updateUser(user));
     }

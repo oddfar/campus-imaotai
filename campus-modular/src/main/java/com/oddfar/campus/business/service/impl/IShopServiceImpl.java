@@ -6,6 +6,7 @@ import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpUtil;
 import cn.hutool.http.Method;
 import com.alibaba.fastjson2.JSONArray;
+import com.alibaba.fastjson2.JSONException;
 import com.alibaba.fastjson2.JSONObject;
 import com.oddfar.campus.business.domain.IMTItemInfo;
 import com.oddfar.campus.business.domain.MapPoint;
@@ -15,6 +16,7 @@ import com.oddfar.campus.business.mapper.IItemMapper;
 import com.oddfar.campus.business.mapper.IShopMapper;
 import com.oddfar.campus.business.service.IShopService;
 import com.oddfar.campus.common.core.RedisCache;
+import com.oddfar.campus.common.exception.ServiceException;
 import com.oddfar.campus.common.utils.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -132,12 +134,22 @@ public class IShopServiceImpl implements IShopService {
 
         String url = "https://static.moutai519.com.cn/mt-backend/xhr/front/mall/shop/list/slim/v3/" + getCurrentSessionId() + "/" + province + "/" + itemId + "/" + dayTime;
         //TODO
-        JSONObject res = JSONObject.parseObject(HttpUtil.get(url));
-        List<IMTItemInfo> imtItemInfoList = new ArrayList<>();
-        if (!res.getString("code").equals("2000")) {
-            logger.error("查询所在省市的投放产品和数量error，" + province + "-" + itemId);
-            return null;
+        String urlRes = HttpUtil.get(url);
+        JSONObject res = null;
+        try {
+            res = JSONObject.parseObject(urlRes);
+        } catch (JSONException jsonException) {
+            throw new ServiceException("查询所在省市的投放产品和数量error，" + province + "-" + itemId);
         }
+
+//        JSONObject res = JSONObject.parseObject(HttpUtil.get(url));
+        if (!res.containsKey("code") || !res.getString("code").equals("2000")) {
+            logger.error("查询所在省市的投放产品和数量error，" + province + "-" + itemId);
+            throw new ServiceException("查询所在省市的投放产品和数量error，" + province + "-" + itemId);
+        }
+        //组合信息
+        List<IMTItemInfo> imtItemInfoList = new ArrayList<>();
+
         JSONObject data = res.getJSONObject("data");
         JSONArray shopList = data.getJSONArray("shops");
 
@@ -176,6 +188,7 @@ public class IShopServiceImpl implements IShopService {
             //预约本市出货量最大的门店
             shopId = getMaxInventoryShopId(shopList, list, city);
             if (StringUtils.isEmpty(shopId)) {
+                //本市没有则预约本省最近的
                 shopId = getMinDistanceShopId(list, province, lat, lng);
             }
         }
