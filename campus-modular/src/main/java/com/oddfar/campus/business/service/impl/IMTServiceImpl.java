@@ -23,6 +23,7 @@ import com.oddfar.campus.common.utils.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
@@ -96,6 +97,7 @@ public class IMTServiceImpl implements IMTService {
         getMTVersion();
     }
 
+    @Async
     @Override
     public boolean sendCode(String mobile) {
         Map<String, Object> data = new HashMap<>();

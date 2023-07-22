@@ -26,6 +26,7 @@ public class IMTLogFactory {
 
         if (json.getString("code").equals("2000")) {
             operLog.setLogName("预约成功");
+            operLog.setStatus(0);
         } else {
             operLog.setLogName("预约失败");
             operLog.setStatus(1);
