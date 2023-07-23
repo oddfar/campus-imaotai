@@ -3,7 +3,7 @@ campus:
   # 名称
   name: campus-imaotai
   # 版本
-  version: 1.0.3
+  version: 1.0.4
 
 server:
   port: 8160

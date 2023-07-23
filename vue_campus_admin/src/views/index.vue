@@ -20,7 +20,7 @@ export default {
   data() {
     return {
       // 版本号
-      version: "1.0.1",
+      version: "1.0.4",
     };
   },
   methods: {

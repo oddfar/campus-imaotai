@@ -99,7 +99,7 @@ public class IMTServiceImpl implements IMTService {
 
     @Async
     @Override
-    public boolean sendCode(String mobile) {
+    public Boolean sendCode(String mobile) {
         Map<String, Object> data = new HashMap<>();
         data.put("mobile", mobile);
         data.put("md5", signature(mobile));
@@ -138,7 +138,7 @@ public class IMTServiceImpl implements IMTService {
         //成功返回 {"code":2000}
         logger.info("「发送验证码返回」：" + jsonObject.toJSONString());
         if (jsonObject.getString("code").equals("2000")) {
-            return true;
+            return Boolean.TRUE;
         } else {
             logger.error("「发送验证码-失败」：" + jsonObject.toJSONString());
             throw new ServiceException("发送验证码错误");

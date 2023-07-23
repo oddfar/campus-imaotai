@@ -20,7 +20,7 @@ public interface IMTService {
      *
      * @param mobile 手机号
      */
-    boolean sendCode(String mobile);
+    Boolean sendCode(String mobile);
 
     /**
      * 登录i茅台
