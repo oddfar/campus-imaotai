@@ -56,7 +56,7 @@ i茅台app，每日自动预约茅台，可添加多个用户，可选本市出�
 
 ## 友情链接
 
-yize8888-maotai: https://github.com/oddfar/campus-imaotai
+yize8888-maotai: https://github.com/yize8888/maotai
 
 ## 声明
 
