@@ -31,13 +31,6 @@ i茅台app，每日自动预约茅台，可添加多个用户，可选本市出�
 
 若没有则提交 [issues](https://github.com/oddfar/campus-imaotai/issues)  ，附带详细的错误原因
 
-## 关注&交流
-
-欢迎各位老哥进群进行**技术交流**（只交流技术，不谈茅台），为了防止广告进入，请添加我微信（备注：**Campus**），我会直接将你拉进**Campus交流群**
-
-**私信不解决项目使用问题，请提交 issues！**
-
-<img src="https://note.oddfar.com/img/my-wechat.jpg" alt="wechat" style="height:280px;" />
 
 ## 贡献代码
 
