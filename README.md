@@ -31,6 +31,7 @@ i茅台app，每日自动预约茅台，可添加多个用户，可选本市出�
 
 若没有则提交 [issues](https://github.com/oddfar/campus-imaotai/issues)  ，附带详细的错误原因
 
+不会Docker部署的，可使用客户端：<https://github.com/lisongkun/hygge-imaotai>
 
 ## 贡献代码
 
