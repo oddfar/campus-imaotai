@@ -6,25 +6,34 @@ export function reservation(mobile) {
     return request({
         url: '/imt/user/reservation',
         method: 'get',
-        params: {mobile}
+        params: { mobile }
+    })
+}
+//travelReward
+export function travelReward(mobile) {
+    return request({
+        url: '/imt/user/travelReward',
+        method: 'get',
+        params: { mobile }
     })
 }
 
+
 // 发送验证码
-export function sendCode(mobile) {
+export function sendCode(mobile, deviceId) {
     return request({
         url: '/imt/user/sendCode',
         method: 'get',
-        params: {mobile}
+        params: { mobile: mobile, deviceId: deviceId }
     })
 }
 
 // 查询I茅台用户列表
-export function login(mobile, code) {
+export function login(mobile, code, deviceId) {
     return request({
         url: '/imt/user/login',
         method: 'get',
-        params: { mobile: mobile, code: code }
+        params: { mobile: mobile, code: code, deviceId: deviceId }
     })
 }
 

@@ -114,7 +114,6 @@
     <el-table
       v-loading="loading"
       :data="shopList"
-      @selection-change="handleSelectionChange"
     >
       <!-- <el-table-column type="selection" width="55" align="center" /> -->
       <!-- <el-table-column label="ID" align="center" prop="shopId" /> -->

@@ -184,6 +184,10 @@
           <el-col :span="24">
             <el-form-item label="异常信息：" v-if="form.status === 1">{{ form.errorMsg }}</el-form-item>
           </el-col>
+          <el-col :span="24">
+            <el-form-item style="white-space: pre-wrap" label="日志内容："  >{{ form.logContent }}</el-form-item>
+          </el-col>
+          
         </el-row>
       </el-form>
       <div slot="footer" class="dialog-footer">

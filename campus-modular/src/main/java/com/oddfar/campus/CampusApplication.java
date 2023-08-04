@@ -4,7 +4,8 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 /**
- * @author zhiyuan
+ * GitHub: https://github.com/oddfar/campus-imaotai
+ * @author oddfar
  */
 @SpringBootApplication
 public class CampusApplication {

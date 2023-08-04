@@ -17,7 +17,7 @@ public interface IUserService {
      * @param body
      * @return
      */
-    int insertIUser(Long mobile, JSONObject body);
+    int insertIUser(Long mobile, String deviceId, JSONObject body);
 
     /**
      * 查询预约用户列表
@@ -25,6 +25,13 @@ public interface IUserService {
      * @return
      */
     List<IUser> selectReservationUser();
+
+    /**
+     * 通过预约执行分钟查询预约用户列表
+     *
+     * @return
+     */
+    List<IUser> selectReservationUserByMinute(int minute);
 
     /**
      * 添加i茅台用户
@@ -41,4 +48,19 @@ public interface IUserService {
      * @return 结果
      */
     int updateIUser(IUser iUser);
+
+    /**
+     * 批量修改用户随机预约的时间
+     *
+     * @return
+     */
+    void updateUserMinuteBatch();
+
+    /**
+     * 删除用户
+     *
+     * @param iUserId id
+     * @return
+     */
+    int deleteIUser(Long iUserId);
 }

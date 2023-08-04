@@ -15,23 +15,39 @@
 
 ## 项目介绍
 
-i茅台app，每日自动预约茅台，可添加多个用户，可选本市出货量最大的门店，或预约你的位置附近门店
+i茅台app，每日自动预约茅台
 
-软件会在每日9点05开始批量预约，并 [pushplus](https://www.pushplus.plus/) 推送消息
+- [x] 平台注册账号(可用i茅台)
+- [x] 添加多个用户
+- [x] 自动预约
+- [x] 类型选择（本市出货量最大的门店，或位置附近门店）
+- [x] 自动旅行
+- [x] 首次旅行分享
+- [x] 获取申购耐力值
+- [x] 自定义时间/随机时间预约或旅行
+- [x] 结果消息推送
 
 此项目使用 **Campus** 进行编写：<https://github.com/oddfar/campus>
 
 ## 使用教程
 
-- 部署项目：[点击此处](https://github.com/oddfar/campus-imaotai/wiki/%E9%A1%B9%E7%9B%AE%E4%BD%BF%E7%94%A8#%E9%83%A8%E7%BD%B2%E9%A1%B9%E7%9B%AE)
-- 使用项目：[点击此处](https://github.com/oddfar/campus-imaotai/wiki/%E9%A1%B9%E7%9B%AE%E4%BD%BF%E7%94%A8#%E9%A1%B9%E7%9B%AE%E4%BD%BF%E7%94%A8)
-- 常见问题：[点击此处](https://github.com/oddfar/campus-imaotai/wiki/%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98)
+- 文档
+
+  <https://github.com/oddfar/campus-imaotai/wiki>
 
 有问题请查看文档，查找 [issues](https://github.com/oddfar/campus-imaotai/issues) 上是否有相同问题！
 
 若没有则提交 [issues](https://github.com/oddfar/campus-imaotai/issues)  ，附带详细的错误原因
 
 不会Docker部署的，可使用客户端：<https://github.com/lisongkun/hygge-imaotai>
+
+## 关注&交流
+
+欢迎各位老哥进群进行**技术交流**（只交流技术，不谈茅台），为了防止广告进入，请添加我微信（备注：**Campus**），我会直接将你拉进**Campus交流群**
+
+**私信不解决项目使用问题，请提交 issues！**
+
+<img src="https://note.oddfar.com/img/my-wechat.jpg" alt="wechat" style="height:280px;" />
 
 ## 贡献代码
 

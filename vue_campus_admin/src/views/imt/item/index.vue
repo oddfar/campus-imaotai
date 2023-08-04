@@ -33,7 +33,7 @@
           <el-image
             style="width: 100px; "
             :src="scope.row.picture"
-            :fit="fit"
+            fit="fit"
           ></el-image>
         </template>
       </el-table-column>

@@ -128,6 +128,11 @@ public class IShopServiceImpl implements IShopService {
     }
 
     @Override
+    public IShop selectByIShopId(String iShopId) {
+        return iShopMapper.selectOne(IShop::getIShopId,iShopId);
+    }
+
+    @Override
     public List<IMTItemInfo> getShopsByProvince(String province, String itemId) {
 
         long dayTime = LocalDate.now().atStartOfDay().toInstant(ZoneOffset.of("+8")).toEpochMilli();
@@ -196,6 +201,10 @@ public class IShopServiceImpl implements IShopService {
         if (shopType == 2) {
             // 预约本省距离最近的门店
             shopId = getMinDistanceShopId(list, province, lat, lng);
+        }
+
+        if (StringUtils.isEmpty(shopId)){
+
         }
 
 

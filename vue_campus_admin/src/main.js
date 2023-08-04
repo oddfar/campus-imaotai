@@ -16,6 +16,9 @@ import { download } from '@/utils/request'
 
 import './assets/icons' // icon
 import './permission' // permission control
+
+import Crypto from "@/utils/crypto";
+
 import { getDicts } from "@/api/system/dict/data";
 import { getConfigKey } from "@/api/system/config";
 import { parseTime, resetForm, addDateRange, selectDictLabel, selectDictLabels, handleTree } from "@/utils/ruoyi";
@@ -48,6 +51,8 @@ Vue.prototype.selectDictLabel = selectDictLabel
 Vue.prototype.selectDictLabels = selectDictLabels
 Vue.prototype.download = download
 Vue.prototype.handleTree = handleTree
+
+Vue.prototype.Crypto = Crypto
 
 // 全局组件挂载
 Vue.component('DictTag', DictTag)

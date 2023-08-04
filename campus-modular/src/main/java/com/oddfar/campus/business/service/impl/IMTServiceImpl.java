@@ -1,6 +1,7 @@
 package com.oddfar.campus.business.service.impl;
 
 import cn.hutool.core.convert.Convert;
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.crypto.Mode;
 import cn.hutool.crypto.Padding;
 import cn.hutool.crypto.symmetric.AES;
@@ -29,9 +30,12 @@ import org.springframework.stereotype.Service;
 import javax.annotation.PostConstruct;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -97,9 +101,8 @@ public class IMTServiceImpl implements IMTService {
         getMTVersion();
     }
 
-    @Async
     @Override
-    public Boolean sendCode(String mobile) {
+    public Boolean sendCode(String mobile, String deviceId) {
         Map<String, Object> data = new HashMap<>();
         data.put("mobile", mobile);
         data.put("md5", signature(mobile));
@@ -110,28 +113,11 @@ public class IMTServiceImpl implements IMTService {
                 "https://app.moutai519.com.cn/xhr/front/user/register/vcode");
 
 
-        request.header("MT-Lat", "28.499562");
-        request.header("MT-K", "1675213490331");
-        request.header("MT-Lng", "102.182324");
-        request.header("Host", "app.moutai519.com.cn");
-        request.header("MT-User-Tag", "0");
-        request.header("Accept", "*/*");
-        request.header("MT-Network-Type", "WIFI");
-//        request.header("MT-Token", "2");
-        request.header("MT-Team-ID", "");
-        request.header("MT-Info", "028e7f96f6369cafe1d105579c5b9377");
-        request.header("MT-Device-ID", "2F2075D0-B66C-4287-A903-DBFF6358342A");
-        request.header("MT-Bundle-ID", "com.moutai.mall");
-        request.header("Accept-Language", "en-CN;q=1, zh-Hans-CN;q=0.9");
-        request.header("MT-Request-ID", "167560018873318465");
+        request.header("MT-Device-ID", deviceId);
         request.header("MT-APP-Version", getMTVersion());
         request.header("User-Agent", "iOS;16.3;Apple;?unrecognized?");
-        request.header("MT-R", "clips_OlU6TmFRag5rCXwbNAQ/Tz1SKlN8THcecBp/HGhHdw==");
-        request.header("Content-Length", "93");
-        request.header("Accept-Encoding", "gzip, deflate, br");
-        request.header("Connection", "keep-alive");
+
         request.header("Content-Type", "application/json");
-//        request.header("userId", "1");
 
         HttpResponse execute = request.body(JSONObject.toJSONString(data)).execute();
         JSONObject jsonObject = JSONObject.parseObject(execute.body());
@@ -148,12 +134,10 @@ public class IMTServiceImpl implements IMTService {
     }
 
     @Override
-    public boolean login(String mobile, String code) {
+    public boolean login(String mobile, String code, String deviceId) {
         Map<String, String> map = new HashMap<>();
         map.put("mobile", mobile);
         map.put("vCode", code);
-        map.put("ydToken", "");
-        map.put("ydLogId", "");
 
         map.put("md5", signature(mobile + code + "" + ""));
 
@@ -163,38 +147,18 @@ public class IMTServiceImpl implements IMTService {
         HttpRequest request = HttpUtil.createRequest(Method.POST,
                 "https://app.moutai519.com.cn/xhr/front/user/register/login");
 
-
-        request.header("MT-Lat", "28.499562");
-        request.header("MT-K", "1675213490331");
-        request.header("MT-Lng", "102.182324");
-        request.header("Host", "app.moutai519.com.cn");
-        request.header("MT-User-Tag", "0");
-        request.header("Accept", "*/*");
-        request.header("MT-Network-Type", "WIFI");
-//        request.header("MT-Token", "2");
-        request.header("MT-Team-ID", "");
-        request.header("MT-Info", "028e7f96f6369cafe1d105579c5b9377");
-        request.header("MT-Device-ID", "2F2075D0-B66C-4287-A903-DBFF6358342A");
-        request.header("MT-Bundle-ID", "com.moutai.mall");
-        request.header("Accept-Language", "en-CN;q=1, zh-Hans-CN;q=0.9");
-        request.header("MT-Request-ID", "167560018873318465");
+        request.header("MT-Device-ID", deviceId);
         request.header("MT-APP-Version", getMTVersion());
         request.header("User-Agent", "iOS;16.3;Apple;?unrecognized?");
-        request.header("MT-R", "clips_OlU6TmFRag5rCXwbNAQ/Tz1SKlN8THcecBp/HGhHdw==");
-        request.header("Content-Length", "93");
-        request.header("Accept-Encoding", "gzip, deflate, br");
-        request.header("Connection", "keep-alive");
         request.header("Content-Type", "application/json");
-//        request.header("userId", "1");
 
         HttpResponse execute = request.body(JSONObject.toJSONString(map)).execute();
 
         JSONObject body = JSONObject.parseObject(execute.body());
 
-
         if (body.getString("code").equals("2000")) {
-            logger.info("「登录请求-成功」" + body.toJSONString());
-            iUserService.insertIUser(Long.parseLong(mobile), body);
+//            logger.info("「登录请求-成功」" + body.toJSONString());
+            iUserService.insertIUser(Long.parseLong(mobile), deviceId, body);
             return true;
         } else {
             logger.error("「登录请求-失败」" + body.toJSONString());
@@ -212,39 +176,276 @@ public class IMTServiceImpl implements IMTService {
         }
         String[] items = iUser.getItemCode().split("@");
 
+        String logContent = "";
         for (String itemId : items) {
-            String shopId = iShopService.getShopId(iUser.getShopType(), itemId,
-                    iUser.getProvinceName(), iUser.getCityName(), iUser.getLat(), iUser.getLng());
-            if (StringUtils.isNotEmpty(shopId)) {
+            try {
+                String shopId = iShopService.getShopId(iUser.getShopType(), itemId,
+                        iUser.getProvinceName(), iUser.getCityName(), iUser.getLat(), iUser.getLng());
                 //预约
                 JSONObject json = reservation(iUser, itemId, shopId);
-                //日志记录
-                IMTLogFactory.reservation(iUser, shopId, json);
-            } else {
-                IMTLogFactory.reservation(iUser, shopId);
+                logContent += String.format("[预约项目]：%s\n[shopId]：%s\n[结果返回]：%s\n\n", itemId, shopId, json.toString());
+            } catch (Exception e) {
+                logContent += String.format("执行报错--[预约项目]：%s\n[结果返回]：%s\n\n", itemId, e.getMessage());
             }
-
         }
+        try {
+            //预约后领取耐力值
+            String energyAward = getEnergyAward(iUser);
+            logContent += "[申购耐力值]:" + energyAward;
+        } catch (Exception e) {
+            logContent += "执行报错--[申购耐力值]:" + e.getMessage();
+        }
+        //日志记录
+        IMTLogFactory.reservation(iUser, logContent);
 
     }
 
+    //获取申购耐力值
+    @Override
+    public String getEnergyAward(IUser iUser) {
+        String url = "https://h5.moutai519.com.cn/game/isolationPage/getUserEnergyAward";
+        HttpRequest request = HttpUtil.createRequest(Method.POST, url);
+
+        request.header("MT-Device-ID", iUser.getDeviceId())
+                .header("MT-APP-Version", getMTVersion())
+                .header("User-Agent", "iOS;16.3;Apple;?unrecognized?")
+                .header("MT-Lat", iUser.getLat())
+                .header("MT-Lng", iUser.getLng())
+                .cookie("MT-Token-Wap=" + iUser.getCookie() + ";MT-Device-ID-Wap=" + iUser.getDeviceId() + ";");
+
+
+        String body = request.execute().body();
+
+        JSONObject jsonObject = JSONObject.parseObject(body);
+        if (jsonObject.getInteger("code") != 200) {
+            String message = jsonObject.getString("message");
+            throw new ServiceException(message);
+        }
+
+        return body;
+    }
 
     @Override
+    public void getTravelReward(IUser iUser) {
+        String logContent = "";
+        try {
+            String s = travelReward(iUser);
+            logContent += "[获得旅行奖励]:" + s;
+        } catch (Exception e) {
+//            e.printStackTrace();
+            logContent += "执行报错--[获得旅行奖励]:" + e.getMessage();
+        }
+        //日志记录
+        IMTLogFactory.reservation(iUser, logContent);
+    }
+
+    /**
+     * 获得旅行奖励
+     *
+     * @param iUser
+     * @return
+     */
+    public String travelReward(IUser iUser) {
+        //9-20点才能领取旅行奖励
+        int hour = DateUtil.hour(new Date(), true);
+        if (!(9 <= hour && hour < 20)) {
+            String message = "活动未开始，开始时间9点-20点";
+            throw new ServiceException(message);
+        }
+        Map<String, Integer> pageData = getUserIsolationPageData(iUser);
+        Integer status = pageData.get("status");
+        if (status == 3) {
+            Integer currentPeriodCanConvertXmyNum = pageData.get("currentPeriodCanConvertXmyNum");
+            Double travelRewardXmy = getXmTravelReward(iUser);
+            //本次旅行奖励领取后, 当月实际剩余旅行奖励
+            if (travelRewardXmy > currentPeriodCanConvertXmyNum) {
+                String message = "当月无可领取奖励";
+                throw new ServiceException(message);
+            }
+        }
+
+        Integer remainChance = pageData.get("remainChance");
+        if (remainChance < 1) {
+            String message = "当日旅行次数已耗尽";
+            throw new ServiceException(message);
+        } else {
+            //小茅运旅行活动
+            return startTravel(iUser);
+        }
+    }
+
+    //小茅运旅行活动
+    public String startTravel(IUser iUser) {
+        String url = "https://h5.moutai519.com.cn/game/xmTravel/startTravel";
+        HttpRequest request = HttpUtil.createRequest(Method.POST, url);
+
+        request.header("MT-Device-ID", iUser.getDeviceId())
+                .header("MT-APP-Version", getMTVersion())
+                .header("User-Agent", "iOS;16.3;Apple;?unrecognized?")
+                .cookie("MT-Token-Wap=" + iUser.getCookie() + ";MT-Device-ID-Wap=" + iUser.getDeviceId() + ";");
+        String body = request.execute().body();
+        JSONObject jsonObject = JSONObject.parseObject(body);
+        if (jsonObject.getInteger("code") != 2000) {
+            String message = "开始旅行失败：" + jsonObject.getString("message");
+            throw new ServiceException(message);
+        }
+        JSONObject data = jsonObject.getJSONObject("data");
+        //最后返回 {"startTravelTs":1690798861076}
+        return jsonObject.toString();
+    }
+
+
+    //查询 可获取小茅运
+    public Double getXmTravelReward(IUser iUser) {
+        //查询旅行奖励:
+        String url = "https://h5.moutai519.com.cn/game/xmTravel/getXmTravelReward";
+        HttpRequest request = HttpUtil.createRequest(Method.GET, url);
+
+        request.header("MT-Device-ID", iUser.getDeviceId())
+                .header("MT-APP-Version", getMTVersion())
+                .header("User-Agent", "iOS;16.3;Apple;?unrecognized?")
+                .cookie("MT-Token-Wap=" + iUser.getCookie() + ";MT-Device-ID-Wap=" + iUser.getDeviceId() + ";");
+        String body = request.execute().body();
+        JSONObject jsonObject = JSONObject.parseObject(body);
+        if (jsonObject.getInteger("code") != 2000) {
+            String message = jsonObject.getString("message");
+            throw new ServiceException(message);
+        }
+        JSONObject data = jsonObject.getJSONObject("data");
+        Double travelRewardXmy = data.getDouble("travelRewardXmy");
+        //例如 1.95
+        return travelRewardXmy;
+
+    }
+
+    //获取用户页面数据
+    public Map<String, Integer> getUserIsolationPageData(IUser iUser) {
+        //查询小茅运信息
+        String url = "https://h5.moutai519.com.cn/game/isolationPage/getUserIsolationPageData";
+        HttpRequest request = HttpUtil.createRequest(Method.GET, url);
+
+        request.header("MT-Device-ID", iUser.getDeviceId())
+                .header("MT-APP-Version", getMTVersion())
+                .header("User-Agent", "iOS;16.3;Apple;?unrecognized?")
+                .cookie("MT-Token-Wap=" + iUser.getCookie() + ";MT-Device-ID-Wap=" + iUser.getDeviceId() + ";");
+        String body = request.form("__timestamp", DateUtil.currentSeconds()).execute().body();
+
+        JSONObject jsonObject = JSONObject.parseObject(body);
+        if (jsonObject.getInteger("code") != 2000) {
+            String message = jsonObject.getString("message");
+            throw new ServiceException(message);
+        }
+        JSONObject data = jsonObject.getJSONObject("data");
+        //xmy: 小茅运值
+        String xmy = data.getString("xmy");
+        //energy: 耐力值
+        int energy = data.getIntValue("energy");
+        JSONObject xmTravel = data.getJSONObject("xmTravel");
+        JSONObject energyReward = data.getJSONObject("energyReward");
+        //status: 1. 未开始 2. 进行中 3. 已完成
+        Integer status = xmTravel.getInteger("status");
+        // travelEndTime: 旅行结束时间
+        Long travelEndTime = xmTravel.getLong("travelEndTime");
+        //remainChance 今日剩余旅行次数
+        int remainChance = xmTravel.getIntValue("remainChance");
+
+        //可领取申购耐力值奖励
+        Integer energyValue = energyReward.getInteger("value");
+
+        if (energyValue > 0) {
+            //获取申购耐力值
+            getEnergyAward(iUser);
+            energy += energyValue;
+        }
+
+//        本月剩余旅行奖励
+        int exchangeRateInfo = getExchangeRateInfo(iUser);
+        if (exchangeRateInfo <= 0) {
+            String message = "当月无可领取奖励";
+            throw new ServiceException(message);
+        }
+
+        Long endTime = travelEndTime * 1000;
+        // 未开始
+        if (status == 1) {
+            if (energy < 100) {
+                String message = String.format("耐力不足100, 当前耐力值:%s", energy);
+                throw new ServiceException(message);
+            }
+        }
+        // 进行中
+        if (status == 2) {
+            Date date = new Date(endTime);
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            String formattedDate = sdf.format(date);
+            String message = String.format("旅行暂未结束,本次旅行结束时间:%s ", formattedDate);
+            throw new ServiceException(message);
+        }
+        Map<String, Integer> map = new HashMap<>();
+
+        map.put("remainChance", remainChance);
+        map.put("status", status);
+        map.put("currentPeriodCanConvertXmyNum", getExchangeRateInfo(iUser));
+        return map;
+    }
+
+    // 获取本月剩余奖励耐力值
+    public int getExchangeRateInfo(IUser iUser) {
+        String url = "https://h5.moutai519.com.cn/game/synthesize/exchangeRateInfo";
+        HttpRequest request = HttpUtil.createRequest(Method.GET, url);
+
+        request.header("MT-Device-ID", iUser.getDeviceId())
+                .header("MT-APP-Version", getMTVersion())
+                .header("User-Agent", "iOS;16.3;Apple;?unrecognized?")
+                .cookie("MT-Token-Wap=" + iUser.getCookie() + ";MT-Device-ID-Wap=" + iUser.getDeviceId() + ";");
+
+        String body = request.form("__timestamp", DateUtil.currentSeconds()).execute().body();
+        JSONObject jsonObject = JSONObject.parseObject(body);
+        if (jsonObject.getInteger("code") != 2000) {
+            String message = jsonObject.getString("message");
+            throw new ServiceException(message);
+        }
+        //获取本月剩余奖励耐力值
+        return jsonObject.getJSONObject("data").getIntValue("currentPeriodCanConvertXmyNum");
+
+    }
+
+    @Async
+    @Override
     public void reservationBatch() {
-        List<IUser> iUsers = iUserService.selectReservationUser();
+        int minute = DateUtil.minute(new Date());
+        List<IUser> iUsers = iUserService.selectReservationUserByMinute(minute);
 
         for (IUser iUser : iUsers) {
+            logger.info("「开始预约用户」" + iUser.getMobile());
+            //预约
+            reservation(iUser);
+            //延时3秒
             try {
-                logger.info("「开始预约用户」" + iUser.getMobile());
-                //预约
-                reservation(iUser);
-                //延时一秒
-//                TimeUnit.SECONDS.sleep(1);
-            } catch (Exception e) {
-                IMTLogFactory.reservation(iUser, e);
+                TimeUnit.SECONDS.sleep(3);
+            } catch (InterruptedException e) {
                 e.printStackTrace();
             }
 
+        }
+    }
+
+    @Async
+    @Override
+    public void getTravelRewardBatch() {
+        try {
+            int minute = DateUtil.minute(new Date());
+            List<IUser> iUsers = iUserService.selectReservationUserByMinute(minute);
+//        List<IUser> iUsers = iUserService.selectReservationUser();
+
+            for (IUser iUser : iUsers) {
+                logger.info("「开始获得旅行奖励」" + iUser.getMobile());
+                getTravelReward(iUser);
+                //延时3秒
+                TimeUnit.SECONDS.sleep(3);
+            }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
     }
 
@@ -256,7 +457,6 @@ public class IMTServiceImpl implements IMTService {
     }
 
     public JSONObject reservation(IUser iUser, String itemId, String shopId) {
-
         Map<String, Object> map = new HashMap<>();
         JSONArray itemArray = new JSONArray();
         Map<String, Object> info = new HashMap<>();
@@ -277,32 +477,23 @@ public class IMTServiceImpl implements IMTService {
                 "https://app.moutai519.com.cn/xhr/front/mall/reservation/add");
 
         request.header("MT-Lat", iUser.getLat());
-        request.header("MT-K", "1675213490331");
         request.header("MT-Lng", iUser.getLng());
-        request.header("Host", "app.moutai519.com.cn");
-        request.header("MT-User-Tag", "0");
-        request.header("Accept", "*/*");
-        request.header("MT-Network-Type", "WIFI");
         request.header("MT-Token", iUser.getToken());
-        request.header("MT-Team-ID", "");
         request.header("MT-Info", "028e7f96f6369cafe1d105579c5b9377");
-        request.header("MT-Device-ID", "2F2075D0-B66C-4287-A903-DBFF6358342A");
-        request.header("MT-Bundle-ID", "com.moutai.mall");
-        request.header("Accept-Language", "en-CN;q=1, zh-Hans-CN;q=0.9");
-        request.header("MT-Request-ID", "167560018873318465");
+        request.header("MT-Device-ID", iUser.getDeviceId());
         request.header("MT-APP-Version", getMTVersion());
         request.header("User-Agent", "iOS;16.3;Apple;?unrecognized?");
-        request.header("MT-R", "clips_OlU6TmFRag5rCXwbNAQ/Tz1SKlN8THcecBp/HGhHdw==");
-        request.header("Content-Length", "93");
-        request.header("Accept-Encoding", "gzip, deflate, br");
-        request.header("Connection", "keep-alive");
         request.header("Content-Type", "application/json");
         request.header("userId", iUser.getUserId().toString());
 
         HttpResponse execute = request.body(JSONObject.toJSONString(map)).execute();
 
         JSONObject body = JSONObject.parseObject(execute.body());
-
+        //{"code":2000,"data":{"successDesc":"申购完成，请于7月6日18:00查看预约申购结果","reservationList":[{"reservationId":17053404357,"sessionId":678,"shopId":"233331084001","reservationTime":1688608601720,"itemId":"10214","count":1}],"reservationDetail":{"desc":"申购成功后将以短信形式通知您，请您在申购成功次日18:00前确认支付方式，并在7天内完成提货。","lotteryTime":1688637600000,"cacheValidTime":1688637600000}}}
+        if (body.getInteger("code") != 2000) {
+            String message = body.getString("message");
+            throw new ServiceException(message);
+        }
 //        logger.info(body.toJSONString());
         return body;
     }

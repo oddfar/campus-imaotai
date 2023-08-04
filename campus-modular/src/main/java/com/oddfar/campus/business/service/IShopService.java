@@ -24,6 +24,8 @@ public interface IShopService {
      */
     void refreshItem();
 
+    IShop selectByIShopId(String iShopId);
+
     /**
      * 查询所在省市的投放产品和数量
      *

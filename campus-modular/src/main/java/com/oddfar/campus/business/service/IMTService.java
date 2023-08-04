@@ -18,18 +18,20 @@ public interface IMTService {
     /**
      * 发送手机验证码
      *
-     * @param mobile 手机号
+     * @param mobile   手机号
+     * @param deviceId 设备id
      */
-    Boolean sendCode(String mobile);
+    Boolean sendCode(String mobile, String deviceId);
 
     /**
      * 登录i茅台
      *
-     * @param mobile 手机号
-     * @param code   验证码
+     * @param mobile   手机号
+     * @param code     验证码
+     * @param deviceId 设备id
      * @return
      */
-    boolean login(String mobile, String code);
+    boolean login(String mobile, String code, String deviceId);
 
     /**
      * 预约
@@ -37,9 +39,27 @@ public interface IMTService {
     void reservation(IUser iUser);
 
     /**
+     * 获取申购耐力值
+     */
+    String getEnergyAward(IUser iUser);
+
+    /**
+     * 获得旅行奖励
+     *
+     * @param iUser
+     * @return
+     */
+    void getTravelReward(IUser iUser);
+
+    /**
      * 批量预约
      */
     void reservationBatch();
+
+    /**
+     * 批量获得旅行奖励
+     */
+    void getTravelRewardBatch();
 
     /**
      * 刷新版本号，预约item，门店shop列表，

@@ -56,22 +56,7 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item> -->
-      <!-- <el-form-item label="纬度" prop="lat">
-        <el-input
-          v-model="queryParams.lat"
-          placeholder="请输入纬度"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="经度" prop="lng">
-        <el-input
-          v-model="queryParams.lng"
-          placeholder="请输入经度"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item> -->
+
       <el-form-item label="到期时间">
         <el-date-picker
           v-model="dateRange"
@@ -106,7 +91,6 @@
           icon="el-icon-plus"
           size="mini"
           @click="handleAddIUser"
-          v-hasPermi="['imt:user:add']"
           >添加账号</el-button
         >
         <el-button
@@ -115,7 +99,6 @@
           icon="el-icon-plus"
           size="mini"
           @click="handleAdd"
-          v-hasPermi="['imt:user:add']"
           >直接新增</el-button
         >
       </el-col>
@@ -128,7 +111,6 @@
           size="mini"
           :disabled="single"
           @click="handleUpdate"
-          v-hasPermi="['imt:user:edit']"
           >修改</el-button
         >
       </el-col>
@@ -140,7 +122,6 @@
           size="mini"
           :disabled="multiple"
           @click="handleDelete"
-          v-hasPermi="['imt:user:remove']"
           >删除</el-button
         >
       </el-col>
@@ -156,30 +137,92 @@
       :data="userList"
       @selection-change="handleSelectionChange"
     >
+      <el-table-column type="expand">
+        <template slot-scope="props">
+          <el-form label-position="left" inline class="demo-table-expand">
+            <el-form-item label="手机号">
+              <span>{{ props.row.mobile }}</span>
+            </el-form-item>
+            <el-form-item label="I茅台用户id">
+              <span>{{ props.row.userId }}</span>
+            </el-form-item>
+            <el-form-item label="备注">
+              <span>{{ props.row.remark }}</span>
+            </el-form-item>
+            <el-form-item label="i茅台token">
+              <span v-if="props.row.token">{{
+                props.row.token.substring(0, 5) + "......"
+              }}</span>
+            </el-form-item>
+            <el-form-item label="i茅台cookie">
+              <span v-if="props.row.cookie">{{
+                props.row.cookie.substring(0, 5) + "......"
+              }}</span>
+            </el-form-item>
+            <el-form-item label="pulsh推送token">
+              <span v-if="props.row.pushPlusToken">{{
+                props.row.pushPlusToken.substring(0, 5) + "......"
+              }}</span>
+            </el-form-item>
+            <el-form-item label="设备id">
+              <span>{{ props.row.deviceId }}</span>
+            </el-form-item>
+            <el-form-item label="预约项目code">
+              <span>{{ props.row.itemCode }}</span>
+            </el-form-item>
+            <el-form-item label="省份">
+              <span>{{ props.row.provinceName }}</span>
+            </el-form-item>
+            <el-form-item label="城市">
+              <span>{{ props.row.cityName }}</span>
+            </el-form-item>
+            <el-form-item label="纬度">
+              <span>{{ props.row.lat }}</span>
+            </el-form-item>
+            <el-form-item label="经度">
+              <span>{{ props.row.lng }}</span>
+            </el-form-item>
+            <el-form-item label="经度">
+              <span>{{ props.row.lng }}</span>
+            </el-form-item>
+            <el-form-item label="随机预约">
+              <dict-tag
+                :options="dict.type.sys_normal_disable"
+                :value="props.row.randomMinute"
+              />
+            </el-form-item>
+            <el-form-item label="创建时间">
+              <span>{{ props.row.createTime }}</span>
+            </el-form-item>
+            <el-form-item label="到期时间">
+              <span>{{ props.row.expireTime }}</span>
+            </el-form-item>
+            <el-form-item label="创建人">
+              <span>{{ props.row.createUser }}</span>
+            </el-form-item>
+          </el-form>
+        </template>
+      </el-table-column>
+
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="手机号" align="center" prop="mobile" />
-      <el-table-column label="I茅台用户id" align="center" prop="userId" />
-      <el-table-column label="token" align="center" prop="token">
-        <template slot-scope="scope">
-          <span v-if="scope.row.token">{{
-            scope.row.token.substring(0, 5) + "......"
-          }}</span>
-        </template>
-      </el-table-column>
+      <el-table-column label="备注" align="center" prop="remark" />
       <el-table-column label="预约项目code" align="center" prop="itemCode" />
       <el-table-column label="省份" align="center" prop="provinceName" />
-      <el-table-column label="城市" align="center" prop="cityName" />
-      <!-- <el-table-column label="完整地址" align="center" prop="address" /> -->
-      <el-table-column label="纬度" align="center" prop="lat" />
-      <el-table-column label="经度" align="center" prop="lng" />
-      <el-table-column label="类型" align="center" prop="shopType" />
-      <el-table-column label="推送token" align="center" prop="pushPlusToken">
+      <el-table-column
+        label="类型"
+        align="center"
+        prop="shopType"
+        :show-overflow-tooltip="true"
+      >
         <template slot-scope="scope">
-          <span v-if="scope.row.pushPlusToken">{{
-            scope.row.pushPlusToken.substring(0, 5) + "......"
+          <span>{{
+            scope.row.shopType == 1 ? "预约出货量最大门店" : "预约附近门店"
           }}</span>
         </template>
       </el-table-column>
+      <el-table-column label="预约执行分钟" align="center" prop="minute" />
+
       <el-table-column
         label="到期时间"
         align="center"
@@ -201,15 +244,20 @@
             type="text"
             icon="el-icon-thumb"
             @click="reservation(scope.row)"
-            v-hasPermi="['imt:user:edit']"
             >预约</el-button
+          >
+          <el-button
+            size="mini"
+            type="text"
+            icon="el-icon-thumb"
+            @click="travelReward(scope.row)"
+            >旅行</el-button
           >
           <el-button
             size="mini"
             type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
-            v-hasPermi="['imt:user:edit']"
             >修改</el-button
           >
           <el-button
@@ -217,7 +265,6 @@
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
-            v-hasPermi="['imt:user:remove']"
             >删除</el-button
           >
         </template>
@@ -234,55 +281,145 @@
 
     <!-- 添加或修改I茅台用户对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="600px" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="80px">
+      <el-form ref="form" :model="form" :rules="rules" label-width="100px">
         <el-form-item v-if="toAdd != 1" label="手机号" prop="mobile">
           <el-input v-model="form.mobile" placeholder="请输入I茅台用户手机号" />
         </el-form-item>
-        <el-form-item label="用户id" prop="userId">
-          <el-input v-model="form.userId" placeholder="请输入I茅台用户id" />
-        </el-form-item>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="备注" prop="remark">
+              <el-input v-model="form.remark" placeholder="请输入备注" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="用户id" prop="userId">
+              <el-input v-model="form.userId" placeholder="请输入I茅台用户id" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+
         <el-form-item label="toekn" prop="token">
           <el-input v-model="form.token" placeholder="请输入I茅台toekn" />
         </el-form-item>
-        <el-form-item label="预约code" prop="itemCode">
-          <el-input
-            v-model="form.itemCode"
-            placeholder="请输入商品预约code，用@间隔"
-          />
+        <el-form-item label="cookie" prop="cookie">
+          <el-input v-model="form.cookie" placeholder="请输入I茅台cookie" />
         </el-form-item>
-        <el-form-item label="省份" prop="provinceName">
-          <el-input v-model="form.provinceName" placeholder="请输入省份" />
+        <el-form-item label="设备id" prop="deviceId">
+          <el-input v-model="form.deviceId" placeholder="请输入设备id" />
         </el-form-item>
-        <el-form-item label="城市" prop="cityName">
-          <el-input v-model="form.cityName" placeholder="请输入城市" />
-        </el-form-item>
-        <el-form-item label="类型" prop="shopType">
-          <el-input
-            v-model="form.shopType"
-            placeholder="1:预约本市出货量最大的门店;2:预约你的位置(经纬度)附近门店;"
-          />
-        </el-form-item>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="预约code" prop="itemCode">
+              <!-- <el-input
+                v-model="form.itemCode"
+                placeholder="请输入商品预约code，用@间隔"
+              /> -->
+              <el-select
+                v-model="itemSelect"
+                multiple
+                placeholder="请选择"
+                @change="changeItem"
+              >
+                <el-option
+                  v-for="item in itemList"
+                  :key="item.itemCode"
+                  :label="item.title"
+                  :value="item.itemCode"
+                >
+                </el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="分钟" prop="minute">
+              <el-input
+                v-model="form.minute"
+                placeholder="预约执行的时间(单位分)，例如15分执行"
+              />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="随机时间预约" prop="randomMinute">
+              <el-select
+                style="width: 150px"
+                v-model="form.randomMinute"
+                placeholder="随机时间预约"
+              >
+                <el-option
+                  v-for="dict in dict.type.sys_normal_disable"
+                  :key="dict.value"
+                  :label="dict.label"
+                  :value="dict.value"
+                ></el-option>
+              </el-select> </el-form-item
+          ></el-col>
+          <el-col :span="12">
+            <el-form-item label="类型" prop="shopType">
+              <el-select v-model="form.shopType" placeholder="请选择">
+                <el-option
+                  v-for="item in typeOptions"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                >
+                </el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+        </el-row>
+
+        <!-- <el-row>
+          <el-col :span="12">
+            <el-form-item label="省份" prop="provinceName">
+              <el-input
+                v-model="form.provinceName"
+                placeholder="请输入省份"
+              /> </el-form-item
+          ></el-col>
+          <el-col :span="12">
+            <el-form-item label="城市" prop="cityName">
+              <el-input
+                v-model="form.cityName"
+                placeholder="请输入城市"
+              /> </el-form-item
+          ></el-col>
+        </el-row>
+
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="纬度" prop="lat">
+              <el-input v-model="form.lat" placeholder="请输入纬度" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="经度" prop="lng">
+              <el-input v-model="form.lng" placeholder="请输入经度" />
+            </el-form-item>
+          </el-col>
+        </el-row> -->
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="门店商品ID" prop="ishopId">
+              <el-input v-model="form.ishopId" placeholder="请输入门店商品ID" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="推送token" prop="pushPlusToken">
+              <el-input
+                v-model="form.pushPlusToken"
+                placeholder="请输入推送token"
+              />
+            </el-form-item>
+          </el-col>
+        </el-row>
+
         <!-- <el-form-item label="完整地址" prop="address">
           <el-input v-model="form.address" placeholder="请输入完整地址" />
         </el-form-item> -->
-        <el-form-item label="纬度" prop="lat">
-          <el-input v-model="form.lat" placeholder="请输入纬度" />
-        </el-form-item>
-        <el-form-item label="经度" prop="lng">
-          <el-input v-model="form.lng" placeholder="请输入经度" />
-        </el-form-item>
-        <el-form-item label="推送token" prop="jsonResult">
-          <el-input v-model="form.pushPlusToken" placeholder="请输入内容" />
-        </el-form-item>
+
         <el-form-item label="到期时间" prop="expireTime">
-          <!-- <el-date-picker
-            clearable
-            v-model="form.expireTime"
-            type="date"
-            value-format="yyyy-MM-dd"
-            placeholder="请选择到期时间"
-          >
-          </el-date-picker> -->
           <el-date-picker
             v-model="form.expireTime"
             type="datetime"
@@ -304,7 +441,7 @@
       width="500px"
       append-to-body
     >
-      <el-form ref="form" :model="form" label-width="80px">
+      <el-form ref="form" :model="form">
         <el-form-item label="手机号" prop="mobile">
           <el-input v-model="form.mobile" placeholder="请输入I茅台用户手机号" />
           <div style="margin-top: 10px">
@@ -338,10 +475,14 @@ import {
   sendCode,
   login,
   reservation,
+  travelReward,
 } from "@/api/imt/user";
+
+import { listItem } from "@/api/imt/item";
 
 export default {
   name: "User",
+  dicts: ["sys_normal_disable"],
   data() {
     return {
       // 遮罩层
@@ -373,6 +514,7 @@ export default {
         userId: null,
         token: null,
         itemCode: null,
+        deviceId: null,
         provinceName: null,
         cityName: null,
         address: null,
@@ -392,12 +534,47 @@ export default {
       },
       //0:新增，1:修改
       toAdd: 0,
+      typeOptions: [
+        {
+          value: 1,
+          label: "预约本市出货量最大的门店",
+        },
+        {
+          value: 2,
+          label: "预约你的位置(经纬度)附近门店",
+        },
+      ],
+      // I茅台预约商品列表格数据
+      itemList: [],
+      //选择的数据
+      itemSelect: [],
     };
   },
   created() {
     this.getList();
+    listItem().then((response) => {
+      this.itemList = response.data;
+    });
+    console.log(this.guid());
   },
   methods: {
+    //item下拉框选择
+    changeItem(e) {
+      this.form.itemCode = "";
+      this.itemSelect.forEach((e) => {
+        this.form.itemCode += e + "@";
+      });
+    },
+    guid() {
+      return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(
+        /[xy]/g,
+        function (c) {
+          var r = (Math.random() * 16) | 0,
+            v = c == "x" ? r : (r & 0x3) | 0x8;
+          return v.toString(16);
+        }
+      );
+    },
     /** 查询I茅台用户列表 */
     getList() {
       this.loading = true;
@@ -430,7 +607,13 @@ export default {
         shopType: null,
         jsonResult: null,
         createTime: null,
+        minute: 5,
+        shopType: 1,
+        ishopId: null,
+        randomMinute: "0",
+        remark: null,
         expireTime: null,
+        pushPlusToken: null,
       };
       this.resetForm("form");
     },
@@ -457,6 +640,7 @@ export default {
       this.open = true;
       this.title = "添加I茅台用户";
       this.toAdd = 0;
+      this.itemSelect = [];
     },
     handleAddIUser() {
       this.reset();
@@ -471,12 +655,33 @@ export default {
         this.form = response.data;
         this.open = true;
         this.title = "修改I茅台用户";
+        this.itemSelect = [];
+        if (
+          this.form.itemCode.indexOf("@") == -1 &&
+          this.form.itemCode !== ""
+        ) {
+          this.itemSelect.push(this.form.itemCode);
+        } else {
+          let arr = this.form.itemCode.split("@");
+          arr.forEach((e) => {
+            if (e !== "") {
+              this.itemSelect.push(e);
+            }
+          });
+        }
       });
     },
     //预约
     reservation(row) {
       const mobile = row.mobile || this.ids;
       reservation(mobile).then((response) => {
+        this.$modal.msgSuccess("请求成功，结果看日志");
+      });
+    },
+    //小茅运旅行活动
+    travelReward(row) {
+      const mobile = row.mobile || this.ids;
+      travelReward(mobile).then((response) => {
         this.$modal.msgSuccess("请求成功，结果看日志");
       });
     },
@@ -502,14 +707,17 @@ export default {
     },
     //发生验证码
     sendCode(mobile) {
-      sendCode(mobile).then((response) => {
+      this.form.deviceId = this.guid();
+      sendCode(mobile, this.form.deviceId).then((response) => {
         this.$modal.msgSuccess("发送成功");
       });
     },
     //登录
     login(mobile, code) {
-      login(mobile, code).then((response) => {
+      login(mobile, code, this.form.deviceId).then((response) => {
         this.$modal.msgSuccess("登录成功");
+        this.open = false;
+        this.openUser = false;
         this.getList();
       });
     },
@@ -530,3 +738,17 @@ export default {
   },
 };
 </script>
+<style>
+.demo-table-expand {
+  font-size: 0;
+}
+.demo-table-expand label {
+  width: 120px;
+  color: #99a9bf;
+}
+.demo-table-expand .el-form-item {
+  margin-right: 0;
+  margin-bottom: 0;
+  width: 50%;
+}
+</style>

@@ -18,6 +18,9 @@ import com.oddfar.campus.framework.service.SysUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.HashSet;
+import java.util.Set;
+
 /**
  * 注册校验方法
  */
@@ -31,6 +34,9 @@ public class SysRegisterService {
 
     @Autowired
     private RedisCache redisCache;
+
+    @Autowired
+    private SysPermissionService permissionService;
 
     /**
      * 注册
@@ -56,7 +62,7 @@ public class SysRegisterService {
         } else if (password.length() < UserConstants.PASSWORD_MIN_LENGTH
                 || password.length() > UserConstants.PASSWORD_MAX_LENGTH) {
             msg = "密码长度必须在5到20个字符之间";
-        } else if (UserConstants.NOT_UNIQUE.equals(userService.checkUserNameUnique(sysUser))) {
+        } else if (!(userService.checkUserNameUnique(sysUser))) {
             msg = "保存用户'" + username + "'失败，注册账号已存在";
         } else {
             sysUser.setNickName(username);
@@ -65,7 +71,15 @@ public class SysRegisterService {
             if (!regFlag) {
                 msg = "注册失败,请联系系统管理人员";
             } else {
-                //注册失败异步记录信息
+                //注册成功
+                //添加 imaotai 角色
+                SysUserEntity userEntity = userService.selectUserByUserName(username);
+                Set<String> roleSet = new HashSet<>();
+                roleSet.add("imaotai");
+                userService.insertUserAuth(userEntity.getUserId(), roleSet);
+                //更新redis缓存
+                permissionService.resetUserRoleAuthCache(userEntity.getUserId());
+
                 AsyncManager.me().execute(AsyncFactory.recordLogininfor(username, null, Constants.REGISTER, MessageUtils.message("user.register.success")));
             }
         }

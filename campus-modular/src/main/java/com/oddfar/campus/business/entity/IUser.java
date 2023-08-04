@@ -5,13 +5,13 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.oddfar.campus.common.domain.BaseEntity;
 import com.oddfar.campus.common.utils.StringUtils;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * I茅台用户对象 i_user
@@ -20,8 +20,9 @@ import java.util.Map;
  * @date 2023-07-02
  */
 @Data
+@EqualsAndHashCode(callSuper = true)
 @TableName("i_user")
-public class IUser {
+public class IUser extends BaseEntity {
     private static final long serialVersionUID = 1L;
 
     /**
@@ -41,9 +42,24 @@ public class IUser {
     private String token;
 
     /**
+     * cookie
+     */
+    private String cookie;
+
+    /**
+     * 设备id
+     */
+    private String deviceId;
+
+    /**
      * 商品预约code，用@间隔
      */
     private String itemCode;
+
+    /**
+     * 门店商品ID
+     */
+    private String ishopId;
 
     /**
      * 省份
@@ -71,6 +87,16 @@ public class IUser {
     private String lng;
 
     /**
+     * 预约的分钟（1-59）
+     */
+    private int minute;
+
+    /**
+     * 随机分钟预约，9点取一个时间（0:随机，1:不随机）
+     */
+    private String randomMinute;
+
+    /**
      * 类型
      */
     private int shopType;
@@ -83,13 +109,13 @@ public class IUser {
     /**
      * 返回参数
      */
+    @JsonIgnore
     private String jsonResult;
 
     /**
-     * 创建时间
+     * 备注
      */
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-    private Date createTime;
+    private String remark;
 
     /**
      * token过期时间
@@ -101,16 +127,22 @@ public class IUser {
     private Map<String, Object> params;
 
     public IUser() {
+
     }
 
-    public IUser(Long mobile, JSONObject jsonObject) {
+    public IUser(Long mobile, String deviceId, JSONObject jsonObject) {
         JSONObject data = jsonObject.getJSONObject("data");
         this.userId = data.getLong("userId");
         this.mobile = mobile;
         this.token = data.getString("token");
+        this.cookie = data.getString("cookie");
+        this.deviceId = deviceId.toUpperCase();
         this.jsonResult = StringUtils.substring(jsonObject.toJSONString(), 0, 2000);
 
-        this.createTime = new Date();
+        if (StringUtils.isEmpty(this.remark)) {
+            this.remark = data.getString("userName");
+        }
+
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.DAY_OF_MONTH, 30);
         Date thirtyDaysLater = calendar.getTime();
@@ -123,4 +155,12 @@ public class IUser {
         }
         return params;
     }
+
+    public int getMinute() {
+        if (minute > 59 || minute < 1) {
+            this.minute = 5;
+        }
+        return minute;
+    }
+
 }

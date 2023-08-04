@@ -5,6 +5,7 @@ import com.oddfar.campus.common.domain.entity.SysRoleEntity;
 import com.oddfar.campus.common.domain.entity.SysUserEntity;
 import com.oddfar.campus.common.domain.entity.SysUserRoleEntity;
 import com.oddfar.campus.common.exception.ServiceException;
+import com.oddfar.campus.common.utils.SecurityUtils;
 import com.oddfar.campus.common.utils.StringUtils;
 import com.oddfar.campus.framework.api.sysconfig.ConfigExpander;
 import com.oddfar.campus.framework.mapper.SysRoleMapper;
@@ -97,6 +98,7 @@ public class SysUserServiceImpl implements SysUserService {
                 && !(checkEmailUnique(user))) {
             throw new ServiceException("新增用户'" + user.getUserName() + "'失败，邮箱账号已存在");
         }
+        user.setPassword(SecurityUtils.encryptPassword(user.getPassword()));
         // 新增用户信息
         int rows = userMapper.insert(user);
         // 新增用户与角色管理

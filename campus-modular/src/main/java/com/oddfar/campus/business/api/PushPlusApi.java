@@ -1,8 +1,8 @@
 package com.oddfar.campus.business.api;
 
 import cn.hutool.http.HttpUtil;
+import com.oddfar.campus.business.entity.ILog;
 import com.oddfar.campus.business.entity.IUser;
-import com.oddfar.campus.common.domain.entity.SysOperLogEntity;
 import com.oddfar.campus.common.utils.StringUtils;
 import com.oddfar.campus.framework.manager.AsyncManager;
 
@@ -16,7 +16,7 @@ import java.util.TimerTask;
 public class PushPlusApi {
 
 
-    public static void sendNotice(IUser iUser, SysOperLogEntity operLog) {
+    public static void sendNotice(IUser iUser, ILog operLog) {
         String token = iUser.getPushPlusToken();
         if (StringUtils.isEmpty(token)) {
             return;
@@ -24,13 +24,13 @@ public class PushPlusApi {
         String title, content;
         if (operLog.getStatus() == 0) {
             //预约成功
-            title = iUser.getMobile() + "-i茅台预约成功";
-            content = operLog.getJsonResult();
-            AsyncManager.me().execute(sendNotice(token, title, content, "json"));
+            title = iUser.getRemark() + "-i茅台执行成功";
+            content = iUser.getMobile() + System.lineSeparator() + operLog.getLogContent();
+            AsyncManager.me().execute(sendNotice(token, title, content, "txt"));
         } else {
             //预约失败
-            title = iUser.getMobile() + "-i茅台预约失败";
-            content = title;
+            title = iUser.getRemark() + "-i茅台执行失败";
+            content = iUser.getMobile() + System.lineSeparator() + operLog.getLogContent();
             AsyncManager.me().execute(sendNotice(token, title, content, "txt"));
         }
 

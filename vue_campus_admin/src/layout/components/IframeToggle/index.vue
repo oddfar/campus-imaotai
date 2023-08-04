@@ -11,14 +11,18 @@
 </template>
 
 <script>
-import InnerLink from "../InnerLink/index"
+import InnerLink from "../InnerLink/index";
 
 export default {
   components: { InnerLink },
   computed: {
     iframeViews() {
-      return this.$store.state.tagsView.iframeViews
-    }
-  }
-}
+      return this.$store.state.tagsView.iframeViews;
+    },
+  },
+  created() {
+   
+  },
+
+};
 </script>
