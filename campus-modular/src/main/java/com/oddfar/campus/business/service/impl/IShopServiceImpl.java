@@ -144,11 +144,13 @@ public class IShopServiceImpl implements IShopService {
         try {
             res = JSONObject.parseObject(urlRes);
         } catch (JSONException jsonException) {
+            logger.info(url);
             throw new ServiceException("查询所在省市的投放产品和数量error，" + province + "-" + itemId);
         }
 
 //        JSONObject res = JSONObject.parseObject(HttpUtil.get(url));
         if (!res.containsKey("code") || !res.getString("code").equals("2000")) {
+            logger.info(url);
             logger.error("查询所在省市的投放产品和数量error，" + province + "-" + itemId);
             throw new ServiceException("查询所在省市的投放产品和数量error，" + province + "-" + itemId);
         }

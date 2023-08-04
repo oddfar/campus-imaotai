@@ -120,6 +120,10 @@ public class IUserController {
         if (iShop == null) {
             throw new ServiceException("门店商品id不存在");
         }
+        iUser.setLng(iShop.getLng());
+        iUser.setLat(iShop.getLat());
+        iUser.setProvinceName(iShop.getProvinceName());
+        iUser.setCityName(iShop.getCityName());
 
         return R.ok(iUserService.insertIUser(iUser));
     }
@@ -134,6 +138,10 @@ public class IUserController {
         if (iShop == null) {
             throw new ServiceException("门店商品id不存在");
         }
+        iUser.setLng(iShop.getLng());
+        iUser.setLat(iShop.getLat());
+        iUser.setProvinceName(iShop.getProvinceName());
+        iUser.setCityName(iShop.getCityName());
         return R.ok(iUserService.updateIUser(iUser));
     }
 
