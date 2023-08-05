@@ -65,4 +65,12 @@ public interface IMTService {
      * 刷新版本号，预约item，门店shop列表，
      */
     void refreshAll();
+
+    /**
+     * 每日预约申购结果
+     */
+    void appointmentResults();
+
+
+
 }

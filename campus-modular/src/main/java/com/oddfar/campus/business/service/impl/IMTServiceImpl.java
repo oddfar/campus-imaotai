@@ -1,6 +1,7 @@
 package com.oddfar.campus.business.service.impl;
 
 import cn.hutool.core.convert.Convert;
+import cn.hutool.core.date.DateUnit;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.crypto.Mode;
 import cn.hutool.crypto.Padding;
@@ -454,6 +455,38 @@ public class IMTServiceImpl implements IMTService {
         refreshMTVersion();
         iShopService.refreshShop();
         iShopService.refreshItem();
+    }
+
+    @Override
+    public void appointmentResults() {
+        List<IUser> iUsers = iUserService.selectReservationUser();
+        for (IUser iUser : iUsers) {
+            try {
+                String url = "https://app.moutai519.com.cn/xhr/front/mall/reservation/list/pageOne/query";
+                String body = HttpUtil.createRequest(Method.GET, url)
+                        .header("MT-Device-ID", iUser.getDeviceId())
+                        .header("MT-APP-Version", getMTVersion())
+                        .header("MT-Token", iUser.getToken())
+                        .header("User-Agent", "iOS;16.3;Apple;?unrecognized?").execute().body();
+                JSONObject jsonObject = JSONObject.parseObject(body);
+                if (jsonObject.getInteger("code") != 2000) {
+                    String message = jsonObject.getString("message");
+                    throw new ServiceException(message);
+                }
+                for (Object itemVOs : jsonObject.getJSONObject("data").getJSONArray("reservationItemVOS")) {
+                    JSONObject item = JSON.parseObject(itemVOs.toString());
+                    // 预约时间在24小时内的
+                    if (item.getInteger("status") == 2 || DateUtil.between(item.getDate("reservationTime"), new Date(), DateUnit.HOUR) < 24) {
+                        String logContent = DateUtil.formatDate(item.getDate("reservationTime")) + " 申购" + item.getString("itemName") + "成功";
+                        IMTLogFactory.reservation(iUser, logContent);
+                    }
+
+                }
+            } catch (Exception e) {
+                logger.error("查询申购结果失败:失败原因{}", e.getMessage());
+            }
+
+        }
     }
 
     public JSONObject reservation(IUser iUser, String itemId, String shopId) {
