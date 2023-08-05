@@ -459,6 +459,7 @@ public class IMTServiceImpl implements IMTService {
 
     @Override
     public void appointmentResults() {
+        logger.info("申购结果查询开始=========================");
         List<IUser> iUsers = iUserService.selectReservationUser();
         for (IUser iUser : iUsers) {
             try {
@@ -476,7 +477,7 @@ public class IMTServiceImpl implements IMTService {
                 for (Object itemVOs : jsonObject.getJSONObject("data").getJSONArray("reservationItemVOS")) {
                     JSONObject item = JSON.parseObject(itemVOs.toString());
                     // 预约时间在24小时内的
-                    if (item.getInteger("status") == 2 || DateUtil.between(item.getDate("reservationTime"), new Date(), DateUnit.HOUR) < 24) {
+                    if (item.getInteger("status") == 2 && DateUtil.between(item.getDate("reservationTime"), new Date(), DateUnit.HOUR) < 24) {
                         String logContent = DateUtil.formatDate(item.getDate("reservationTime")) + " 申购" + item.getString("itemName") + "成功";
                         IMTLogFactory.reservation(iUser, logContent);
                     }
@@ -487,6 +488,7 @@ public class IMTServiceImpl implements IMTService {
             }
 
         }
+        logger.info("申购结果查询结束=========================");
     }
 
     public JSONObject reservation(IUser iUser, String itemId, String shopId) {
