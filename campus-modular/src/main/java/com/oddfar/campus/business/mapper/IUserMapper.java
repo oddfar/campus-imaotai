@@ -70,4 +70,5 @@ public interface IUserMapper extends BaseMapperX<IUser> {
     @Select("UPDATE i_user SET `minute` = (SELECT FLOOR(RAND() * 59 + 1)) WHERE random_minute = \"0\"")
     void updateUserMinuteBatch();
 
+    int deleteIUser(Long[] iUserId);
 }

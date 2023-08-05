@@ -62,5 +62,5 @@ public interface IUserService {
      * @param iUserId id
      * @return
      */
-    int deleteIUser(Long iUserId);
+    int deleteIUser(Long[] iUserId);
 }

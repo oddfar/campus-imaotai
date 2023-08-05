@@ -34,7 +34,7 @@ public class IUserServiceImpl implements IUserService {
     public int insertIUser(Long mobile, String deviceId, JSONObject jsonObject) {
         JSONObject data = jsonObject.getJSONObject("data");
         if (StringUtils.isEmpty(deviceId)) {
-            deviceId = UUID.randomUUID().toString().toUpperCase();
+            deviceId = UUID.randomUUID().toString().toLowerCase();
         }
         IUser user = iUserMapper.selectById(mobile);
 
@@ -73,7 +73,7 @@ public class IUserServiceImpl implements IUserService {
         }
 
         if (StringUtils.isEmpty(iUser.getDeviceId())) {
-            iUser.setDeviceId(UUID.randomUUID().toString().toUpperCase());
+            iUser.setDeviceId(UUID.randomUUID().toString().toLowerCase());
         }
         iUser.setCreateUser(SecurityUtils.getUserId());
         return iUserMapper.insert(iUser);
@@ -94,7 +94,7 @@ public class IUserServiceImpl implements IUserService {
     }
 
     @Override
-    public int deleteIUser(Long iUserId) {
-        return iUserMapper.deleteById(iUserId);
+    public int deleteIUser(Long[] iUserId) {
+        return iUserMapper.deleteIUser(iUserId);
     }
 }

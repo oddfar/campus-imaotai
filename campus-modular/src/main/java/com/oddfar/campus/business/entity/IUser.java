@@ -136,7 +136,7 @@ public class IUser extends BaseEntity {
         this.mobile = mobile;
         this.token = data.getString("token");
         this.cookie = data.getString("cookie");
-        this.deviceId = deviceId.toUpperCase();
+        this.deviceId = deviceId.toLowerCase();
         this.jsonResult = StringUtils.substring(jsonObject.toJSONString(), 0, 2000);
 
         if (StringUtils.isEmpty(this.remark)) {

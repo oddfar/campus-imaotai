@@ -15,8 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Arrays;
-
 /**
  * I茅台用户Controller
  *
@@ -151,6 +149,6 @@ public class IUserController {
     @PreAuthorize("@ss.resourceAuth()")
     @DeleteMapping(value = "/{mobiles}", name = "删除I茅台用户")
     public R remove(@PathVariable Long[] mobiles) {
-        return R.ok(iUserMapper.deleteBatchIds(Arrays.asList(mobiles)));
+        return R.ok(iUserMapper.deleteIUser(mobiles));
     }
 }
