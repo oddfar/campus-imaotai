@@ -457,7 +457,7 @@
               type="primary"
               @click="sendCode(form.mobile)"
               :disabled="state"
-            >发送验证码<span v-if="state">({{ stateNum }})</span>
+              >发送验证码<span v-if="state">({{ stateNum }})</span>
             </el-button>
           </div>
         </el-form-item>
@@ -487,22 +487,21 @@
               type="primary"
               @click="sendCode(form.mobile, form.deviceId)"
               :disabled="state"
-            >发送验证码<span v-if="state">({{ stateNum }})</span>
+              >发送验证码<span v-if="state">({{ stateNum }})</span>
             </el-button>
           </div>
         </el-form-item>
 
         <el-form-item label="验证码" prop="code">
-          <el-input v-model="form.code" placeholder="请输入验证码"/>
+          <el-input v-model="form.code" placeholder="请输入验证码" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button
           type="primary"
           @click="refresh(form.mobile, form.code, form.deviceId, 1)"
-        >刷 新
-        </el-button
-        >
+          >刷 新
+        </el-button>
         <el-button @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
@@ -603,7 +602,6 @@ export default {
     listItem().then((response) => {
       this.itemList = response.data;
     });
-    console.log(this.guid());
   },
   methods: {
     //item下拉框选择
@@ -756,7 +754,11 @@ export default {
     },
     //发生验证码
     sendCode(mobile, deviceId) {
-      this.form.deviceId = deviceId == "" ? this.guid() : deviceId;
+      if (deviceId == undefined || deviceId == "") {
+        this.form.deviceId = this.guid();
+      } else {
+        this.form.deviceId = deviceId;
+      }
       sendCode(mobile, this.form.deviceId).then((response) => {
         this.$modal.msgSuccess("发送成功");
         this.state = true;
@@ -771,7 +773,7 @@ export default {
     },
     //登录
     login(mobile, code) {
-      this.refresh(mobile, code, this.form.deviceId, 0)
+      this.refresh(mobile, code, this.form.deviceId, 0);
     },
     /** 删除按钮操作 */
     handleDelete(row) {
