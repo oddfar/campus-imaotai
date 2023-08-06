@@ -33,18 +33,19 @@ public class IUserServiceImpl implements IUserService {
     @Override
     public int insertIUser(Long mobile, String deviceId, JSONObject jsonObject) {
         JSONObject data = jsonObject.getJSONObject("data");
-        if (StringUtils.isEmpty(deviceId)) {
-            deviceId = UUID.randomUUID().toString().toLowerCase();
-        }
+
         IUser user = iUserMapper.selectById(mobile);
 
         if (user != null) {
             //存在则更新
-            IUser iUser = new IUser(mobile, deviceId, jsonObject);
+            IUser iUser = new IUser(mobile, jsonObject);
             iUser.setCreateUser(SecurityUtils.getUserId());
             BeanUtil.copyProperties(iUser, user);
             return iUserMapper.updateById(user);
         } else {
+            if (StringUtils.isEmpty(deviceId)) {
+                deviceId = UUID.randomUUID().toString().toLowerCase();
+            }
             IUser iUser = new IUser(mobile, deviceId, jsonObject);
             iUser.setCreateUser(SecurityUtils.getUserId());
             return iUserMapper.insert(iUser);

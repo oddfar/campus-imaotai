@@ -15,6 +15,7 @@ import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import com.oddfar.campus.business.entity.IUser;
 import com.oddfar.campus.business.mapper.IShopMapper;
+import com.oddfar.campus.business.mapper.IUserMapper;
 import com.oddfar.campus.business.service.IMTLogFactory;
 import com.oddfar.campus.business.service.IMTService;
 import com.oddfar.campus.business.service.IShopService;
@@ -46,7 +47,9 @@ public class IMTServiceImpl implements IMTService {
     private static final Logger logger = LoggerFactory.getLogger(IMTServiceImpl.class);
 
     @Autowired
-    IShopMapper iShopMapper;
+    private IShopMapper iShopMapper;
+    @Autowired
+    private IUserMapper iUserMapper;
 
     @Autowired
     private RedisCache redisCache;
@@ -147,7 +150,10 @@ public class IMTServiceImpl implements IMTService {
 
         HttpRequest request = HttpUtil.createRequest(Method.POST,
                 "https://app.moutai519.com.cn/xhr/front/user/register/login");
-
+        IUser user = iUserMapper.selectById(mobile);
+        if (user != null) {
+            deviceId = user.getDeviceId();
+        }
         request.header("MT-Device-ID", deviceId);
         request.header("MT-APP-Version", getMTVersion());
         request.header("User-Agent", "iOS;16.3;Apple;?unrecognized?");
@@ -163,7 +169,7 @@ public class IMTServiceImpl implements IMTService {
             return true;
         } else {
             logger.error("「登录请求-失败」" + body.toJSONString());
-            throw new ServiceException("登录失败，日志已记录");
+            throw new ServiceException("登录失败，本地错误日志已记录");
 //            return false;
         }
 

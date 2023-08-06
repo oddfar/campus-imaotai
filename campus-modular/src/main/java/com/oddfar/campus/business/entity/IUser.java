@@ -130,6 +130,24 @@ public class IUser extends BaseEntity {
 
     }
 
+    public IUser(Long mobile, JSONObject jsonObject) {
+        JSONObject data = jsonObject.getJSONObject("data");
+        this.userId = data.getLong("userId");
+        this.mobile = mobile;
+        this.token = data.getString("token");
+        this.cookie = data.getString("cookie");
+        this.jsonResult = StringUtils.substring(jsonObject.toJSONString(), 0, 2000);
+
+        if (StringUtils.isEmpty(this.remark)) {
+            this.remark = data.getString("userName");
+        }
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.DAY_OF_MONTH, 30);
+        Date thirtyDaysLater = calendar.getTime();
+        this.expireTime = thirtyDaysLater;
+    }
+
     public IUser(Long mobile, String deviceId, JSONObject jsonObject) {
         JSONObject data = jsonObject.getJSONObject("data");
         this.userId = data.getLong("userId");

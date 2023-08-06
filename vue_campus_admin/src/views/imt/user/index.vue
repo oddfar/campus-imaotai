@@ -793,6 +793,7 @@ export default {
         this.$modal.msgSuccess(msg);
         this.open = false;
         this.openUser = false;
+        this.refreshToken = false;
         this.getList();
       });
     },
