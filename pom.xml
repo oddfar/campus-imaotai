@@ -6,7 +6,7 @@
 
     <groupId>com.oddfar.campus</groupId>
     <artifactId>campus</artifactId>
-    <version>1.1.3</version>
+    <version>1.0.6</version>
     <packaging>pom</packaging>
 
     <name>campus</name>
@@ -21,7 +21,7 @@
     </modules>
 
     <properties>
-        <campus.version>1.1.3</campus.version>
+        <campus.version>1.0.6</campus.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>1.8</java.version>
         <bitwalker.version>1.21</bitwalker.version>
