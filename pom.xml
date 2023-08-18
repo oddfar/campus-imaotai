@@ -6,7 +6,7 @@
 
     <groupId>com.oddfar.campus</groupId>
     <artifactId>campus</artifactId>
-    <version>1.0.6</version>
+    <version>${revision}</version>
     <packaging>pom</packaging>
 
     <name>campus</name>
@@ -21,7 +21,7 @@
     </modules>
 
     <properties>
-        <campus.version>1.0.6</campus.version>
+        <revision>1.0.7</revision>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>1.8</java.version>
         <bitwalker.version>1.21</bitwalker.version>
@@ -36,6 +36,8 @@
         <poi.version>4.1.2</poi.version>
         <pagehelper.boot.version>1.4.3</pagehelper.boot.version>
         <sunmail.version>1.6.2</sunmail.version>
+        <!-- 插件版本 -->
+        <flatten-maven-plugin.version>1.3.0</flatten-maven-plugin.version>
     </properties>
 
     <!-- 依赖声明 -->
@@ -149,19 +151,19 @@
             <dependency>
                 <groupId>com.oddfar.campus</groupId>
                 <artifactId>campus-common</artifactId>
-                <version>${campus.version}</version>
+                <version>${revision}</version>
             </dependency>
             <!-- 系统模块-->
             <dependency>
                 <groupId>com.oddfar.campus</groupId>
                 <artifactId>campus-framework</artifactId>
-                <version>${campus.version}</version>
+                <version>${revision}</version>
             </dependency>
             <!--后台管理-->
             <dependency>
                 <groupId>com.oddfar.campus</groupId>
                 <artifactId>campus-admin</artifactId>
-                <version>${campus.version}</version>
+                <version>${revision}</version>
             </dependency>
         </dependencies>
 
@@ -179,7 +181,39 @@
                     <encoding>${project.build.sourceEncoding}</encoding>
                 </configuration>
             </plugin>
+            <!-- 统一版本号管理 -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>flatten-maven-plugin</artifactId>
+                <version>${flatten-maven-plugin.version}</version>
+                <configuration>
+                    <updatePomFile>true</updatePomFile>
+                    <flattenMode>resolveCiFriendliesOnly</flattenMode>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>flatten</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>flatten</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>flatten.clean</id>
+                        <phase>clean</phase>
+                        <goals>
+                            <goal>clean</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
     </build>
 
 
