@@ -6,7 +6,6 @@ import com.oddfar.campus.common.core.LambdaQueryWrapperX;
 import com.oddfar.campus.common.domain.PageResult;
 import org.apache.ibatis.annotations.Select;
 
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -43,7 +42,7 @@ public interface IUserMapper extends BaseMapperX<IUser> {
 
     default List<IUser> selectReservationUser() {
         return selectList(new LambdaQueryWrapperX<IUser>()
-                .gt(IUser::getExpireTime, new Date())
+//                .gt(IUser::getExpireTime, new Date())
                 .ne(IUser::getLat, "")
                 .ne(IUser::getLng, "")
                 .ne(IUser::getShopType, "")
@@ -59,7 +58,7 @@ public interface IUserMapper extends BaseMapperX<IUser> {
     default List<IUser> selectReservationUserByMinute(int minute) {
         return selectList(new LambdaQueryWrapperX<IUser>()
                 .eq(IUser::getMinute, minute)
-                .gt(IUser::getExpireTime, new Date())
+//                .gt(IUser::getExpireTime, new Date())
                 .ne(IUser::getLat, "")
                 .ne(IUser::getLng, "")
                 .ne(IUser::getShopType, "")
@@ -67,7 +66,7 @@ public interface IUserMapper extends BaseMapperX<IUser> {
         );
     }
 
-    @Select("UPDATE i_user SET `minute` = (SELECT FLOOR(RAND() * 59 + 1)) WHERE random_minute = \"0\"")
+    @Select("UPDATE i_user SET `minute` = (SELECT FLOOR(RAND() * 50 + 1)) WHERE random_minute = \"0\"")
     void updateUserMinuteBatch();
 
     int deleteIUser(Long[] iUserId);
