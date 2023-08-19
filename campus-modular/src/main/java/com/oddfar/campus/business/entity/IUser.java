@@ -97,7 +97,7 @@ public class IUser extends BaseEntity {
     private String randomMinute;
 
     /**
-     * 类型
+     * 类型(1：预约本市出货量最大的门店，2：预约你的位置附近门店)
      */
     private int shopType;
 

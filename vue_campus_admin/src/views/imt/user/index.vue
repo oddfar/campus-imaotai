@@ -651,7 +651,6 @@ export default {
         address: null,
         lat: null,
         lng: null,
-        shopType: null,
         jsonResult: null,
         createTime: null,
         minute: 5,

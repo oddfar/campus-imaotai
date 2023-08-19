@@ -63,12 +63,15 @@ public class IUserController {
     @PreAuthorize("@ss.resourceAuth()")
     public R reservation(String mobile) {
         IUser user = iUserMapper.selectById(mobile);
-        if (user == null || StringUtils.isEmpty(user.getItemCode())) {
-            return R.error("用户不存在或配置不对");
-        } else {
-            imtService.reservation(user);
-            return R.ok();
+        if (user == null) {
+            return R.error("用户不存在");
         }
+        if (StringUtils.isEmpty(user.getItemCode())) {
+            return R.error("商品预约code为空");
+        }
+
+        imtService.reservation(user);
+        return R.ok();
     }
 
     /**

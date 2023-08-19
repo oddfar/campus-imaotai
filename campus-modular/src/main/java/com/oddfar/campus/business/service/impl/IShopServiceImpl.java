@@ -129,7 +129,13 @@ public class IShopServiceImpl implements IShopService {
 
     @Override
     public IShop selectByIShopId(String iShopId) {
-        return iShopMapper.selectOne(IShop::getIShopId,iShopId);
+        List<IShop> iShopList = iShopMapper.selectList("i_shop_id", iShopId);
+        if (iShopList != null && iShopList.size() > 0) {
+            return iShopList.get(0);
+        } else {
+            return null;
+        }
+//        return iShopMapper.selectOne(IShop::getIShopId, iShopId);
     }
 
     @Override
@@ -198,15 +204,18 @@ public class IShopServiceImpl implements IShopService {
                 //本市没有则预约本省最近的
                 shopId = getMinDistanceShopId(list, province, lat, lng);
             }
-        }
-
-        if (shopType == 2) {
-            // 预约本省距离最近的门店
+        } else {
+            //预约本省距离最近的门店
             shopId = getMinDistanceShopId(list, province, lat, lng);
         }
 
-        if (StringUtils.isEmpty(shopId)){
+//        if (shopType == 2) {
+//            // 预约本省距离最近的门店
+//            shopId = getMinDistanceShopId(list, province, lat, lng);
+//        }
 
+        if (StringUtils.isEmpty(shopId)) {
+            throw new ServiceException("申购时根据类型获取的门店商品id为空");
         }
 
 
