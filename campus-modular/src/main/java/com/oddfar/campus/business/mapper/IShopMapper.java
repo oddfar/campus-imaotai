@@ -4,7 +4,10 @@ import com.oddfar.campus.business.entity.IShop;
 import com.oddfar.campus.common.core.BaseMapperX;
 import com.oddfar.campus.common.core.LambdaQueryWrapperX;
 import com.oddfar.campus.common.domain.PageResult;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Update;
+
+import java.util.List;
 
 /**
  * I茅台商品Mapper接口
@@ -30,4 +33,11 @@ public interface IShopMapper extends BaseMapperX<IShop> {
         );
 
     }
+
+    /**
+     * 批量插入
+     *
+     * @param shopList 购物清单
+     */
+    void inserts(@Param("shopList") List<IShop> shopList);
 }

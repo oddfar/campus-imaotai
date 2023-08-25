@@ -3,4 +3,23 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.oddfar.campus.business.mapper.IShopMapper">
 
+    <!-- 通用查询结果列 -->
+    <sql id="baseColumnList">
+        shop_id, i_shop_id, province_name, city_name, district_name, full_address, lat, lng, name, tenant_name, create_time
+    </sql>
+
+    <!-- 添加多条数据 -->
+    <insert id="inserts" parameterType="java.util.List" >
+        INSERT INTO i_shop
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            shop_id, i_shop_id, province_name, city_name, district_name, full_address, lat, lng, name, tenant_name, create_time,
+        </trim>
+        VALUES
+        <foreach collection="list" item="item" separator="," >
+            <trim prefix="(" suffix=")" suffixOverrides="," >
+                #{item.shopId}, #{item.iShopId}, #{item.provinceName}, #{item.cityName}, #{item.districtName}, #{item.fullAddress}, #{item.lat}, #{item.lng}, #{item.name}, #{item.tenantName}, #{item.createTime},
+            </trim>
+        </foreach>
+    </insert>
+
 </mapper>
