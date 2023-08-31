@@ -1,11 +1,12 @@
 package com.oddfar.campus.business.service;
 
+import com.baomidou.mybatisplus.extension.service.IService;
 import com.oddfar.campus.business.domain.IMTItemInfo;
 import com.oddfar.campus.business.entity.IShop;
 
 import java.util.List;
 
-public interface IShopService {
+public interface IShopService extends IService<IShop> {
 
     List<IShop> selectShopList();
 

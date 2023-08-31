@@ -1,13 +1,13 @@
 package com.oddfar.campus.business.service.impl;
 
 import cn.hutool.core.convert.Convert;
-import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpUtil;
 import cn.hutool.http.Method;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONException;
 import com.alibaba.fastjson2.JSONObject;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.oddfar.campus.business.domain.IMTItemInfo;
 import com.oddfar.campus.business.domain.MapPoint;
 import com.oddfar.campus.business.entity.IItem;
@@ -32,7 +32,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
-public class IShopServiceImpl implements IShopService {
+public class IShopServiceImpl extends ServiceImpl<IShopMapper, IShop> implements IShopService {
 
     private static final Logger logger = LoggerFactory.getLogger(IShopServiceImpl.class);
 
@@ -47,18 +47,17 @@ public class IShopServiceImpl implements IShopService {
     @Override
     public List<IShop> selectShopList() {
 
-        List<IShop> shopList = Convert.toList(IShop.class, redisCache.getCacheList("mt_shop_list"));
+        List<IShop> shopList = redisCache.getCacheList("mt_shop_list");
 
-        if (ObjectUtil.isNotEmpty(shopList)) {
+        if (shopList != null && shopList.size() > 0) {
             return shopList;
-        }
-        shopList = iShopMapper.selectList();
-        if (ObjectUtil.isEmpty(shopList)) {
+        }else {
             refreshShop();
-            shopList = iShopMapper.selectList();
         }
 
-        redisCache.setCacheList("mt_shop_list", shopList);
+        shopList = iShopMapper.selectList();
+
+
         return shopList;
     }
 
@@ -80,12 +79,15 @@ public class IShopServiceImpl implements IShopService {
 
         JSONObject jsonObject = JSONObject.parseObject(s);
         Set<String> shopIdSet = jsonObject.keySet();
-
+        List<IShop> list = new ArrayList<>();
         for (String iShopId : shopIdSet) {
             JSONObject shop = jsonObject.getJSONObject(iShopId);
             IShop iShop = new IShop(iShopId, shop);
-            iShopMapper.insert(iShop);
+//            iShopMapper.insert(iShop);
+            list.add(iShop);
         }
+        this.saveBatch(list);
+        redisCache.setCacheList("mt_shop_list", list);
     }
 
     @Override

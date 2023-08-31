@@ -49,23 +49,19 @@ i茅台app，每日自动预约茅台
 
 <img src="https://note.oddfar.com/img/my-wechat.jpg" alt="wechat" style="height:280px;" />
 
-## 拓展
 
-以下是各位大佬拓展了本项目
-
-- https://github.com/Abeiheng/iimaotai
-
-  1.限制注册用户的新增小茅用户额度 2.修改小茅用户信息面板美化 3.删除注册用户，一并删除二级用户创建的小茅用户
-
-- https://github.com/wuhbin/imaotai/tree/20230805
-
-  增加查询每日申购结果定时任务
 
 ## 贡献代码
 
 若您有好的想法，发现一些 **BUG** 并修复了，欢迎提交 **Pull Request** 参与开源贡献
 
 发起 pull request 请求，提交到 master 分支，等待作者合并
+
+## 友情链接
+
+- 葫芦娃项目
+
+  yize8888-maotai: https://github.com/yize8888/maotai
 
 ## 演示图
 
@@ -76,9 +72,6 @@ i茅台app，每日自动预约茅台
 | ![image-20230707144703842](.github/image-20230707144703842.png) | ![image-20230707145525709](.github/image-20230707145525709.png) |
 
 
-## 友情链接
-
-yize8888-maotai: https://github.com/yize8888/maotai
 
 ## 声明
 

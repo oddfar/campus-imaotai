@@ -50,6 +50,12 @@ public interface IMTService {
      * @return
      */
     void getTravelReward(IUser iUser);
+//
+//    /**
+//     * 获取累计申购奖励
+//     * @param iUser
+//     */
+//    void getCumulatively(IUser iUser);
 
     /**
      * 批量预约
