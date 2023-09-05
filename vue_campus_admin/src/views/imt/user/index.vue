@@ -537,6 +537,85 @@ import {
 import {listItem} from "@/api/imt/item";
 
 export default {
+  name: "User",
+  dicts: ["sys_normal_disable"],
+  data() {
+    return {
+      // 遮罩层
+      loading: true,
+      // 选中数组
+      ids: [],
+      // 非单个禁用
+      single: true,
+      // 非多个禁用
+      multiple: true,
+      // 显示搜索条件
+      showSearch: true,
+      // 总条数
+      total: 0,
+      // I茅台用户表格数据
+      userList: [],
+      // 日期范围
+      dateRange: [],
+      // 弹出层标题
+      title: "",
+      // 是否显示弹出层
+      open: false,
+      openUser: false,
+      refreshToken: false,
+      // 发送短信按钮倒计时
+      state: false,
+      stateNum: 60,
+      // 查询参数
+      queryParams: {
+        pageNum: 1,
+        pageSize: 10,
+        mobile: null,
+        userId: null,
+        token: null,
+        itemCode: null,
+        deviceId: null,
+        provinceName: null,
+        cityName: null,
+        address: null,
+        lat: null,
+        lng: null,
+        shopType: null,
+        jsonResult: null,
+        expireTime: null,
+      },
+      // 表单参数
+      form: {},
+      // 表单校验
+      rules: {
+        mobile: [
+          {required: true, message: "手机号不能为空", trigger: "blur"},
+        ],
+      },
+      //0:新增，1:修改
+      toAdd: 0,
+      typeOptions: [
+        {
+          value: 1,
+          label: "预约本市出货量最大的门店",
+        },
+        {
+          value: 2,
+          label: "预约你的位置(经纬度)附近门店",
+        },
+      ],
+      // I茅台预约商品列表格数据
+      itemList: [],
+      //选择的数据
+      itemSelect: [],
+    };
+  },
+  created() {
+    this.getList();
+    listItem().then((response) => {
+      this.itemList = response.data;
+    });
+  },
   methods: {
     //item下拉框选择
     changeItem(e) {
@@ -742,85 +821,6 @@ export default {
       };
       this.title = "刷新用户:" + row.remark + "(" + row.mobile + ")登录信息";
     },
-  },
-  name: "User",
-  dicts: ["sys_normal_disable"],
-  data() {
-    return {
-      // 遮罩层
-      loading: true,
-      // 选中数组
-      ids: [],
-      // 非单个禁用
-      single: true,
-      // 非多个禁用
-      multiple: true,
-      // 显示搜索条件
-      showSearch: true,
-      // 总条数
-      total: 0,
-      // I茅台用户表格数据
-      userList: [],
-      // 日期范围
-      dateRange: [],
-      // 弹出层标题
-      title: "",
-      // 是否显示弹出层
-      open: false,
-      openUser: false,
-      refreshToken: false,
-      // 发送短信按钮倒计时
-      state: false,
-      stateNum: 60,
-      // 查询参数
-      queryParams: {
-        pageNum: 1,
-        pageSize: 10,
-        mobile: null,
-        userId: null,
-        token: null,
-        itemCode: null,
-        deviceId: null,
-        provinceName: null,
-        cityName: null,
-        address: null,
-        lat: null,
-        lng: null,
-        shopType: null,
-        jsonResult: null,
-        expireTime: null,
-      },
-      // 表单参数
-      form: {},
-      // 表单校验
-      rules: {
-        mobile: [
-          {required: true, message: "手机号不能为空", trigger: "blur"},
-        ],
-      },
-      //0:新增，1:修改
-      toAdd: 0,
-      typeOptions: [
-        {
-          value: 1,
-          label: "预约本市出货量最大的门店",
-        },
-        {
-          value: 2,
-          label: "预约你的位置(经纬度)附近门店",
-        },
-      ],
-      // I茅台预约商品列表格数据
-      itemList: [],
-      //选择的数据
-      itemSelect: [],
-    };
-  },
-  created() {
-    this.getList();
-    listItem().then((response) => {
-      this.itemList = response.data;
-    });
   },
 };
 </script>
