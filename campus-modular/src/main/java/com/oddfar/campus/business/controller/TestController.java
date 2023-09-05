@@ -2,6 +2,7 @@ package com.oddfar.campus.business.controller;
 
 import com.oddfar.campus.business.mapper.IUserMapper;
 import com.oddfar.campus.business.service.IMTService;
+import com.oddfar.campus.business.service.IShopService;
 import com.oddfar.campus.common.annotation.Anonymous;
 import com.oddfar.campus.common.annotation.ApiResource;
 import com.oddfar.campus.common.annotation.Log;
@@ -23,6 +24,8 @@ public class TestController {
     private IUserMapper iUserMapper;
     @Autowired
     private IMTService imtService;
+    @Autowired
+    private IShopService iShopService;
 
     /**
      * 需要接口权限
@@ -50,6 +53,7 @@ public class TestController {
     @Anonymous
     @GetMapping(value = "/3", name = "测试3的接口")
     public R test3() {
+        iShopService.selectShopList();
         return R.ok();
     }
 
