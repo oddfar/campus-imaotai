@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 @Service
@@ -51,7 +52,7 @@ public class IShopServiceImpl extends ServiceImpl<IShopMapper, IShop> implements
 
         if (shopList != null && shopList.size() > 0) {
             return shopList;
-        }else {
+        } else {
             refreshShop();
         }
 
@@ -142,25 +143,39 @@ public class IShopServiceImpl extends ServiceImpl<IShopMapper, IShop> implements
 
     @Override
     public List<IMTItemInfo> getShopsByProvince(String province, String itemId) {
+        String key = "mt_province:" + province + "." + getCurrentSessionId() + "." + itemId;
+        List<IMTItemInfo> cacheList = redisCache.getCacheList(key);
+        if (cacheList != null && cacheList.size() > 0) {
+            return cacheList;
+        } else {
+            List<IMTItemInfo> imtItemInfoList = reGetShopsByProvince(province, itemId);
+            redisCache.reSetCacheList(key, imtItemInfoList);
+            redisCache.expire(key, 60, TimeUnit.MINUTES);
+            return imtItemInfoList;
+        }
+    }
+
+    public List<IMTItemInfo> reGetShopsByProvince(String province, String itemId) {
 
         long dayTime = LocalDate.now().atStartOfDay().toInstant(ZoneOffset.of("+8")).toEpochMilli();
 
         String url = "https://static.moutai519.com.cn/mt-backend/xhr/front/mall/shop/list/slim/v3/" + getCurrentSessionId() + "/" + province + "/" + itemId + "/" + dayTime;
-        //TODO
+
         String urlRes = HttpUtil.get(url);
         JSONObject res = null;
         try {
             res = JSONObject.parseObject(urlRes);
         } catch (JSONException jsonException) {
-            logger.info(url);
-            throw new ServiceException("查询所在省市的投放产品和数量error，" + province + "-" + itemId);
+            String message = StringUtils.format("查询所在省市的投放产品和数量error: %s", url);
+            logger.error(message);
+            throw new ServiceException(message);
         }
 
 //        JSONObject res = JSONObject.parseObject(HttpUtil.get(url));
         if (!res.containsKey("code") || !res.getString("code").equals("2000")) {
-            logger.info(url);
-            logger.error("查询所在省市的投放产品和数量error，" + province + "-" + itemId);
-            throw new ServiceException("查询所在省市的投放产品和数量error，" + province + "-" + itemId);
+            String message = StringUtils.format("查询所在省市的投放产品和数量error: %s", url);
+            logger.error(message);
+            throw new ServiceException(message);
         }
         //组合信息
         List<IMTItemInfo> imtItemInfoList = new ArrayList<>();

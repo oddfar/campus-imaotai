@@ -129,6 +129,19 @@ public class RedisCache {
     }
 
     /**
+     * 重新set缓存List数据
+     *
+     * @param key      缓存的键值
+     * @param dataList 待缓存的List数据
+     * @return 缓存的对象
+     */
+    public <T> long reSetCacheList(final String key, final List<T> dataList) {
+        this.deleteObject(key);
+        Long count = redisTemplate.opsForList().rightPushAll(key, dataList);
+        return count == null ? 0 : count;
+    }
+
+    /**
      * 获得缓存的list对象
      *
      * @param key 缓存的键值
