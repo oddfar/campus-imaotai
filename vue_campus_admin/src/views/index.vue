@@ -1,7 +1,5 @@
 <template>
   <div class="app-container home">
-    <p>当前版本{{ version }}</p>
-    <p></p>
     <p>
       本项目中所有内容只供学习和研究使用，不得将本项目中任何内容用于违反国家/地区/组织等的法律法规或相关规定的其他用途。
     </p>
@@ -11,22 +9,38 @@
     <p></p>
     <p>本项目免费，无任何盈利</p>
     <p>项目完全开源，更新地址：https://github.com/oddfar/campus-imaotai</p>
+
+    <el-card class="box-card">
+      <p>版本情况:</p>
+      <p>campus-imaotai:{{ version }}</p>
+      <p>campus框架:{{ frameworkVersion }}</p>
+    </el-card>
   </div>
 </template>
 
 <script>
+import {getVersion} from "@/api/system/index";
+
 export default {
   name: "Index",
   data() {
     return {
       // 版本号
-      version: "1.0.8",
+      version: "",
+      frameworkVersion: "",
     };
   },
+  created() {
+    this.getVersion();
+  },
   methods: {
-    goTarget(href) {
-      window.open(href, "_blank");
-    },
+    getVersion() {
+      getVersion().then((response) => {
+          this.version = response.data.version;
+          this.frameworkVersion = response.data.frameworkVersion;
+        }
+      );
+    }
   },
 };
 </script>
@@ -39,12 +53,14 @@ export default {
     font-size: 17.5px;
     border-left: 5px solid #eee;
   }
+
   hr {
     margin-top: 20px;
     margin-bottom: 20px;
     border: 0;
     border-top: 1px solid #eee;
   }
+
   .col-item {
     margin-bottom: 20px;
   }

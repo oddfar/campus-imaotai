@@ -11,7 +11,7 @@
 
     <name>campus</name>
     <url>http://campus.oddfar.com</url>
-    <description>校园信息墙</description>
+    <description>i茅台自动预约</description>
 
     <modules>
         <module>campus-common</module>
@@ -21,7 +21,8 @@
     </modules>
 
     <properties>
-        <revision>1.0.8</revision>
+        <revision>1.0.9</revision>
+        <campus.revision>1.1.6</campus.revision>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>1.8</java.version>
         <bitwalker.version>1.21</bitwalker.version>

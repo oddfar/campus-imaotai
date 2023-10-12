@@ -4,6 +4,7 @@ campus:
   name: campus-imaotai
   # 版本
   version: ${revision}
+  frameworkVersion: ${campus.revision}
 
 server:
   port: 8160
