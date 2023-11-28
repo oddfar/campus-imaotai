@@ -138,9 +138,9 @@ public class IUser extends BaseEntity {
         this.cookie = data.getString("cookie");
         this.jsonResult = StringUtils.substring(jsonObject.toJSONString(), 0, 2000);
 
-        if (StringUtils.isEmpty(this.remark)) {
-            this.remark = data.getString("userName");
-        }
+//        if (StringUtils.isEmpty(this.remark)) {
+//            this.remark = data.getString("userName");
+//        }
 
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.DAY_OF_MONTH, 30);
