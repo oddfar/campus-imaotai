@@ -5,15 +5,15 @@ import com.oddfar.campus.common.domain.entity.SysDictDataEntity;
 import com.oddfar.campus.common.utils.DictUtils;
 import com.oddfar.campus.framework.mapper.SysDictDataMapper;
 import com.oddfar.campus.framework.service.SysDictDataService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.List;
 
 @Service
 public class SysDictDataServiceImpl implements SysDictDataService {
 
-    @Autowired
+    @Resource
     private SysDictDataMapper dictDataMapper;
 
 

@@ -7,7 +7,7 @@ import javax.servlet.http.HttpServletRequest;
  * 专属于 web 包的工具类
  * 参考 ruoyi-pro 芋道源码
  *
- * @author 致远
+ * @author oddfar
  */
 public class WebFrameworkUtils {
 

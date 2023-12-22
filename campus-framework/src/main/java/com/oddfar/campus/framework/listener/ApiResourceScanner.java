@@ -23,6 +23,8 @@ import java.util.List;
 /**
  * api接口资源扫描
  * 参考 https://gitee.com/stylefeng/guns 项目
+ *
+ * @author oddfar
  */
 public class ApiResourceScanner implements BeanPostProcessor {
 

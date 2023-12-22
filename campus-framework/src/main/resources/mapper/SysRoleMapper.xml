@@ -3,7 +3,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.oddfar.campus.framework.mapper.SysRoleMapper">
 
-    <resultMap type="SysRoleEntity" id="SysRoleResult">
+    <resultMap type="com.oddfar.campus.common.domain.entity.SysRoleEntity" id="SysRoleResult">
         <id property="roleId" column="role_id"/>
         <result property="roleName" column="role_name"/>
         <result property="roleKey" column="role_key"/>
@@ -34,19 +34,19 @@
 
 
 
-    <select id="selectRolePermissionByUserId" resultType="SysRoleEntity">
+    <select id="selectRolePermissionByUserId" resultType="com.oddfar.campus.common.domain.entity.SysRoleEntity">
         <include refid="selectRoleVo"/>
         WHERE r.del_flag = '0' and ur.user_id = #{userId}
     </select>
 
 
-    <select id="selectRoleById" parameterType="Long" resultType="SysRoleEntity">
+    <select id="selectRoleById" parameterType="Long" resultType="com.oddfar.campus.common.domain.entity.SysRoleEntity">
         <include refid="selectRoleVo"/>
         where r.role_id = #{roleId}
     </select>
 
 
-    <select id="selectRoleList" parameterType="SysRoleEntity" resultMap="SysRoleResult">
+    <select id="selectRoleList" parameterType="com.oddfar.campus.common.domain.entity.SysRoleEntity" resultMap="SysRoleResult">
         <include refid="selectRoleVo"/>
         where r.del_flag = '0'
         <if test="roleId != null and roleId != 0">

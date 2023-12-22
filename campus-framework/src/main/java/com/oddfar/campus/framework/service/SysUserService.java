@@ -1,9 +1,9 @@
 package com.oddfar.campus.framework.service;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.oddfar.campus.common.domain.PageResult;
 import com.oddfar.campus.common.domain.entity.SysUserEntity;
 
-import java.util.List;
 import java.util.Set;
 
 
@@ -34,7 +34,7 @@ public interface SysUserService {
      * @param user 用户信息
      * @return 用户信息集合信息
      */
-    List<SysUserEntity> selectAllocatedList(SysUserEntity user);
+    Page<SysUserEntity> selectAllocatedList(SysUserEntity user);
 
     /**
      * 根据条件分页查询未分配用户角色列表
@@ -42,7 +42,7 @@ public interface SysUserService {
      * @param user 用户信息
      * @return 用户信息集合信息
      */
-    List<SysUserEntity> selectUnallocatedList(SysUserEntity user);
+    Page<SysUserEntity> selectUnallocatedList(SysUserEntity user);
 
     /**
      * 根据用户ID查询用户所属角色组

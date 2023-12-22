@@ -1,7 +1,7 @@
 package com.oddfar.campus.admin.controller.system;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.oddfar.campus.common.annotation.ApiResource;
-import com.oddfar.campus.common.core.page.PageUtils;
 import com.oddfar.campus.common.domain.PageResult;
 import com.oddfar.campus.common.domain.R;
 import com.oddfar.campus.common.domain.entity.SysRoleEntity;
@@ -21,7 +21,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
-import java.util.List;
 
 @RestController
 @RequestMapping("/system/role")
@@ -128,9 +127,8 @@ public class SysRoleController {
     @PreAuthorize("@ss.hasPermi('system:role:list')")
     @GetMapping("/authUser/allocatedList")
     public R allocatedList(SysUserEntity user) {
-        PageUtils.startPage();
-        List<SysUserEntity> list = userService.selectAllocatedList(user);
-        return R.ok().put(PageUtils.getPageResult(list));
+        Page<SysUserEntity> page = userService.selectAllocatedList(user);
+        return R.ok().put(page);
     }
 
     /**
@@ -139,9 +137,8 @@ public class SysRoleController {
     @PreAuthorize("@ss.hasPermi('system:role:list')")
     @GetMapping("/authUser/unallocatedList")
     public R unallocatedList(SysUserEntity user) {
-        PageUtils.startPage();
-        List<SysUserEntity> list = userService.selectUnallocatedList(user);
-        return R.ok().put(PageUtils.getPageResult(list));
+        Page<SysUserEntity> page = userService.selectUnallocatedList(user);
+        return R.ok().put(page);
     }
 
     /**

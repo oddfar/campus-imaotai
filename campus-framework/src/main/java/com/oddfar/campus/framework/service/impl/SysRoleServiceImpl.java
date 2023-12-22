@@ -15,7 +15,6 @@ import com.oddfar.campus.framework.mapper.SysUserRoleMapper;
 import com.oddfar.campus.framework.service.SysMenuService;
 import com.oddfar.campus.framework.service.SysResourceService;
 import com.oddfar.campus.framework.service.SysRoleService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,15 +26,15 @@ import java.util.stream.Collectors;
 @Service
 public class SysRoleServiceImpl extends ServiceImpl<SysUserRoleMapper, SysUserRoleEntity> implements SysRoleService {
 
-    @Autowired
+    @Resource
     private SysRoleMapper roleMapper;
-    @Autowired
+    @Resource
     private SysUserRoleMapper userRoleMapper;
-    @Autowired
+    @Resource
     private SysRoleMenuMapper roleMenuMapper;
-    @Autowired
+    @Resource
     private SysMenuService menuService;
-    @Autowired
+    @Resource
     private SysResourceService resourceService;
 
     @Resource

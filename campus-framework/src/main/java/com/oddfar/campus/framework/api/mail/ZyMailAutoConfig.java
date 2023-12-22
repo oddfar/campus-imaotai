@@ -11,7 +11,6 @@ public class ZyMailAutoConfig {
 
     /**
      * mail发送邮件接口
-     *
      */
     @Bean
     @ConditionalOnMissingBean(MailSendApi.class)

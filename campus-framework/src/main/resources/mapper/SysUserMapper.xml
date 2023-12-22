@@ -3,7 +3,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.oddfar.campus.framework.mapper.SysUserMapper">
 
-    <resultMap type="SysUserEntity" id="SysUserResult">
+    <resultMap type="com.oddfar.campus.common.domain.entity.SysUserEntity" id="SysUserResult">
         <id     property="userId"       column="user_id"      />
         <result property="userName"     column="user_name"    />
         <result property="nickName"     column="nick_name"    />
@@ -24,7 +24,7 @@
         <collection  property="roles"   javaType="java.util.List"   resultMap="RoleResult" />
     </resultMap>
 
-    <resultMap id="RoleResult" type="SysRoleEntity">
+    <resultMap id="RoleResult" type="com.oddfar.campus.common.domain.entity.SysRoleEntity">
         <id     property="roleId"       column="role_id"        />
         <result property="roleName"     column="role_name"      />
         <result property="roleKey"      column="role_key"       />
@@ -43,11 +43,11 @@
     </sql>
 
 
-    <update id="resetUserPwd" parameterType="SysUserEntity">
+    <update id="resetUserPwd" parameterType="com.oddfar.campus.common.domain.entity.SysUserEntity">
         update sys_user set password = #{password} where user_name = #{userName}
     </update>
 
-    <update id="updateUserAvatar" parameterType="SysUserEntity">
+    <update id="updateUserAvatar" parameterType="com.oddfar.campus.common.domain.entity.SysUserEntity">
         update sys_user set avatar = #{avatar} where user_name = #{userName}
     </update>
 
@@ -62,32 +62,26 @@
         where u.user_id = #{userId}
     </select>
 
-    <select id="selectAllocatedList" parameterType="SysUserEntity" resultMap="SysUserResult">
+    <select id="selectAllocatedList"  resultMap="SysUserResult">
         select distinct u.user_id, u.user_name, u.nick_name, u.email, u.phonenumber, u.status, u.create_time
         from sys_user u
-        left join sys_user_role ur on u.user_id = ur.user_id
-        left join sys_role r on r.role_id = ur.role_id
-        where u.del_flag = '0' and r.role_id = #{roleId}
-        <if test="userName != null and userName != ''">
-            AND u.user_name like concat('%', #{userName}, '%')
-        </if>
-        <if test="phonenumber != null and phonenumber != ''">
-            AND u.phonenumber like concat('%', #{phonenumber}, '%')
-        </if>
+            left join sys_user_role ur on u.user_id = ur.user_id
+            left join sys_role r on r.role_id = ur.role_id
+        ${ew.getCustomSqlSegment}
     </select>
 
-    <select id="selectUnallocatedList" parameterType="SysUserEntity" resultMap="SysUserResult">
+    <select id="selectUnallocatedList" resultMap="SysUserResult">
         select distinct u.user_id, u.user_name, u.nick_name, u.email, u.phonenumber, u.status, u.create_time
         from sys_user u
         left join sys_user_role ur on u.user_id = ur.user_id
         left join sys_role r on r.role_id = ur.role_id
-        where u.del_flag = '0' and (r.role_id != #{roleId} or r.role_id IS NULL)
-        and u.user_id not in (select u.user_id from sys_user u inner join sys_user_role ur on u.user_id = ur.user_id and ur.role_id = #{roleId})
-        <if test="userName != null and userName != ''">
-            AND u.user_name like concat('%', #{userName}, '%')
+        where u.del_flag = '0' and (r.role_id != #{user.roleId} or r.role_id IS NULL)
+        and u.user_id not in (select u.user_id from sys_user u inner join sys_user_role ur on u.user_id = ur.user_id and ur.role_id = #{user.roleId})
+        <if test="user.userName != null and user.userName != ''">
+            AND u.user_name like concat('%', #{user.userName}, '%')
         </if>
-        <if test="phonenumber != null and phonenumber != ''">
-            AND u.phonenumber like concat('%', #{phonenumber}, '%')
+        <if test="user.phonenumber != null and user.phonenumber != ''">
+            AND u.phonenumber like concat('%', #{user.phonenumber}, '%')
         </if>
     </select>
 

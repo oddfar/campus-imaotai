@@ -4,9 +4,9 @@ import com.oddfar.campus.common.domain.PageResult;
 import com.oddfar.campus.common.domain.entity.SysLoginLogEntity;
 import com.oddfar.campus.framework.mapper.SysLoginLogMapper;
 import com.oddfar.campus.framework.service.SysLoginLogService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.Arrays;
 import java.util.List;
 
@@ -18,7 +18,7 @@ import java.util.List;
 @Service
 public class SysLoginLogServiceImpl implements SysLoginLogService {
 
-    @Autowired
+    @Resource
     private SysLoginLogMapper loginLogMapper;
 
     /**

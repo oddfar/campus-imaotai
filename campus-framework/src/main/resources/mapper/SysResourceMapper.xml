@@ -35,7 +35,7 @@
         from sys_resource
     </sql>
 
-    <select id="selectResourceList" resultType="SysResourceEntity">
+    <select id="selectResourceList" resultType="com.oddfar.campus.common.domain.entity.SysResourceEntity">
         <include refid="selectResourceVo"/>
         <where>
             <if test="resourceCode != null and resourceCode != ''">
@@ -50,7 +50,7 @@
         </where>
     </select>
 
-    <select id="selectResourceListByUserId" resultType="SysResourceEntity">
+    <select id="selectResourceListByUserId" resultType="com.oddfar.campus.common.domain.entity.SysResourceEntity">
         select distinct r.resource_id, r.app_code, r.resource_code, r.resource_name, r.class_name, r.method_name,
         r.modular_name, r.url, r.http_method, r.resource_biz_type, r.required_permission_flag,r.create_time
         from sys_resource r

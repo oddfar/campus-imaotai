@@ -3,6 +3,7 @@ package com.oddfar.campus.common.domain;
 
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.TypeReference;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.oddfar.campus.common.enums.BizCodeEnum;
 
 import java.util.HashMap;
@@ -101,6 +102,11 @@ public class R extends HashMap<String, Object> {
         return this;
     }
 
+    public R put(IPage page) {
+        super.put("rows", page.getRecords());
+        super.put("total", page.getTotal());
+        return this;
+    }
 
 
     public Integer getCode() {

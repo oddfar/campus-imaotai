@@ -18,9 +18,6 @@ import com.oddfar.campus.framework.service.SysUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.HashSet;
-import java.util.Set;
-
 /**
  * 注册校验方法
  */
@@ -34,9 +31,6 @@ public class SysRegisterService {
 
     @Autowired
     private RedisCache redisCache;
-
-    @Autowired
-    private SysPermissionService permissionService;
 
     /**
      * 注册
@@ -71,15 +65,7 @@ public class SysRegisterService {
             if (!regFlag) {
                 msg = "注册失败,请联系系统管理人员";
             } else {
-                //注册成功
-                //添加 imaotai 角色
-                SysUserEntity userEntity = userService.selectUserByUserName(username);
-                Set<String> roleSet = new HashSet<>();
-                roleSet.add("imaotai");
-                userService.insertUserAuth(userEntity.getUserId(), roleSet);
-                //更新redis缓存
-                permissionService.resetUserRoleAuthCache(userEntity.getUserId());
-
+                //注册失败异步记录信息
                 AsyncManager.me().execute(AsyncFactory.recordLogininfor(username, null, Constants.REGISTER, MessageUtils.message("user.register.success")));
             }
         }

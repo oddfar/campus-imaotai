@@ -130,7 +130,7 @@ public class SysPermissionService {
 //        Collection<String> keys = redisCache.keys(CacheConstants.LOGIN_USER_KEY + "*");
         SysUserEntity user = new SysUserEntity();
         user.setRoleId(roleId);
-        List<SysUserEntity> sysUserEntities = userService.selectAllocatedList(user);
+        List<SysUserEntity> sysUserEntities = userService.selectAllocatedList(user).getRecords();
 
         sysUserEntities.forEach(u -> resetUserRoleAuthCache(u.getUserId()));
     }

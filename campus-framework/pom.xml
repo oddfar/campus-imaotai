@@ -23,6 +23,7 @@
             <artifactId>campus-common</artifactId>
         </dependency>
 
+        <!-- SpringWeb模块 -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
@@ -57,7 +58,6 @@
             <groupId>com.sun.mail</groupId>
             <artifactId>javax.mail</artifactId>
         </dependency>
-
 
     </dependencies>
 </project>

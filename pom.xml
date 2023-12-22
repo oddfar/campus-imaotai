@@ -22,24 +22,48 @@
 
     <properties>
         <revision>1.0.8</revision>
-        <campus.revision>1.1.6</campus.revision>
+        <campus.revision>1.1.8</campus.revision>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>1.8</java.version>
         <bitwalker.version>1.21</bitwalker.version>
-        <mybatis.plus.boot.version>3.5.2</mybatis.plus.boot.version>
+        <mybatis.plus.boot.version>3.5.4.1</mybatis.plus.boot.version>
+        <p6spy.version>3.9.1</p6spy.version>
+        <dynamic-ds.version>4.2.0</dynamic-ds.version>
         <swagger.version>3.0.0</swagger.version>
-        <fastjson.version>2.0.14</fastjson.version>
-        <hutool.version>5.8.8</hutool.version>
+        <fastjson.version>2.0.42</fastjson.version>
+        <hutool.version>5.8.23</hutool.version>
         <commons.fileupload.version>1.4</commons.fileupload.version>
         <mapstruct.version>1.5.3.Final</mapstruct.version>
         <kaptcha.version>2.3.2</kaptcha.version>
         <jwt.version>0.9.1</jwt.version>
         <poi.version>4.1.2</poi.version>
-        <pagehelper.boot.version>1.4.3</pagehelper.boot.version>
         <sunmail.version>1.6.2</sunmail.version>
+        <p6spy.spring.boot>1.8.1</p6spy.spring.boot>
         <!-- 插件版本 -->
         <flatten-maven-plugin.version>1.3.0</flatten-maven-plugin.version>
     </properties>
+
+    <profiles>
+        <profile>
+            <id>dev</id>
+            <properties>
+                <!-- 环境标识，需要与配置文件的名称相对应 -->
+                <profiles.active>dev</profiles.active>
+                <logging.level>debug</logging.level>
+            </properties>
+            <activation>
+                <!-- 默认环境 -->
+                <activeByDefault>true</activeByDefault>
+            </activation>
+        </profile>
+        <profile>
+            <id>prod</id>
+            <properties>
+                <profiles.active>prod</profiles.active>
+                <logging.level>warn</logging.level>
+            </properties>
+        </profile>
+    </profiles>
 
     <!-- 依赖声明 -->
     <dependencyManagement>
@@ -48,7 +72,7 @@
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-dependencies</artifactId>
-                <version>2.5.14</version>
+                <version>2.5.15</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -60,11 +84,18 @@
                 <version>${mybatis.plus.boot.version}</version>
             </dependency>
 
-            <!-- mybatis pagehelper 分页插件 -->
+            <!-- sql性能分析插件 -->
             <dependency>
-                <groupId>com.github.pagehelper</groupId>
-                <artifactId>pagehelper-spring-boot-starter</artifactId>
-                <version>${pagehelper.boot.version}</version>
+                <groupId>p6spy</groupId>
+                <artifactId>p6spy</artifactId>
+                <version>${p6spy.version}</version>
+            </dependency>
+
+            <!-- dynamic-datasource 多数据源-->
+            <dependency>
+                <groupId>com.baomidou</groupId>
+                <artifactId>dynamic-datasource-spring-boot-starter</artifactId>
+                <version>${dynamic-ds.version}</version>
             </dependency>
 
             <!-- Swagger3依赖 -->
@@ -142,11 +173,6 @@
                 <artifactId>javax.mail</artifactId>
                 <version>${sunmail.version}</version>
             </dependency>
-            <!--            &lt;!&ndash; Mysql驱动包 &ndash;&gt;-->
-            <!--            <dependency>-->
-            <!--                <groupId>mysql</groupId>-->
-            <!--                <artifactId>mysql-connector-java</artifactId>-->
-            <!--            </dependency>-->
 
             <!-- 通用工具-->
             <dependency>

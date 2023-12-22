@@ -1,4 +1,4 @@
-package com.oddfar.campus.framework.api.excel.exception;
+package com.oddfar.campus.common.exception;
 
 /**
  * 工具类异常

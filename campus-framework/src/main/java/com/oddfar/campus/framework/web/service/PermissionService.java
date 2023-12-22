@@ -27,7 +27,7 @@ import java.util.Set;
  * 自定义权限实现，及自定义controller接口资源权限，ss取自SpringSecurity首字母
  * （根据若依修改）
  *
- * @author zhiyuan
+ * @author oddfar
  */
 @Service("ss")
 public class PermissionService {

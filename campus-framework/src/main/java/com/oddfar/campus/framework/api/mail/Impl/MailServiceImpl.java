@@ -5,9 +5,11 @@ import cn.hutool.extra.mail.MailUtil;
 import com.oddfar.campus.framework.api.mail.MailConfigRead;
 import com.oddfar.campus.framework.api.mail.MailSendApi;
 import org.springframework.scheduling.annotation.Async;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 public class MailServiceImpl implements MailSendApi {
 
     @Async//异步发送邮件
@@ -32,8 +34,5 @@ public class MailServiceImpl implements MailSendApi {
 
     }
 
-    @Override
-    public void sendALiMail(String tos, String subject, String content) {
 
-    }
 }

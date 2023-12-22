@@ -9,7 +9,6 @@ import com.oddfar.campus.common.domain.entity.SysRoleResourceEntity;
 import com.oddfar.campus.common.domain.entity.SysUserEntity;
 import com.oddfar.campus.common.domain.model.SysRoleAuth;
 import com.oddfar.campus.framework.mapper.SysResourceMapper;
-import com.oddfar.campus.framework.mapper.SysRoleMapper;
 import com.oddfar.campus.framework.mapper.SysRoleResourceMapper;
 import com.oddfar.campus.framework.service.SysResourceService;
 import org.springframework.stereotype.Service;
@@ -21,9 +20,6 @@ import java.util.stream.Collectors;
 @Service
 public class SysResourceServiceImpl extends ServiceImpl<SysResourceMapper, SysResourceEntity> implements SysResourceService {
 
-
-    @Resource
-    private SysRoleMapper roleMapper;
     @Resource
     private SysResourceMapper resourceMapper;
     @Resource
@@ -75,7 +71,7 @@ public class SysResourceServiceImpl extends ServiceImpl<SysResourceMapper, SysRe
 
     @Override
     public List<SysRoleAuth> selectSysRoleAuthAll() {
-        return  roleResourceMapper.selectList().stream()
+        return roleResourceMapper.selectList().stream()
                 .map(SysRoleAuth::new).collect(Collectors.toList());
     }
 
@@ -134,7 +130,7 @@ public class SysResourceServiceImpl extends ServiceImpl<SysResourceMapper, SysRe
             rr.setResourceCode(resourceEntity.getResourceCode());
             rrList.add(rr);
         }
-        System.out.println("rrList:" + rrList);
+
         return roleResourceMapper.saveBatch(rrList);
 
     }

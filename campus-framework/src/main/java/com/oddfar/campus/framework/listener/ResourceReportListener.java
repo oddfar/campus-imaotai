@@ -20,9 +20,11 @@ import java.util.Optional;
 
 /**
  * 监听项目初始化完毕，导入资源信息(没用，暂存下代码)
+ *
+ * @author oddfar
  */
 //@Component  implements ApplicationListener<ApplicationReadyEvent>
-public class ResourceReportListener  {
+public class ResourceReportListener {
 
 
     @Autowired
@@ -30,7 +32,7 @@ public class ResourceReportListener  {
     @Autowired
     SysResourceService resourceService;
 
-//    @Override
+    //    @Override
     public void onApplicationEvent(ApplicationReadyEvent event) {
         //清空表
         resourceService.truncateResource();

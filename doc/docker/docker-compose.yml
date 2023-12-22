@@ -1,0 +1,72 @@
+version : '3'
+
+services:
+  mysql:
+    image: mysql:5.7
+    container_name: mysql
+    environment:
+      # root 密码
+      MYSQL_ROOT_PASSWORD: 123456789
+      # 初始化数据库(后续的初始化sql会在这个库执行)
+      MYSQL_DATABASE: 'campus_imaotai'
+    volumes:
+      # 数据挂载
+      - /docker/mysql/data/:/var/lib/mysql/
+      # 配置挂载
+      - /docker/mysql/conf/:/etc/mysql/conf.d/
+      # 日志
+      - /docker/mysql/logs:/logs
+    command: [
+          'mysqld',
+          '--innodb-buffer-pool-size=80M',
+          '--character-set-server=utf8mb4',
+          '--collation-server=utf8mb4_unicode_ci',
+          '--default-time-zone=+8:00',
+          '--lower-case-table-names=1'
+        ]
+    privileged: true
+    network_mode: "host"
+
+  redis:
+    image: redis:6.2.12
+    container_name: redis
+    volumes:
+      # 配置文件
+      - /docker/redis/conf:/redis/config
+      # 数据文件
+      - /docker/redis/data/:/redis/data/
+    command: "redis-server /redis/config/redis.conf"
+    privileged: true
+    network_mode: "host"
+
+
+  nginx-web:
+    image: nginx:1.23.4
+    container_name: nginx-web
+    environment:
+      # 时区上海
+      TZ: Asia/Shanghai
+    volumes:
+      # 页面目录
+      - /docker/nginx/html:/usr/share/nginx/html
+      # 证书映射
+      - /docker/nginx/cert:/etc/nginx/cert
+      # 配置文件映射
+      - /docker/nginx/conf/nginx.conf:/etc/nginx/nginx.conf
+      # 日志目录
+      - /docker/nginx/log:/var/log/nginx
+    privileged: true
+    network_mode: "host"
+
+  campus-server:
+    image: campus/campus-imaotai:1.0.8
+    container_name: campus-imaotai
+    environment:
+      # 时区上海
+      TZ: Asia/Shanghai
+      SERVER_PORT: 8160
+#      spring.config.additional-location: /home/campus/conf/application-prod.yml
+    volumes:
+      - /docker/server/conf:/home/campus/conf
+    privileged: true
+    network_mode: "host"

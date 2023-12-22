@@ -32,7 +32,7 @@
         <result property="resourceCode" column="resource_code"/>
     </resultMap>
 
-    <select id="selectMenuTreeAll" resultType="SysMenuEntity">
+    <select id="selectMenuTreeAll" resultType="com.oddfar.campus.common.domain.entity.SysMenuEntity">
         select distinct m.menu_id,
                         m.parent_id,
                         m.menu_name,
@@ -116,7 +116,7 @@
           and ur.user_id = #{userId}
     </select>
 
-    <select id="selectMenuListByUserId" parameterType="SysMenuEntity" resultMap="SysMenuResult">
+    <select id="selectMenuListByUserId" parameterType="com.oddfar.campus.common.domain.entity.SysMenuEntity" resultMap="SysMenuResult">
         select distinct m.menu_id, m.parent_id, m.menu_name, m.path, m.component, m.`query`, m.visible, m.status,
         ifnull(m.perms,'') as perms, m.is_frame, m.is_cache, m.menu_type, m.icon, m.order_num, m.create_time
         from sys_menu m

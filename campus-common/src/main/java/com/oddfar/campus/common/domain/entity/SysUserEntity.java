@@ -3,6 +3,7 @@ package com.oddfar.campus.common.domain.entity;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.oddfar.campus.common.domain.BaseEntity;
 import com.oddfar.campus.common.validator.Xss;
 import lombok.Data;
@@ -18,7 +19,7 @@ import java.util.List;
 /**
  * 用户对象 sys_user
  *
- * @author 致远 oddfar@163.com
+ * @author oddfar
  * @since 1.0.0 2022-09-24
  */
 
@@ -60,7 +61,7 @@ public class SysUserEntity extends BaseEntity  {
     private String avatar;
 
     /** 密码 */
-//    @JsonIgnore
+    @JsonIgnore
     private String password;
 
     /** 帐号状态（0正常 1停用） */

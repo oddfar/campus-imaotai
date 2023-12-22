@@ -18,7 +18,7 @@ import java.util.List;
  * 菜单权限表 sys_menu
  * （根据若依项目修改）
  *
- * @author 致远
+ * @author oddfar
  */
 @Data
 @EqualsAndHashCode(callSuper = true)

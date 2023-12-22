@@ -3,7 +3,10 @@ package com.oddfar.campus.framework.api.mail;
 import java.util.List;
 
 /**
- * @author zhiyuan
+ * 发送邮件Api
+ * （后期整合下阿里云 腾讯云）
+ *
+ * @author oddfar
  */
 public interface MailSendApi {
 
@@ -17,12 +20,4 @@ public interface MailSendApi {
      */
     void sendQQMail(List<String> tos, String subject, String content, Boolean isHtml);
 
-    /**
-     * 发送阿里云邮箱的一个例子，具体用法访问官网查看
-     *
-     * @param tos     对方的邮箱地址
-     * @param subject 标题
-     * @param content 邮件文本正文
-     */
-    void sendALiMail(String tos, String subject, String content);
 }

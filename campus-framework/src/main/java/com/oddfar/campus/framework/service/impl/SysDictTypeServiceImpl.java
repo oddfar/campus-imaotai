@@ -10,10 +10,10 @@ import com.oddfar.campus.common.utils.StringUtils;
 import com.oddfar.campus.framework.mapper.SysDictDataMapper;
 import com.oddfar.campus.framework.mapper.SysDictTypeMapper;
 import com.oddfar.campus.framework.service.SysDictTypeService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.Resource;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -23,9 +23,9 @@ import static com.oddfar.campus.common.utils.DictUtils.clearDictCache;
 
 @Service
 public class SysDictTypeServiceImpl implements SysDictTypeService {
-    @Autowired
+    @Resource
     private SysDictTypeMapper dictTypeMapper;
-    @Autowired
+    @Resource
     private SysDictDataMapper dictDataMapper;
 
     @Override

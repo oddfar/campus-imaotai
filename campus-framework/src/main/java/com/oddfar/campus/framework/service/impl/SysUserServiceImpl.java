@@ -1,5 +1,11 @@
 package com.oddfar.campus.framework.service.impl;
 
+import cn.hutool.core.util.ObjectUtil;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.oddfar.campus.common.constant.UserConstants;
+import com.oddfar.campus.common.core.page.PageQuery;
 import com.oddfar.campus.common.domain.PageResult;
 import com.oddfar.campus.common.domain.entity.SysRoleEntity;
 import com.oddfar.campus.common.domain.entity.SysUserEntity;
@@ -13,11 +19,11 @@ import com.oddfar.campus.framework.mapper.SysUserMapper;
 import com.oddfar.campus.framework.mapper.SysUserRoleMapper;
 import com.oddfar.campus.framework.service.SysRoleService;
 import com.oddfar.campus.framework.service.SysUserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
+import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -27,13 +33,13 @@ import java.util.stream.Collectors;
 @Service
 public class SysUserServiceImpl implements SysUserService {
 
-    @Autowired
+    @Resource
     private SysUserMapper userMapper;
-    @Autowired
+    @Resource
     private SysUserRoleMapper userRoleMapper;
-    @Autowired
+    @Resource
     private SysRoleMapper roleMapper;
-    @Autowired
+    @Resource
     private SysRoleService roleService;
 
     @Override
@@ -44,7 +50,7 @@ public class SysUserServiceImpl implements SysUserService {
     @Override
     public SysUserEntity selectUserByUserName(String userName) {
         SysUserEntity userEntity = userMapper.selectUserByUserName(userName);
-        if ( userEntity != null &&StringUtils.isEmpty(userEntity.getAvatar())) {
+        if (userEntity != null && StringUtils.isEmpty(userEntity.getAvatar())) {
             userEntity.setAvatar(ConfigExpander.getUserDefaultAvatar());
         }
         return userEntity;
@@ -60,13 +66,22 @@ public class SysUserServiceImpl implements SysUserService {
     }
 
     @Override
-    public List<SysUserEntity> selectAllocatedList(SysUserEntity user) {
-        return userMapper.selectAllocatedList(user);
+    public Page<SysUserEntity> selectAllocatedList(SysUserEntity user) {
+        Page<SysUserEntity> page = new PageQuery().buildPage();
+
+        QueryWrapper<SysUserEntity> wrapper = Wrappers.query();
+        wrapper.eq("u.del_flag", UserConstants.NORMAL)
+                .eq("r.role_id", user.getRoleId())
+                .eq(ObjectUtil.isNotNull(user.getPhonenumber()), "u.phonenumber", user.getPhonenumber())
+                .like(ObjectUtil.isNotNull(user.getUserName()), "u.user_name", user.getUserName());
+        Page<SysUserEntity> sysUserPage = userMapper.selectAllocatedList(page, wrapper);
+        return sysUserPage;
     }
 
     @Override
-    public List<SysUserEntity> selectUnallocatedList(SysUserEntity user) {
-        return userMapper.selectUnallocatedList(user);
+    public Page<SysUserEntity> selectUnallocatedList(SysUserEntity user) {
+        Page<SysUserEntity> page = new PageQuery().buildPage();
+        return userMapper.selectUnallocatedList(page, user);
     }
 
     @Override

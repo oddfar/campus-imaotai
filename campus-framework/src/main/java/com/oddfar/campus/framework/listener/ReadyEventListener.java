@@ -15,6 +15,8 @@ import java.util.List;
 
 /**
  * 监听项目初始化完毕，执行的操作
+ *
+ * @author oddfar
  */
 @Component
 public class ReadyEventListener implements ApplicationListener<ApplicationReadyEvent> {

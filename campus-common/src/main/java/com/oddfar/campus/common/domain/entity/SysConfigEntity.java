@@ -11,12 +11,13 @@ import javax.validation.constraints.Size;
 
 /**
  * 配置实体类
- * @author zhiyuan
+ *
+ * @author oddfar
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
 @TableName("sys_config")
-public class SysConfigEntity extends BaseEntity  {
+public class SysConfigEntity extends BaseEntity {
     private static final long serialVersionUID = 1L;
 
     //    @JsonFormat(shape = JsonFormat.Shape.STRING)

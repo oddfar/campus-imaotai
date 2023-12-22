@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-@MapperScan("com.oddfar.campus.framework.mapper") //指定扫描目录
+@MapperScan("${mybatis-plus.mapperPackage}")
 public class MybatisPlusConfig {
 
     /**

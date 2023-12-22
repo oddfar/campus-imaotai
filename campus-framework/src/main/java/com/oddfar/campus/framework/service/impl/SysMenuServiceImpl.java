@@ -18,9 +18,9 @@ import com.oddfar.campus.framework.mapper.SysMenuMapper;
 import com.oddfar.campus.framework.mapper.SysRoleMapper;
 import com.oddfar.campus.framework.mapper.SysRoleMenuMapper;
 import com.oddfar.campus.framework.service.SysMenuService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -30,11 +30,11 @@ import java.util.stream.Collectors;
 @Service
 public class SysMenuServiceImpl implements SysMenuService {
 
-    @Autowired
+    @Resource
     private SysMenuMapper menuMapper;
-    @Autowired
+    @Resource
     private SysRoleMapper roleMapper;
-    @Autowired
+    @Resource
     private SysRoleMenuMapper roleMenuMapper;
 
     /**

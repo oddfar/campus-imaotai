@@ -12,28 +12,9 @@ server:
 
 spring:
   application:
-    name: oddfar
+    name: ${campus.name}
   profiles:
-    active: dev
-  #数据源配置
-  datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/campus_imaotai?characterEncoding=utf-8&useSSL=true&serverTimezone=GMT%2B8
-    username: root
-    password: 123456789
-  #redis配置
-  redis:
-    host: 127.0.0.1
-    port: 6379
-    database: 0
-    timeout: 1800000
-    lettuce:
-      pool:
-        max-active: 20
-        #最大阻塞等待时间(负数表示没限制)
-        max-wait: -1
-        max-idle: 5
-        min-idle: 0
+    active: @profiles.active@
   # 文件上传
   servlet:
     multipart:
@@ -42,11 +23,20 @@ spring:
       # 设置总上传的文件大小
       max-request-size: 20MB
   #MyWebMvcConfig中开启@EnableWebMvc则失效
+  mvc:
+    format:
+      date-time: yyyy-MM-dd HH:mm:ss
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss
-    time-zone: GMT+8
-#    # 对象字段为null不显示
-#    default-property-inclusion: non_null
+    #    time-zone: GMT+8
+    serialization:
+      # 格式化输出
+      indent_output: false
+      # 忽略无法转换的对象
+      fail_on_empty_beans: false
+    deserialization:
+      # 允许对象忽略json中不存在的属性
+      fail_on_unknown_properties: false
 
   # 资源信息
   messages:
@@ -76,30 +66,38 @@ logging:
     com.oddfar: debug
     org.springframework: warn
 
-#mybatis-plus配置
+# MyBatisPlus配置
+# https://baomidou.com/pages/56bac0/
 mybatis-plus:
+  # 不支持多包, 如有需要可在注解配置 或 提升扫包等级
+  # 例如 com.**.**.mapper
+  mapperPackage: com.oddfar.**.mapper
   # 配置mapper的扫描，找到所有的mapper.xml映射文件
-  mapper-locations: classpath*:mapper/**/*Mapper.xml
-  #mybatis-plus日志
+  mapperLocations: classpath*:mapper/**/*Mapper.xml
+  # 实体扫描，多个package用逗号或者分号分隔
+  typeAliasesPackage: com.oddfar.**.domain
   configuration:
-    #开启打印
-    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
-    #关闭打印
-#    log-impl: org.apache.ibatis.logging.nologging.NoLoggingImpl
+    # 自动驼峰命名规则（camel case）映射
+    mapUnderscoreToCamelCase: true
+    # MyBatis 自动映射策略
+    # NONE：不启用 PARTIAL：只对非嵌套 resultMap 自动映射 FULL：对所有 resultMap 自动映射
+    autoMappingBehavior: FULL
+    # MyBatis 自动映射时未知列或未知属性处理策
+    # NONE：不做处理 WARNING：打印相关警告 FAILING：抛出异常和详细信息
+    autoMappingUnknownColumnBehavior: NONE
+    # 更详细的日志输出 会有性能损耗 org.apache.ibatis.logging.stdout.StdOutImpl
+    # 关闭日志记录 (可单纯使用 p6spy 分析) org.apache.ibatis.logging.nologging.NoLoggingImpl
+    # 默认日志输出 org.apache.ibatis.logging.slf4j.Slf4jImpl
+    logImpl: org.apache.ibatis.logging.nologging.NoLoggingImpl
   global-config:
     #逻辑删除
-    db-config:
+    dbConfig:
       logic-delete-value: 1
       logic-not-delete-value: 0
-  type-aliases-package: com.oddfar.**.domain
 
-# PageHelper分页插件
-pagehelper:
-  helperDialect: mysql
-  support-methods-arguments: false
+
 
 # Swagger配置
 swagger:
   # 是否开启swagger
   enabled: true
-

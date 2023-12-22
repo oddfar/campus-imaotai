@@ -1,12 +1,13 @@
 package com.oddfar.campus.framework.mapper;
 
+import com.baomidou.mybatisplus.core.conditions.Wrapper;
+import com.baomidou.mybatisplus.core.toolkit.Constants;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.oddfar.campus.common.core.BaseMapperX;
 import com.oddfar.campus.common.core.LambdaQueryWrapperX;
 import com.oddfar.campus.common.domain.PageResult;
 import com.oddfar.campus.common.domain.entity.SysUserEntity;
 import org.apache.ibatis.annotations.Param;
-
-import java.util.List;
 
 public interface SysUserMapper extends BaseMapperX<SysUserEntity> {
 
@@ -41,10 +42,9 @@ public interface SysUserMapper extends BaseMapperX<SysUserEntity> {
     /**
      * 根据条件分页查询已配用户角色列表
      *
-     * @param user 用户信息
      * @return 用户信息集合信息
      */
-    List<SysUserEntity> selectAllocatedList(SysUserEntity user);
+    Page<SysUserEntity> selectAllocatedList(@Param("page") Page<SysUserEntity> page, @Param(Constants.WRAPPER) Wrapper<SysUserEntity> queryWrapper);
 
     /**
      * 根据条件分页查询未分配用户角色列表
@@ -52,7 +52,7 @@ public interface SysUserMapper extends BaseMapperX<SysUserEntity> {
      * @param user 用户信息
      * @return 用户信息集合信息
      */
-    List<SysUserEntity> selectUnallocatedList(SysUserEntity user);
+    Page<SysUserEntity> selectUnallocatedList(@Param("page") Page<SysUserEntity> page, @Param("user") SysUserEntity user);
 
 
     /**

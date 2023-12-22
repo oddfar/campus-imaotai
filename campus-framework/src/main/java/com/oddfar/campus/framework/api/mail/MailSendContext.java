@@ -4,6 +4,8 @@ import cn.hutool.extra.spring.SpringUtil;
 
 /**
  * 邮件发送的api上下文
+ *
+ * @author oddfar
  */
 public class MailSendContext {
 

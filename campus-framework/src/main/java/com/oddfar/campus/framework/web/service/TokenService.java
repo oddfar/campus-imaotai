@@ -25,8 +25,9 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * token验证处理
+ * (根据若依修改，增加LoginUser)
  *
- * @author ruoyi
+ * @author oddfar
  */
 @Component
 public class TokenService {

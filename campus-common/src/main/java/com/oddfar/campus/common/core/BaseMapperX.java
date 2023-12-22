@@ -5,13 +5,10 @@ import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.support.SFunction;
-import com.oddfar.campus.common.core.page.PageDomain;
-import com.oddfar.campus.common.core.page.TableSupport;
-import com.oddfar.campus.common.domain.PageParam;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.oddfar.campus.common.core.page.PageQuery;
 import com.oddfar.campus.common.domain.PageResult;
-import com.oddfar.campus.common.utils.MyBatisUtils;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.Collection;
@@ -22,21 +19,12 @@ import java.util.List;
  */
 public interface BaseMapperX<T> extends BaseMapper<T> {
 
-    default PageResult<T> selectPage( @Param("ew") Wrapper<T> queryWrapper) {
-        PageDomain pageDomain = TableSupport.buildPageRequest();
-
-        PageParam pageParam = new PageParam();
-        pageParam.setPageNum(pageDomain.getPageNum());
-        pageParam.setPageSize(pageDomain.getPageSize());
-        return selectPage(pageParam, queryWrapper);
-    }
-
-    default PageResult<T> selectPage(PageParam pageParam, @Param("ew") Wrapper<T> queryWrapper) {
-        // MyBatis Plus 查询
-        IPage<T> mpPage = MyBatisUtils.buildPage(pageParam);
-        selectPage(mpPage, queryWrapper);
+    default PageResult<T> selectPage(@Param("ew") Wrapper<T> queryWrapper) {
+        PageQuery pageQuery = new PageQuery();
+        Page<T> page = pageQuery.buildPage();
+        selectPage(page, queryWrapper);
         // 转换返回
-        return new PageResult(mpPage.getRecords(), mpPage.getTotal());
+        return new PageResult(page.getRecords(), page.getTotal());
     }
 
     default T selectOne(String field, Object value) {
@@ -89,9 +77,8 @@ public interface BaseMapperX<T> extends BaseMapper<T> {
 
     /**
      * 逐条插入，适合少量数据插入，或者对性能要求不高的场景
-     *
+     * <p>
      * 如果大量，请使用 {@link com.baomidou.mybatisplus.extension.service.impl.ServiceImpl#saveBatch(Collection)} 方法
-     * 使用示例，可见 RoleMenuBatchInsertMapper、UserRoleBatchInsertMapper 类
      *
      * @param entities 实体们
      */

@@ -31,6 +31,11 @@ public class SwaggerConfig {
     @Value("${swagger.enabled}")
     private boolean enabled;
 
+    /**
+     * 版本情况
+     */
+    @Value("${campus.version}")
+    private String version;
 
     /**
      * 创建API
@@ -97,13 +102,13 @@ public class SwaggerConfig {
         // 用ApiInfoBuilder进行定制
         return new ApiInfoBuilder()
                 // 设置标题
-                .title("标题：校园信息墙_接口文档")
+                .title("标题：Campus_接口文档")
                 // 描述
-                .description("描述：校园信息墙的接口文档列表")
+                .description("描述：Campus的接口文档列表")
                 // 作者信息
-                .contact(new Contact("致远", null, null))
+                .contact(new Contact("oddfar", null, null))
                 // 版本
-                .version("版本号:" + "1.1.0")
+                .version("版本号:" + version)
                 .build();
     }
 }
