@@ -43,6 +43,32 @@ i茅台app，每日自动预约茅台
 
 不会Docker部署的，可使用客户端：<https://github.com/lisongkun/hygge-imaotai>
 
+## 交流
+
+
+
+欢迎各位老哥进群**项目技术交流**（只交流技术，不谈茅台）
+
+若您是开发人员，纯技术交流，请进**Campus框架交流群**
+
+若您使用本茅台项目，交流本项目/吹牛皮，请进**Campus-imaotai交流群**
+
+之前300多人的群早已解散，请大家遵守群规，选择合适的群。
+
+| Campus框架交流群                                             | Campus-imaotai交流群                                         |
+| ------------------------------------------------------------ | ------------------------------------------------------------ |
+| <img src="https://note.oddfar.com/img/campus-group.JPG" alt="wechat" style="height:280px;" /> | <img src="https://note.oddfar.com/img/campus-imaotai-group.jpg" alt="wechat" style="height:280px;" /> |
+
+
+
+
+
+
+
+
+
+
+
 
 ## 贡献代码
 
