@@ -31,13 +31,15 @@ i茅台app，每日自动预约茅台
 
 ## 使用教程
 
-- 文档
+- 文档教程
 
-  <https://github.com/oddfar/campus-imaotai/wiki>
+  https://oddfar.github.io/campus-doc/campus-imaotai
+  
+- 视频教程
 
-有问题请查看文档，查找 [issues](https://github.com/oddfar/campus-imaotai/issues) 上是否有相同问题！
+  https://www.bilibili.com/video/BV1dj411H7oT
 
-若没有则提交 [issues](https://github.com/oddfar/campus-imaotai/issues)  ，附带详细的错误原因
+有问题请查看文档，查找 [issues](https://github.com/oddfar/campus-imaotai/issues) 上是否有相同问题，若没有则提交 [issues](https://github.com/oddfar/campus-imaotai/issues)  ，附带详细的错误原因
 
 不会Docker部署的，可使用客户端：<https://github.com/lisongkun/hygge-imaotai>
 
@@ -53,6 +55,30 @@ i茅台app，每日自动预约茅台
 - 葫芦娃项目
 
   yize8888-maotai: https://github.com/yize8888/maotai
+
+## 演示图
+
+
+
+| i茅台预约                                                    |                                                              |
+| ------------------------------------------------------------ | ------------------------------------------------------------ |
+| ![image-20230707144241399](https://gcore.jsdelivr.net/gh/oddfar/campus-imaotai/.github/image-20230707144241399.png) | ![image-20230707144404638](https://gcore.jsdelivr.net/gh/oddfar/campus-imaotai/.github/image-20230707144404638.png) |
+|                                                              |                                                              |
+| ![image-20230707144703842](https://gcore.jsdelivr.net/gh/oddfar/campus-imaotai/.github/image-20230707144703842.png) | ![image-20230707145525709](https://gcore.jsdelivr.net/gh/oddfar/campus-imaotai/.github/image-20230707145525709.png) |
+
+## star 趋势图
+
+![Stargazers over time](https://starchart.cc/oddfar/campus-imaotai.svg)
+
+
+
+## 贡献
+
+<a href="https://github.com/oddfar/campus-imaotai/graphs/contributors">
+<img src="https://contrib.rocks/image?repo=oddfar/campus-imaotai" />
+</a>
+
+
 
 ## 演示图
 
