@@ -79,9 +79,10 @@ public class SysProfileController {
      */
     @PutMapping(value = "/updatePwd", name = "个人信息管理-重置密码")
     public R updatePwd(String oldPassword, String newPassword) {
-        LoginUser loginUser = getLoginUser();
-        String userName = loginUser.getUsername();
-        String password = loginUser.getPassword();
+        SysUserEntity user = userService.selectUserById(SecurityUtils.getUserId());
+//        LoginUser loginUser = getLoginUser();
+        String userName = user.getUserName();
+        String password = user.getPassword();
         if (!SecurityUtils.matchesPassword(oldPassword, password)) {
             return R.error("修改密码失败，旧密码错误");
         }
@@ -89,9 +90,9 @@ public class SysProfileController {
             return R.error("新密码不能与旧密码相同");
         }
         if (userService.resetUserPwd(userName, SecurityUtils.encryptPassword(newPassword)) > 0) {
-            // 更新缓存用户密码
-            loginUser.getUser().setPassword(SecurityUtils.encryptPassword(newPassword));
-            tokenService.setLoginUser(loginUser);
+//            // 更新缓存用户密码
+//            loginUser.getUser().setPassword(SecurityUtils.encryptPassword(newPassword));
+//            tokenService.setLoginUser(loginUser);
             return R.ok();
         }
         return R.error("修改密码异常，请联系管理员");
