@@ -59,7 +59,7 @@ services:
     network_mode: "host"
 
   campus-server:
-    image: campus/campus-imaotai:1.0.9
+    image: campus/campus-imaotai:1.0.10
     container_name: campus-imaotai
     environment:
       # 时区上海
