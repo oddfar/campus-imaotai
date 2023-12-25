@@ -59,13 +59,13 @@ services:
     network_mode: "host"
 
   campus-server:
-    image: campus/campus-imaotai:1.0.10
+    image: campus/campus-imaotai:1.0.11
     container_name: campus-imaotai
     environment:
       # 时区上海
       TZ: Asia/Shanghai
       SERVER_PORT: 8160
-#      spring.config.additional-location: /home/campus/conf/application-prod.yml
+      spring.config.additional-location: /home/campus/conf/application-prod.yml
     volumes:
       - /docker/server/conf:/home/campus/conf
     privileged: true
