@@ -21,7 +21,7 @@ labels: bug
 
 ## 版本情况
 
-campus框架版本： X.X.X（请确保最新尝试是否还有问题）
+campus框架版本： X.X.X（不知道可不填）
 
 本项目campus-imaotai版本： X.X.X（请确保最新尝试是否还有问题）
 
