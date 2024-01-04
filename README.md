@@ -43,14 +43,13 @@ i茅台app，每日自动预约茅台
 
 ## 交流
 
-欢迎各位老哥进群**项目技术交流**（只交流技术，不谈茅台）
+欢迎各位老哥进群**项目技术交流**（只交流技术，不谈茅台），2个群一个纯技术交流，一个交流本项目/吹牛皮
 
-之前300多人的群早已解散，请大家遵守群规，选择合适的群。
+**Campus-imaotai交流群** 已经满200人，现在进群需手动拉+6.66🧧（技术牛人、开发人员不需要🧧），请添加我微信（备注：**i茅台**），我会拉你进群。
 
-| 若您是开发人员，纯技术交流，请进Campus框架交流群             | 若您使用本茅台项目，交流本项目/吹牛皮，请进Campus-imaotai交流群 |
-| ------------------------------------------------------------ | ------------------------------------------------------------ |
-| <img src="https://note.oddfar.com/img/campus-group.JPG" alt="wechat" style="height:280px;" /> | <img src="https://note.oddfar.com/img/campus-imaotai-group.jpg" alt="wechat" style="height:280px;" /> |
+**Campus 交流群** 只能开发人员，纯技术交流可进，不需要🧧请添加我微信（备注：**campus 交流群**）
 
+<img src="https://note.oddfar.com/img/my-wechat.jpg" alt="wechat" style="height:280px;" />
 
 
 ## 友情链接
