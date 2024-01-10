@@ -501,16 +501,16 @@ CREATE TABLE `sys_role_resource` (
 -- Records of sys_role_resource
 -- ----------------------------
 BEGIN;
-INSERT INTO `sys_role_resource` (`resource_code`, `role_id`) VALUES ('oddfar.I_log.list', 1685558345957654529);
-INSERT INTO `sys_role_resource` (`resource_code`, `role_id`) VALUES ('oddfar.I_user.add', 1685558345957654529);
-INSERT INTO `sys_role_resource` (`resource_code`, `role_id`) VALUES ('oddfar.I_user.edit', 1685558345957654529);
-INSERT INTO `sys_role_resource` (`resource_code`, `role_id`) VALUES ('oddfar.I_user.get_info', 1685558345957654529);
-INSERT INTO `sys_role_resource` (`resource_code`, `role_id`) VALUES ('oddfar.I_user.list', 1685558345957654529);
-INSERT INTO `sys_role_resource` (`resource_code`, `role_id`) VALUES ('oddfar.I_user.login', 1685558345957654529);
-INSERT INTO `sys_role_resource` (`resource_code`, `role_id`) VALUES ('oddfar.I_user.remove', 1685558345957654529);
-INSERT INTO `sys_role_resource` (`resource_code`, `role_id`) VALUES ('oddfar.I_user.reservation', 1685558345957654529);
-INSERT INTO `sys_role_resource` (`resource_code`, `role_id`) VALUES ('oddfar.I_user.send_code', 1685558345957654529);
-INSERT INTO `sys_role_resource` (`resource_code`, `role_id`) VALUES ('oddfar.I_user.travel_reward', 1685558345957654529);
+INSERT INTO `sys_role_resource` (`resource_code`, `role_id`) VALUES ('campus-imaotai.I_log.list', 1685558345957654529);
+INSERT INTO `sys_role_resource` (`resource_code`, `role_id`) VALUES ('campus-imaotai.I_user.add', 1685558345957654529);
+INSERT INTO `sys_role_resource` (`resource_code`, `role_id`) VALUES ('campus-imaotai.I_user.edit', 1685558345957654529);
+INSERT INTO `sys_role_resource` (`resource_code`, `role_id`) VALUES ('campus-imaotai.I_user.get_info', 1685558345957654529);
+INSERT INTO `sys_role_resource` (`resource_code`, `role_id`) VALUES ('campus-imaotai.I_user.list', 1685558345957654529);
+INSERT INTO `sys_role_resource` (`resource_code`, `role_id`) VALUES ('campus-imaotai.I_user.login', 1685558345957654529);
+INSERT INTO `sys_role_resource` (`resource_code`, `role_id`) VALUES ('campus-imaotai.I_user.remove', 1685558345957654529);
+INSERT INTO `sys_role_resource` (`resource_code`, `role_id`) VALUES ('campus-imaotai.I_user.reservation', 1685558345957654529);
+INSERT INTO `sys_role_resource` (`resource_code`, `role_id`) VALUES ('campus-imaotai.I_user.send_code', 1685558345957654529);
+INSERT INTO `sys_role_resource` (`resource_code`, `role_id`) VALUES ('campus-imaotai.I_user.travel_reward', 1685558345957654529);
 COMMIT;
 
 -- ----------------------------
