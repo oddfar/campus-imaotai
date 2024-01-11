@@ -36,6 +36,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -523,21 +524,26 @@ public class IMTServiceImpl implements IMTService {
                         .header("MT-Token", iUser.getToken())
                         .header("User-Agent", "iOS;16.3;Apple;?unrecognized?").execute().body();
                 JSONObject jsonObject = JSONObject.parseObject(body);
+                logger.info("查询申购结果回调: user->{},response->{}", iUser.getMobile(), body);
                 if (jsonObject.getInteger("code") != 2000) {
                     String message = jsonObject.getString("message");
                     throw new ServiceException(message);
                 }
-                for (Object itemVOs : jsonObject.getJSONObject("data").getJSONArray("reservationItemVOS")) {
-                    JSONObject item = JSON.parseObject(itemVOs.toString());
+                JSONArray itemVOs = jsonObject.getJSONObject("data").getJSONArray("reservationItemVOS");
+                if(Objects.isNull(itemVOs) || itemVOs.isEmpty()){
+                    logger.info("申购记录为空: user->{}", iUser.getMobile());
+                    continue;
+                }
+                for (Object itemVO : itemVOs) {
+                    JSONObject item = JSON.parseObject(itemVO.toString());
                     // 预约时间在24小时内的
                     if (item.getInteger("status") == 2 && DateUtil.between(item.getDate("reservationTime"), new Date(), DateUnit.HOUR) < 24) {
                         String logContent = DateUtil.formatDate(item.getDate("reservationTime")) + " 申购" + item.getString("itemName") + "成功";
                         IMTLogFactory.reservation(iUser, logContent);
                     }
-
                 }
             } catch (Exception e) {
-                logger.error("查询申购结果失败:失败原因{}", e.getMessage());
+                logger.error("查询申购结果失败:失败原因->{}", e.getMessage(),e);
             }
 
         }
