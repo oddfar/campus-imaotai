@@ -13,7 +13,7 @@ public interface SysConfigMapper extends BaseMapperX<SysConfigEntity> {
                 .likeIfPresent(SysConfigEntity::getConfigName, config.getConfigName())
                 .likeIfPresent(SysConfigEntity::getConfigKey, config.getConfigKey())
                 .eqIfPresent(SysConfigEntity::getGroupCode, config.getGroupCode())
-                .betweenFormatIfPresent(SysConfigEntity::getCreateTime, config.getParams())
+                .betweenIfPresent(SysConfigEntity::getCreateTime, config.getParams())
         );
 
     }

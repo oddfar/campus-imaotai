@@ -108,20 +108,6 @@ public class LambdaQueryWrapperX<T> extends LambdaQueryWrapper<T> {
         return betweenIfPresent(column, val1, val2);
     }
 
-    /**
-     * 格式化日期去比较
-     *
-     * @param column
-     * @param values
-     * @return
-     */
-    public LambdaQueryWrapperX<T> betweenFormatIfPresent(SFunction<T, ?> column, Map<String, Object> values) {
-
-        String val1 = (String) values.get("beginTime") + " 00:00:00";
-        String val2 = (String) values.get("endTime") + " 23:59:59";
-        return betweenIfPresent(column, val1, val2);
-    }
-
     // ========== 重写父类方法，方便链式调用 ==========
 
     @Override

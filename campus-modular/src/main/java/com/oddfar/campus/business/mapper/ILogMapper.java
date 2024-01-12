@@ -19,7 +19,7 @@ public interface ILogMapper extends BaseMapperX<ILog> {
         return selectPage(new LambdaQueryWrapperX<ILog>()
                 .eqIfPresent(ILog::getMobile, iLog.getMobile())
                 .eqIfPresent(ILog::getStatus, iLog.getStatus())
-                .betweenFormatIfPresent(ILog::getOperTime, iLog.getParams())
+                .betweenIfPresent(ILog::getOperTime, iLog.getParams())
                 .orderByDesc(ILog::getLogId)
         );
 
@@ -31,7 +31,7 @@ public interface ILogMapper extends BaseMapperX<ILog> {
                 .eqIfPresent(ILog::getMobile, iLog.getMobile())
                 .eqIfPresent(ILog::getStatus, iLog.getStatus())
                 .eq(ILog::getCreateUser, userId)
-                .betweenFormatIfPresent(ILog::getOperTime, iLog.getParams())
+                .betweenIfPresent(ILog::getOperTime, iLog.getParams())
                 .orderByDesc(ILog::getLogId)
         );
 

@@ -13,7 +13,7 @@ public interface SysResourceMapper extends BaseMapperX<SysResourceEntity> {
     default PageResult<SysResourceEntity> selectPage(SysResourceEntity resource) {
 
         return selectPage(new LambdaQueryWrapperX<SysResourceEntity>()
-                .betweenFormatIfPresent(SysResourceEntity::getCreateTime, resource.getParams()));
+                .betweenIfPresent(SysResourceEntity::getCreateTime, resource.getParams()));
     }
 
 

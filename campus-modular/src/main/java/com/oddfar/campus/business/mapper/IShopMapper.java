@@ -26,7 +26,7 @@ public interface IShopMapper extends BaseMapperX<IShop> {
                 .likeIfPresent(IShop::getDistrictName, iShop.getDistrictName())
                 .likeIfPresent(IShop::getCityName, iShop.getCityName())
                 .likeIfPresent(IShop::getTenantName, iShop.getTenantName())
-                .betweenFormatIfPresent(IShop::getCreateTime, iShop.getParams())
+                .betweenIfPresent(IShop::getCreateTime, iShop.getParams())
         );
 
     }
