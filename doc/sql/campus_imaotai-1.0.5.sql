@@ -2,6 +2,9 @@
  Date: 02/08/2023 17:33:32
 */
 
+CREATE DATABASE campus_imaotai;
+USE campus_imaotai;
+
 SET NAMES utf8;
 SET FOREIGN_KEY_CHECKS = 0;
 
