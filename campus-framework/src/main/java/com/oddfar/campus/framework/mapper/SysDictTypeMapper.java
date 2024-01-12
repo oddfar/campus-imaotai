@@ -15,7 +15,7 @@ public interface SysDictTypeMapper extends BaseMapperX<SysDictTypeEntity> {
                 .likeIfPresent(SysDictTypeEntity::getDictName, dictType.getDictName())
                 .likeIfPresent(SysDictTypeEntity::getDictType, dictType.getDictType())
                 .eqIfPresent(SysDictTypeEntity::getStatus, dictType.getStatus())
-                .betweenIfPresent(SysDictTypeEntity::getCreateTime, dictType.getParams()));
+                .betweenFormatIfPresent(SysDictTypeEntity::getCreateTime, dictType.getParams()));
     }
 
 

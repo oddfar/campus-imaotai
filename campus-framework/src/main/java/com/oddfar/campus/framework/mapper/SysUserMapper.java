@@ -17,7 +17,7 @@ public interface SysUserMapper extends BaseMapperX<SysUserEntity> {
                 .likeIfPresent(SysUserEntity::getUserName, user.getUserName())
                 .likeIfPresent(SysUserEntity::getPhonenumber, user.getPhonenumber())
                 .eqIfPresent(SysUserEntity::getStatus, user.getStatus())
-                .betweenIfPresent(SysUserEntity::getCreateTime, user.getParams())
+                .betweenFormatIfPresent(SysUserEntity::getCreateTime, user.getParams())
         );
     }
 
