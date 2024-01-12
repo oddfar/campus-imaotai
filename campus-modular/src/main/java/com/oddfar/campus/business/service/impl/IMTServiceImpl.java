@@ -13,6 +13,7 @@ import cn.hutool.http.Method;
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
+import com.oddfar.campus.business.domain.UserCoinInfo;
 import com.oddfar.campus.business.entity.IUser;
 import com.oddfar.campus.business.mapper.IUserMapper;
 import com.oddfar.campus.business.service.IMTLogFactory;
@@ -24,6 +25,7 @@ import com.oddfar.campus.common.exception.ServiceException;
 import com.oddfar.campus.common.utils.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -32,6 +34,7 @@ import javax.annotation.PostConstruct;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -40,6 +43,7 @@ import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 @Service
 public class IMTServiceImpl implements IMTService {
@@ -549,6 +553,40 @@ public class IMTServiceImpl implements IMTService {
         }
         logger.info("申购结果查询结束=========================");
     }
+
+    @Override
+    public List<UserCoinInfo> getUserCoin(Long[] mobiles) {
+        List<IUser> iUsers = iUserMapper.selectBatchIds(Arrays.asList(mobiles));
+        return iUsers.parallelStream().map(this::getUserCoin).collect(Collectors.toList());
+    }
+
+    private UserCoinInfo getUserCoin(IUser iUser){
+        UserCoinInfo userCoinInfo = new UserCoinInfo();
+        BeanUtils.copyProperties(iUser, userCoinInfo);
+        long timestamp = System.currentTimeMillis();
+        // 获取I茅台用户的小茅运&体力值
+        String url = "https://h5.moutai519.com.cn/game/userinfo/getUserCoin?csrf_token&__timestamp="+timestamp;
+        HttpRequest request = HttpUtil.createRequest(Method.GET, url);
+        try{
+            request.header("MT-Device-ID", iUser.getDeviceId())
+                    .header("MT-APP-Version", getMTVersion())
+                    .header("User-Agent", "iOS;16.3;Apple;?unrecognized?")
+                    .cookie("MT-Token-Wap=" + iUser.getCookie() + ";MT-Device-ID-Wap=" + iUser.getDeviceId() + ";");
+            String body = request.execute().body();
+            JSONObject jsonObject = JSONObject.parseObject(body);
+            if (jsonObject.getInteger("code") != 2000) {
+                String message = jsonObject.getString("message");
+                throw new ServiceException(message);
+            }
+            JSONObject data = jsonObject.getJSONObject("data");
+            userCoinInfo.setXmyNum(data.getFloat("xmyNum"));
+            userCoinInfo.setEnergy(data.getInteger("energy"));
+        }catch (Exception e){
+            logger.error("获取I茅台用户的小茅运&体力值失败:user->{},失败原因->{}",iUser.getMobile(), e.getMessage());
+        }
+        return userCoinInfo;
+    }
+
 
     public JSONObject reservation(IUser iUser, String itemId, String shopId) {
         Map<String, Object> map = new HashMap<>();
