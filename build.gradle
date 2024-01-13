@@ -1,26 +1,12 @@
 
 plugins {
-    // Support convention plugins written in Groovy. Convention plugins are build scripts in 'src/main' that automatically become available as plugins in the main build.
-    // id 'groovy-gradle-plugin'
      id 'java-library'
 //          id "jacoco"
-// //    id 'io.quarkus'  version "$quarkusVersion" apply false
-//     id "org.sonarqube" version "4.4.1.3373"
 }
 
 allprojects {
 
     repositories {
-//         maven{
-//             url "$MAVEN_REPO"
-//             credentials(HttpHeaderCredentials) {
-//                 name = "X-JFrog-Art-API"
-//                 value = System.getenv("JCR_TOKEN" )?:"$JCR_TOKEN"
-//             }
-//             authentication {
-//                 header(HttpHeaderAuthentication)
-//             }
-//         }
         maven {
             url 'https://maven.aliyun.com/repository/public/'
         }
@@ -31,7 +17,6 @@ allprojects {
 
 subprojects {
     apply plugin: 'java-library'
-//    apply plugin: 'jacoco'
 
     group = "$group"
     version = "$version"
@@ -44,16 +29,6 @@ subprojects {
         options.encoding = 'UTF-8'
         options.compilerArgs << '-parameters'
     }
-
-    test {
-        //        useJUnitPlatform()
-//        systemProperty "java.util.logging.manager", "org.jboss.logmanager.LogManager"
-//        systemProperty "jdbc.host" , "mysql-junit.infra"
-//        systemProperty "quarkus.log.level","DEBUG"
-
-//        finalizedBy jacocoTestReport
-    }
-
 
     dependencies {
         compileOnly "org.projectlombok:lombok:${lombokVersion}"
