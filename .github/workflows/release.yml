@@ -40,7 +40,7 @@ jobs:
 
       - name: Build with Maven
         working-directory: ./
-        run: mvn -B package --file pom.xml
+        run: mvn -B package -P prod  --file pom.xml
 
       # 设置 Maven pom 版本环境变量
       - name: Set Release version env variable
