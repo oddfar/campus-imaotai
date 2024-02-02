@@ -1,7 +1,8 @@
 FROM node:16 AS build
 WORKDIR /app
 COPY ./vue_campus_admin .
-RUN npm i && npm run build:prod
+RUN npm i --registry https://registry.npm.taobao.org \
+    && npm run build:prod
 
 FROM nginx:1.23.4
 LABEL MAINTAINER="K8sCat <k8scat@gmail.com>"
