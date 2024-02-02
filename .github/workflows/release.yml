@@ -1,0 +1,100 @@
+name: release
+on:
+  # 手动构建
+  workflow_dispatch: 
+    inputs:
+        version_name:
+          description: '版本号'
+          required: false
+          type: string
+
+env:
+  API_WORKING_DIR: campus-modular
+  WEB_WORKING_DIR: vue_campus_admin
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: ./
+
+    permissions: write-all
+
+    strategy:
+      matrix:
+        node-version: [16.x]
+
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v3
+
+      #--------------------构建jar--------------------
+      - name: Set up JDK 8
+        uses: actions/setup-java@v3
+        with:
+          java-version: '8'
+          distribution: 'temurin'
+          cache: maven
+
+      - name: Build with Maven
+        working-directory: ./
+        run: mvn -B package -P prod  --file pom.xml
+
+      # 设置 Maven pom 版本环境变量
+      - name: Set Release version env variable
+        run: |
+          if [ ${{ github.event.inputs.version_name }} != "" ]; then
+            echo "RELEASE_VERSION=${{ github.event.inputs.version_name }}" >> $GITHUB_ENV
+          else
+            # 获取maven项目里的版本号
+            echo "RELEASE_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)" >> $GITHUB_ENV
+          fi
+          
+      - name: Remane jar
+        working-directory: ${{ env.API_WORKING_DIR }}
+        run: |
+          cd target
+          # rename 's/(.*)\.jar/$1_${{ env.RELEASE_VERSION }}.jar/' *.jar
+          for file in *.jar; do mv "$file" "${file%.jar}_${{ env.RELEASE_VERSION }}.jar"; done
+      #--------------------构建前端--------------------
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Cache ☕
+        id: cache
+        uses: actions/cache@v3
+        with:
+          path: vue_campus_admin/node_modules
+          key: ${{runner.os}}-npm-caches-${{ hashfiles('package-lock.json') }}
+
+      - name: Install 🔧
+        working-directory: ${{ env.WEB_WORKING_DIR }}
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: npm install
+
+      - name: Build 🔧
+        working-directory: ${{ env.WEB_WORKING_DIR }}
+        run: |
+          npm run build:prod
+
+      - name: Tar dist file
+        working-directory: ${{ env.WEB_WORKING_DIR }}
+        run: |
+          tar -czvf dist_${{ env.RELEASE_VERSION }}.tar.gz dist
+
+      
+      # 上传文件并发布 Release
+      - name: Create GitHub release
+        uses: marvinpinto/action-automatic-releases@latest
+        with:
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          automatic_release_tag: "v${{ env.RELEASE_VERSION }}"
+          prerelease: false
+          title: "v${{ env.RELEASE_VERSION }}"
+          files: |
+            ${{ env.API_WORKING_DIR }}/target/*.jar
+            ${{ env.WEB_WORKING_DIR }}/dist_*.tar.gz
