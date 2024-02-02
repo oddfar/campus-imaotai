@@ -1,7 +1,7 @@
 FROM node:16 AS build
 WORKDIR /app
 COPY ./vue_campus_admin .
-RUN npm i --registry https://registry.npm.taobao.org \
+RUN npm i --registry=https://registry.npmmirror.com \
     && npm run build:prod
 
 FROM nginx:1.23.4
