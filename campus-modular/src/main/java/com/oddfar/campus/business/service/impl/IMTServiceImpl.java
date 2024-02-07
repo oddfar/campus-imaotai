@@ -107,8 +107,9 @@ public class IMTServiceImpl implements IMTService {
     public Boolean sendCode(String mobile, String deviceId) {
         Map<String, Object> data = new HashMap<>();
         data.put("mobile", mobile);
-        data.put("md5", signature(mobile));
-        data.put("timestamp", String.valueOf(System.currentTimeMillis()));
+        final long curTime = System.currentTimeMillis();
+        data.put("md5", signature(mobile, curTime));
+        data.put("timestamp", String.valueOf(curTime));
 //        data.put("MT-APP-Version", MT_VERSION);
 
         HttpRequest request = HttpUtil.createRequest(Method.POST,
@@ -141,9 +142,10 @@ public class IMTServiceImpl implements IMTService {
         map.put("mobile", mobile);
         map.put("vCode", code);
 
-        map.put("md5", signature(mobile + code + "" + ""));
+        final long curTime = System.currentTimeMillis();
+        map.put("md5", signature(mobile + code + "" + "", curTime));
 
-        map.put("timestamp", String.valueOf(System.currentTimeMillis()));
+        map.put("timestamp", String.valueOf(curTime));
         map.put("MT-APP-Version", getMTVersion());
 
         HttpRequest request = HttpUtil.createRequest(Method.POST,
@@ -621,9 +623,9 @@ public class IMTServiceImpl implements IMTService {
      * @param content
      * @return
      */
-    private static String signature(String content) {
+    private static String signature(String content, long time) {
 
-        String text = SALT + content + System.currentTimeMillis();
+        String text = SALT + content + time;
         String md5 = "";
         try {
             MessageDigest md = MessageDigest.getInstance("MD5");
