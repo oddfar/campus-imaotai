@@ -1,6 +1,7 @@
 package com.oddfar.campus.business.service.impl;
 
 import cn.hutool.core.convert.Convert;
+import cn.hutool.core.date.DateField;
 import cn.hutool.core.date.DateUnit;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.crypto.Mode;
@@ -22,6 +23,7 @@ import com.oddfar.campus.business.service.IUserService;
 import com.oddfar.campus.common.core.RedisCache;
 import com.oddfar.campus.common.exception.ServiceException;
 import com.oddfar.campus.common.utils.StringUtils;
+import java.util.Calendar;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -468,7 +470,11 @@ public class IMTServiceImpl implements IMTService {
     @Async
     @Override
     public void reservationBatch() {
-        int minute = DateUtil.minute(new Date());
+        // 延迟两分钟领取
+        int intervalMinute = -2;
+        Calendar calendar = DateUtil.calendar();
+        calendar.add(DateField.MINUTE.getValue(), intervalMinute);
+        int minute = DateUtil.minute(calendar.getTime());
         List<IUser> iUsers = iUserService.selectReservationUserByMinute(minute);
 
         for (IUser iUser : iUsers) {
