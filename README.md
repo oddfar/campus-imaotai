@@ -41,14 +41,6 @@ i茅台app，每日自动预约茅台
 
 不会Docker部署的，可使用客户端：<https://github.com/lisongkun/hygge-imaotai>
 
-## 交流
-
-欢迎各位老哥进群**项目技术交流**（只交流技术，不谈茅台）
-
-**Campus-imaotai交流群** 已经满200人，现在进群需手动拉，需6.66🧧（技术牛人、开发人员不需要🧧，减少沟通成本请直发你技术栈/开源项目），请添加我微信（备注：**i茅台**），我会拉你进群。
-
-<img src="https://note.oddfar.com/img/my-wechat.jpg" alt="wechat" style="height:280px;" />
-
 
 ## 友情链接
 

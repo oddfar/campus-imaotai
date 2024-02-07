@@ -1,5 +1,6 @@
+FROM adoptopenjdk/openjdk8
 #FROM java:8
-FROM openjdk:8
+#FROM openjdk:8
 
 MAINTAINER oddfar
 
