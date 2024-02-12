@@ -37,6 +37,28 @@ public class PushPlusApi {
 
     }
 
+    public static void sendNotice(IUser iUser, ILog operLog , String msghead ) {
+        String token = iUser.getPushPlusToken();
+        if (StringUtils.isEmpty(token)) {
+            return;
+        }
+        String title, content;
+        if (operLog.getStatus() == 0) {
+            //预约成功
+            title = iUser.getRemark() + "-" + msghead + "成功";
+            content = iUser.getMobile() + System.lineSeparator() + operLog.getLogContent();
+            AsyncManager.me().execute(sendNotice(token, title, content, "txt"));
+        } else {
+            //预约失败
+            title = iUser.getRemark() + "-" + msghead + "失败";
+            content = iUser.getMobile() + System.lineSeparator() + operLog.getLogContent();
+            AsyncManager.me().execute(sendNotice(token, title, content, "txt"));
+        }
+
+
+    }
+
+    
     /**
      * push推送
      *
