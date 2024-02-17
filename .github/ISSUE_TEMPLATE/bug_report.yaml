@@ -40,12 +40,12 @@ body:
 
   # Env | Version
   - type: input
-    id: env-version
+    id: env-campus-version
     attributes:
       label: campus框架版本
 
   - type: input
-    id: env-version
+    id: env-campus-imaotai-version
     attributes:
       label: 本项目 campus-imaotai 版本
     validations:
