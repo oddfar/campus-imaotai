@@ -38,15 +38,18 @@ body:
         ## 环境信息
         请根据实际使用环境修改以下信息。
 
-  # Env |  Version
+  # Env | Version
   - type: input
     id: env-version
     attributes:
-      label: 版本信息
-      options:
-        - label: campus框架版本
-        - label: 本项目 campus-imaotai 版本
-          required: true                                                                                                                                                                                                                                                                                                                                                                                                                                                       
+      label: campus框架版本
+
+  - type: input
+    id: env-version
+    attributes:
+      label: 本项目 campus-imaotai 版本
+    validations:
+      required: true
 
 
   # Env | VM Version
@@ -105,7 +108,7 @@ body:
     id: reproduce-code
     attributes:
       label: 简单的复现代码/链接（可选）
-      render: java
+      render: Java
 
   # Optional | Logging
   - type: textarea
