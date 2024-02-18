@@ -33,6 +33,16 @@ i茅台app，每日自动预约茅台
 
 - 视频：https://www.bilibili.com/video/BV1dj411H7oT
 
+## 快速启动
+
+```shell
+git clone git@github.com:oddfar/campus-imaotai.git
+cd campus-imaotai/doc/docker/nginx
+tar -zxvf dist_1.0.12.tar.gz
+cd ../
+docker-compose up -d
+```
+
 
 ## 演示图
 

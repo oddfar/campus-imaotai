@@ -1,72 +1,73 @@
-version : '3'
+version: '3'
 
 services:
-  mysql:
+  campus-mysql:
     image: mysql:5.7
-    container_name: mysql
+    container_name: campus-mysql
+    restart: always
     environment:
-      # root 密码
-      MYSQL_ROOT_PASSWORD: 123456789
-      # 初始化数据库(后续的初始化sql会在这个库执行)
+      MYSQL_ROOT_PASSWORD: oddfar_imaotai
       MYSQL_DATABASE: 'campus_imaotai'
     volumes:
-      # 数据挂载
-      - /docker/mysql/data/:/var/lib/mysql/
-      # 配置挂载
-      - /docker/mysql/conf/:/etc/mysql/conf.d/
-      # 日志
-      - /docker/mysql/logs:/logs
+      - ./mysql/data/:/var/lib/mysql/
+      - ./mysql/conf/:/etc/mysql/conf.d/
+      - ./mysql/logs:/logs
+      - ./../sql:/docker-entrypoint-initdb.d/
     command: [
-          'mysqld',
-          '--innodb-buffer-pool-size=80M',
-          '--character-set-server=utf8mb4',
-          '--collation-server=utf8mb4_unicode_ci',
-          '--default-time-zone=+8:00',
-          '--lower-case-table-names=1'
-        ]
-    privileged: true
-    network_mode: "host"
+      'mysqld',
+      '--innodb-buffer-pool-size=80M',
+      '--character-set-server=utf8mb4',
+      '--collation-server=utf8mb4_unicode_ci',
+      '--default-time-zone=+8:00',
+      '--lower-case-table-names=1'
+    ]
+    networks:
+      - imaotai
 
-  redis:
+  campus-redis:
     image: redis:6.2.12
-    container_name: redis
+    container_name: campus-redis
+    restart: always
     volumes:
-      # 配置文件
-      - /docker/redis/conf:/redis/config
-      # 数据文件
-      - /docker/redis/data/:/redis/data/
+      - ./redis/conf:/redis/config
+      - ./redis/data/:/redis/data/
     command: "redis-server /redis/config/redis.conf"
-    privileged: true
-    network_mode: "host"
+    networks:
+      - imaotai
 
-
-  nginx-web:
+  campus-nginx:
     image: nginx:1.23.4
-    container_name: nginx-web
+    container_name: campus-nginx
+    restart: always
+    ports:
+      - 80:80
     environment:
-      # 时区上海
       TZ: Asia/Shanghai
     volumes:
-      # 页面目录
-      - /docker/nginx/html:/usr/share/nginx/html
-      # 证书映射
-      - /docker/nginx/cert:/etc/nginx/cert
-      # 配置文件映射
-      - /docker/nginx/conf/nginx.conf:/etc/nginx/nginx.conf
-      # 日志目录
-      - /docker/nginx/log:/var/log/nginx
-    privileged: true
-    network_mode: "host"
+      - ./nginx/dist:/usr/share/nginx/dist
+      - ./nginx/cert:/etc/nginx/cert
+      - ./nginx/conf/nginx.conf:/etc/nginx/nginx.conf
+      - ./nginx/log:/var/log/nginx
+    depends_on:
+      - campus-server
+    networks:
+      - imaotai
 
   campus-server:
     image: campus/campus-imaotai:1.0.12
     container_name: campus-imaotai
+    restart: always
     environment:
-      # 时区上海
       TZ: Asia/Shanghai
       SERVER_PORT: 8160
       spring.config.additional-location: /home/campus/conf/application-prod.yml
     volumes:
-      - /docker/server/conf:/home/campus/conf
-    privileged: true
-    network_mode: "host"
+      - ./server/conf:/home/campus/conf
+    depends_on:
+      - campus-mysql
+      - campus-redis
+    networks:
+      - imaotai
+
+networks:
+  imaotai:
