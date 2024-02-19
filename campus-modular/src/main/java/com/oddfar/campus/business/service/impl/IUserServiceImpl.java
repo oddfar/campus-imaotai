@@ -91,7 +91,12 @@ public class IUserServiceImpl implements IUserService {
     @Override
     @Async
     public void updateUserMinuteBatch() {
-        iUserMapper.updateUserMinuteBatch();
+        Long userCount = iUserMapper.selectCount();
+        if (userCount > 60) {
+            iUserMapper.updateUserMinuteEven();
+        }else {
+            iUserMapper.updateUserMinuteBatch();
+        }
     }
 
     @Override
