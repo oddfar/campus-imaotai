@@ -249,10 +249,12 @@ public class SysUserServiceImpl implements SysUserService {
             // 新增用户与角色管理
             List<SysUserRoleEntity> list = new ArrayList<SysUserRoleEntity>(roleIds.length);
             for (Long roleId : roleIds) {
-                SysUserRoleEntity ur = new SysUserRoleEntity();
-                ur.setUserId(userId);
-                ur.setRoleId(roleId);
-                list.add(ur);
+                if (roleId != null) {
+                    SysUserRoleEntity ur = new SysUserRoleEntity();
+                    ur.setUserId(userId);
+                    ur.setRoleId(roleId);
+                    list.add(ur);
+                }
             }
             userRoleMapper.insertBatch(list);
         }
