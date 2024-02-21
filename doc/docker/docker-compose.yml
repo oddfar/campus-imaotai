@@ -1,9 +1,9 @@
 version : '3'
 
 services:
-  mysql:
+  campus-mysql:
     image: mysql:5.7
-    container_name: mysql
+    container_name: campus-mysql
     environment:
       # root 密码
       MYSQL_ROOT_PASSWORD: 123456789
@@ -27,9 +27,9 @@ services:
     privileged: true
     network_mode: "host"
 
-  redis:
+  campus-redis:
     image: redis:6.2.12
-    container_name: redis
+    container_name: campus-redis
     volumes:
       # 配置文件
       - /docker/redis/conf:/redis/config
@@ -40,9 +40,9 @@ services:
     network_mode: "host"
 
 
-  nginx-web:
+  campus-nginx:
     image: nginx:1.23.4
-    container_name: nginx-web
+    container_name: campus-nginx
     environment:
       # 时区上海
       TZ: Asia/Shanghai
