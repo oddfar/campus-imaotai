@@ -4,7 +4,7 @@ import com.oddfar.campus.business.entity.IUser;
 import com.oddfar.campus.common.core.BaseMapperX;
 import com.oddfar.campus.common.core.LambdaQueryWrapperX;
 import com.oddfar.campus.common.domain.PageResult;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 
 import java.util.List;
 
@@ -66,8 +66,14 @@ public interface IUserMapper extends BaseMapperX<IUser> {
         );
     }
 
-    @Select("UPDATE i_user SET `minute` = (SELECT FLOOR(RAND() * 50 + 1)) WHERE random_minute = \"0\"")
+    @Update("UPDATE i_user SET `minute` = (SELECT FLOOR(RAND() * 50 + 1)) WHERE random_minute = \"0\"")
     void updateUserMinuteBatch();
+
+    @Update("SET @row_number = 0;\n" +
+            "UPDATE i_user\n" +
+            "SET `minute` = (@row_number := @row_number + 1) % 50 + 1\n" +
+            "ORDER BY RAND();")
+    void updateUserMinuteEven();
 
     int deleteIUser(Long[] iUserId);
 }

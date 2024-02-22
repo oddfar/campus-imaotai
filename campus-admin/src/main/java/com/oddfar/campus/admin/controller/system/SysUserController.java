@@ -18,6 +18,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -59,7 +60,7 @@ public class SysUserController {
         if (StringUtils.isNotNull(userId)) {
             SysUserEntity sysUser = userService.selectUserById(userId);
             res.put("data", sysUser);
-            res.put("roleIds", sysUser.getRoles().stream().map(SysRoleEntity::getRoleId).collect(Collectors.toList()));
+            res.put("roleIds", sysUser.getRoles().stream().map(SysRoleEntity::getRoleId).filter(Objects::nonNull).collect(Collectors.toList()));
         }
 
         return res;

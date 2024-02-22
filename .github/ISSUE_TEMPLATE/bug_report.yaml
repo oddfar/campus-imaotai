@@ -1,0 +1,127 @@
+name: 报告bug
+description: 创建一个报告，请详细描述，来帮助我们改进
+title: '[bug]: '
+labels: [ "bug" ]
+
+body:
+  # User's README and agreement
+  - type: markdown
+    attributes:
+      value: |
+        ## 感谢您愿意填写错误回报！
+        ## 以下是一些注意事项，请务必阅读让我们能够更容易处理
+
+        ### ❗ | 查看[文档](https://oddfar.github.io/campus-doc/campus-imaotai)里是否有解决方案 
+        ### ❗ | 确定没有相同问题的 ISSUE 已被提出. 
+        ### ❗ | 如果是部署问题，在[讨论区](https://github.com/oddfar/campus-imaotai/discussions/categories/show-and-tell)里搜索是否存在相似的部署方案
+
+
+        ## 如果您不知道如何有效、精准地表述，我们建议您先阅读《提问的智慧》
+        链接: [《提问的智慧》](https://github.com/ryanhanwu/How-To-Ask-Questions-The-Smart-Way/blob/main/README-zh_CN.md)
+        ---
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: 请确保您已阅读以上注意事项，并勾选下方的确认框。
+      options:
+        - label: "我已确认我已升级到最新版本（最新代码）测试过，问题依旧存在。"
+          required: true
+        - label: "我已经在 [Issue Tracker](https://github.com/oddfar/campus-imaotai/issues) 中找过我要提出的问题，没有找到相同问题的ISSUE。"
+          required: true
+        - label: "我理解并认可上述内容，并理解项目维护者精力有限，不遵循规则的 issue 可能会被无视或直接关闭"
+          required: true
+
+  # User's data
+  - type: markdown
+    attributes:
+      value: |
+        ## 环境信息
+        请根据实际使用环境修改以下信息。
+
+  # Env | Version
+  - type: input
+    id: env-campus-version
+    attributes:
+      label: campus框架版本
+
+  - type: input
+    id: env-campus-imaotai-version
+    attributes:
+      label: 本项目 campus-imaotai 版本
+    validations:
+      required: true
+
+
+  # Env | VM Version
+  - type: dropdown
+    id: env-vm-ver
+    attributes:
+      label: 运行环境
+      description: 选择运行 campus-imaotai 的系统版本
+      options:
+        - Windows (64)
+        - Windows (32/x84)
+        - MacOS
+        - Linux
+        - Ubuntu
+        - CentOS
+        - ArchLinux
+        - UNIX (Android)
+        - 其它（请在下方说明）
+    validations:
+      required: true
+
+  # Env | VM Arch
+  - type: dropdown
+    id: env-vm-arch
+    attributes:
+      label: 运行架构
+      description: (可选) 选择运行 campus-imaotai 的系统架构
+      options:
+        - AMD64
+        - x86
+        - ARM [32] (别名：AArch32 / ARMv7）
+        - ARM [64] (别名：AArch64 / ARMv8）
+        - 其它
+
+  # Input | Reproduce
+  - type: textarea
+    id: problem-description
+    attributes:
+      label: 问题描述
+      description: |
+        1. 使用的什么功能，遇到什么问题
+        2. 返回的实际结果是什么
+    validations:
+      required: true
+
+  # Input | Expected result
+  - type: textarea
+    id: expected
+    attributes:
+      label: 期望的结果是什么？
+    validations:
+      required: true
+
+  # Optional | Reproduce code
+  - type: textarea
+    id: reproduce-code
+    attributes:
+      label: 简单的复现代码/链接（可选）
+      render: Java
+
+  # Optional | Logging
+  - type: textarea
+    id: logging
+    attributes:
+      label: 日志记录（可选）
+      description: |
+        截图或者日志记录都可以，比如 Docker 容器的日志。
+        Docker中查看容器的日志，可以使用 `docker logs container_id` 命令。
+         `container_id` 为目标容器的ID或名称
+
+  # Optional | Extra description
+  - type: textarea
+    id: extra-desc
+    attributes:
+      label: 补充说明（可选）
