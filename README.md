@@ -8,7 +8,8 @@
 <p align="center"> i茅台app自动预约，每日自动预约，支持docker一键部署</p>
 
 <h2 align="center">Campus-imaotai</h2>
-### 基于项目搭建的网站免费使用学习
+
+## 基于项目搭建的网站免费使用学习
 - 链接：https://imaotai.daijc.cn
 
 
