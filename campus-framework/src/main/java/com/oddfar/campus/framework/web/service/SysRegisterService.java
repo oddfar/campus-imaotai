@@ -13,10 +13,13 @@ import com.oddfar.campus.common.utils.SecurityUtils;
 import com.oddfar.campus.common.utils.StringUtils;
 import com.oddfar.campus.framework.manager.AsyncFactory;
 import com.oddfar.campus.framework.manager.AsyncManager;
+import com.oddfar.campus.framework.mapper.SysUserRoleMapper;
 import com.oddfar.campus.framework.service.SysConfigService;
 import com.oddfar.campus.framework.service.SysUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import javax.annotation.Resource;
 
 /**
  * 注册校验方法

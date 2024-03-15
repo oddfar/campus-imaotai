@@ -10,6 +10,15 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
+      <el-form-item label="操作信息" prop="msg">
+        <el-input
+          v-model="queryParams.msg"
+          placeholder="请输入操作信息"
+          clearable
+          style="width: 240px;"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
       <el-form-item label="用户名称" prop="userName">
         <el-input
           v-model="queryParams.userName"

@@ -119,7 +119,7 @@ public class IUserController {
 
         IShop iShop = iShopService.selectByIShopId(iUser.getIshopId());
         if (iShop == null) {
-            throw new ServiceException("门店商品id不存在");
+            throw new ServiceException("门店id不存在");
         }
         iUser.setLng(iShop.getLng());
         iUser.setLat(iShop.getLat());
@@ -137,7 +137,7 @@ public class IUserController {
     public R edit(@RequestBody IUser iUser) {
         IShop iShop = iShopService.selectByIShopId(iUser.getIshopId());
         if (iShop == null) {
-            throw new ServiceException("门店商品id不存在");
+            throw new ServiceException("门店id不存在");
         }
         iUser.setLng(iShop.getLng());
         iUser.setLat(iShop.getLat());

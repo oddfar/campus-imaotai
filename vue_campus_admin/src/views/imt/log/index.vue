@@ -17,6 +17,15 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
+      <el-form-item label="日志内容" prop="logContent">
+        <el-input
+          v-model="queryParams.logContent"
+          placeholder="请输入日志记录内容"
+          clearable
+          style="width: 240px"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
       <el-form-item label="状态" prop="status">
         <el-select
           v-model="queryParams.status"

@@ -421,8 +421,8 @@
         </el-row> -->
         <el-row>
           <el-col :span="12">
-            <el-form-item label="门店商品ID" prop="ishopId">
-              <el-input v-model="form.ishopId" placeholder="请输入门店商品ID"/>
+            <el-form-item label="门店ID" prop="ishopId">
+              <el-input v-model="form.ishopId" placeholder="请输入门店ID（去门店列表获取）"/>
             </el-form-item>
           </el-col>
           <el-col :span="12">

@@ -13,6 +13,7 @@ import cn.hutool.http.Method;
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
+import com.oddfar.campus.business.api.PushPlusApi;
 import com.oddfar.campus.business.entity.IUser;
 import com.oddfar.campus.business.mapper.IUserMapper;
 import com.oddfar.campus.business.service.IMTLogFactory;
@@ -22,6 +23,7 @@ import com.oddfar.campus.business.service.IUserService;
 import com.oddfar.campus.common.core.RedisCache;
 import com.oddfar.campus.common.exception.ServiceException;
 import com.oddfar.campus.common.utils.StringUtils;
+import com.oddfar.campus.framework.manager.AsyncManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -184,15 +186,59 @@ public class IMTServiceImpl implements IMTService {
         String[] items = iUser.getItemCode().split("@");
 
         String logContent = "";
-        for (String itemId : items) {
+        /*for (String itemId : items) {
             try {
                 String shopId = iShopService.getShopId(iUser.getShopType(), itemId,
                         iUser.getProvinceName(), iUser.getCityName(), iUser.getLat(), iUser.getLng());
                 //预约
                 JSONObject json = reservation(iUser, itemId, shopId);
                 logContent += String.format("[预约项目]：%s\n[shopId]：%s\n[结果返回]：%s\n\n", itemId, shopId, json.toString());
+                //随机延时4到10s
+                int sleepTime = (int) (Math.random() * 6 + 4);
+                TimeUnit.SECONDS.sleep(sleepTime);
             } catch (Exception e) {
                 logContent += String.format("执行报错--[预约项目]：%s\n[结果返回]：%s\n\n", itemId, e.getMessage());
+
+                // 对预约失败项目进行重试机制，重试次数为3
+
+            }
+        }*/
+
+        for (String itemId : items) {
+            int retryCount = 0; // 重试次数计数器
+            boolean reservationSuccess = false; // 标记预约是否成功
+            while (retryCount < 3 && !reservationSuccess) {
+                try {
+                    String shopId = iShopService.getShopId(iUser.getShopType(), itemId,
+                            iUser.getProvinceName(), iUser.getCityName(), iUser.getLat(), iUser.getLng());
+                    // 预约
+                    JSONObject json = reservation(iUser, itemId, shopId);
+                    logContent += String.format("[预约项目]：%s\n[shopId]：%s\n[结果返回]：%s\n\n", itemId, shopId, json.toString());
+                    reservationSuccess = true; // 标记预约成功
+                    // 随机延时4到10s
+                    int sleepTime = (int) (Math.random() * 6 + 4);
+                    TimeUnit.SECONDS.sleep(sleepTime);
+                } catch (Exception e) {
+                    logContent += String.format("执行报错--[预约项目]：%s\n[结果返回]：%s\n\n", itemId, e.getMessage());
+                    retryCount++; // 增加重试次数
+
+
+                    /**
+                     * 如果错误信息是：则不再重试
+                     *  - 申购已结束，请明天再来。
+                     *  - 今天已申购。
+                     *  - 您的实名信息未完善或未通过认证
+                     */
+                    if (e.getMessage().contains("申购已结束")
+                            || e.getMessage().contains("今天已申购")
+                            || e.getMessage().contains("实名信息未完善")) {
+                        break;
+                    }
+                }
+            }
+            if (!reservationSuccess) {
+                // 如果重试次数达到上限仍未成功，则记录日志并继续下一个项目的预约
+                logContent += String.format("重试%d次后，仍未成功预约项目：%s\n\n", retryCount, itemId);
             }
         }
 

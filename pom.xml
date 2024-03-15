@@ -10,7 +10,7 @@
     <packaging>pom</packaging>
 
     <name>campus</name>
-    <url>http://campus.oddfar.com</url>
+    <url>https://imaotai.daijc.cn</url>
     <description>i茅台自动预约</description>
 
     <modules>
@@ -24,7 +24,7 @@
         <revision>1.0.12</revision>
         <campus.revision>1.1.9</campus.revision>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <java.version>1.8</java.version>
+        <java.version>17</java.version>
         <bitwalker.version>1.21</bitwalker.version>
         <mybatis.plus.boot.version>3.5.4.1</mybatis.plus.boot.version>
         <p6spy.version>3.9.1</p6spy.version>

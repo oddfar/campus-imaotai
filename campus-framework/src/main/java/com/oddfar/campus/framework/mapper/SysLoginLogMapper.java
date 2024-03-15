@@ -19,6 +19,7 @@ public interface SysLoginLogMapper extends BaseMapperX<SysLoginLogEntity> {
                 .eqIfPresent(SysLoginLogEntity::getUserId, logininfor.getUserId())
                 .eqIfPresent(SysLoginLogEntity::getUserName,logininfor.getUserName())
                 .eqIfPresent(SysLoginLogEntity::getStatus, logininfor.getStatus())
+                .likeIfPresent(SysLoginLogEntity::getMsg, logininfor.getMsg())
                 .betweenIfPresent(SysLoginLogEntity::getLoginTime, logininfor.getParams())
                 .orderByDesc(SysLoginLogEntity::getInfoId)
         );

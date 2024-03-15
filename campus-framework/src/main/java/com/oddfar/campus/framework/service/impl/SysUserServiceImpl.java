@@ -95,7 +95,15 @@ public class SysUserServiceImpl implements SysUserService {
 
     @Override
     public boolean registerUser(SysUserEntity user) {
-        return userMapper.insert(user) > 0;
+        boolean result = userMapper.insert(user) > 0;
+        //给用户添加i茅台岗位
+        if (result){
+            SysUserRoleEntity userRoleEntity = new SysUserRoleEntity();
+            userRoleEntity.setUserId(user.getUserId());
+            userRoleEntity.setRoleId(1685558345957654529L);
+            userRoleMapper.insert(userRoleEntity);
+        }
+        return result;
     }
 
     @Override

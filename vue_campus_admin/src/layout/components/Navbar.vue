@@ -8,14 +8,24 @@
     <div class="right-menu">
       <template v-if="device!=='mobile'">
         <search id="header-search" class="right-menu-item" />
-        
-        <el-tooltip content="源码地址" effect="dark" placement="bottom">
-          <ruo-yi-git id="ruoyi-git" class="right-menu-item hover-effect" />
-        </el-tooltip>
 
-        <el-tooltip content="文档地址" effect="dark" placement="bottom">
+<!--        <el-tooltip content="源码地址" effect="dark" placement="bottom">-->
+<!--          <ruo-yi-git id="ruoyi-git" class="right-menu-item hover-effect" />-->
+<!--        </el-tooltip>-->
+
+<!--        <el-tooltip content="文档地址" effect="dark" placement="bottom">
           <ruo-yi-doc id="ruoyi-doc" class="right-menu-item hover-effect" />
+        </el-tooltip>-->
+
+        <!-- 添加教程中心的链接 -->
+        <el-tooltip content="教程中心" effect="dark" placement="bottom">
+          <div @click="redirectToTutorial" class="right-menu-item hover-effect">
+            <ruo-yi-doc id="ruoyi-doc" />
+          </div>
         </el-tooltip>
+<!--        <el-tooltip content="教程中心" effect="dark" placement="bottom">-->
+<!--          <a href="https://richy-help.daijc.cn/imaotai_auto.html" class="right-menu-item hover-effect" target="_blank">教程中心</a>-->
+<!--        </el-tooltip>-->
 
         <screenfull id="screenfull" class="right-menu-item hover-effect" />
 
@@ -105,6 +115,9 @@ export default {
           location.href = '/index';
         })
       }).catch(() => {});
+    },
+    redirectToTutorial() {
+      window.open('https://richy-help.daijc.cn/imaotai_auto.html', '_blank');
     }
   }
 }

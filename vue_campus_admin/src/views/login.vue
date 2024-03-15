@@ -1,7 +1,8 @@
 <template>
   <div class="login">
     <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form">
-      <h3 class="title">campus-imaotai后台管理系统</h3>
+      <h3 class="title">imaotai学习系统</h3>
+<!--      <h6 class="small-text">请联系管理员开通账号免费使用</h6>-->
       <el-form-item prop="username">
         <el-input
           v-model="loginForm.username"
@@ -55,9 +56,6 @@
       </el-form-item>
     </el-form>
     <!--  底部  -->
-    <div class="el-login-footer">
-      <span>Copyright © 2023 oddfar.com All Rights Reserved.</span>
-    </div>
   </div>
 </template>
 
@@ -91,7 +89,7 @@ export default {
       // 验证码开关
       captchaEnabled: true,
       // 注册开关
-      register: false,
+      register: true,
       redirect: undefined
     };
   },
@@ -216,4 +214,11 @@ export default {
 .login-code-img {
   height: 38px;
 }
+/*.small-text {
+  margin: 0px auto 30px auto;
+  text-align: center;
+  font-size: 0.8em; !* 小字号 *!
+  color: #6c757d; !* 淡灰色字体 *!
+}*/
+
 </style>

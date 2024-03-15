@@ -1,6 +1,6 @@
 FROM nginx:stable-alpine
 # author
-MAINTAINER oddfar
+MAINTAINER djc
 # 复制html文件到路径
 COPY dist /usr/share/nginx/html
 # 复制conf文件到路径

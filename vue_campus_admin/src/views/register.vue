@@ -60,9 +60,6 @@
       </el-form-item>
     </el-form>
     <!--  底部  -->
-    <div class="el-register-footer">
-      <span>Copyright © 2023 oddfar.com All Rights Reserved.</span>
-    </div>
   </div>
 </template>
 

@@ -232,7 +232,7 @@ public class IShopServiceImpl extends ServiceImpl<IShopMapper, IShop> implements
 //        }
 
         if (StringUtils.isEmpty(shopId)) {
-            throw new ServiceException("申购时根据类型获取的门店商品id为空");
+            throw new ServiceException("申购时根据类型获取的门店id为空");
         }
 
 

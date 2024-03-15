@@ -75,7 +75,7 @@ CREATE TABLE `i_user` (
                           `cookie` varchar(255) DEFAULT NULL COMMENT 'I茅台cookie',
                           `device_id` varchar(50) DEFAULT NULL COMMENT '设备id',
                           `item_code` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '商品预约code，用@间隔',
-                          `ishop_id` varchar(50) DEFAULT NULL COMMENT '门店商品id',
+                          `ishop_id` varchar(50) DEFAULT NULL COMMENT '门店id',
                           `province_name` varchar(50) DEFAULT NULL COMMENT '省份',
                           `city_name` varchar(50) DEFAULT NULL COMMENT '城市',
                           `address` varchar(255) DEFAULT NULL COMMENT '完整地址',
