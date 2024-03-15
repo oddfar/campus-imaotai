@@ -8,8 +8,9 @@
 <p align="center"> i茅台app自动预约，每日自动预约，支持docker一键部署</p>
 
 <h2 align="center">Campus-imaotai</h2>
+### 基于项目搭建的网站免费使用学习
+- 链接：https://imaotai.daijc.cn
 
-  [笔记仓库](https://github.com/oddfar/notes)  |  [我的博客](https://oddfar.com)  
 
 ## 项目介绍
 
@@ -25,17 +26,8 @@ i茅台app，每日自动预约茅台
 - [x] 自定义时间/随机时间预约或旅行
 - [x] 申购结果消息推送
 
-此项目使用 **Campus** 进行编写：<https://github.com/oddfar/campus>
-
-## 文档
-
-- 文档：https://oddfar.github.io/campus-doc/campus-imaotai
-
-- 视频：https://www.bilibili.com/video/BV1dj411H7oT
-
 
 ## 演示图
-
 
 
 | i茅台预约                                                    |                                                              |
@@ -63,6 +55,11 @@ i茅台app，每日自动预约茅台
 ![Stargazers over time](https://starchart.cc/oddfar/campus-imaotai.svg)
 
 ## 友情链接
+
+- 本项目原作
+
+  oddfar：<https://github.com/oddfar/campus-imaotai>
+
 
 - 本项目其他版
 
