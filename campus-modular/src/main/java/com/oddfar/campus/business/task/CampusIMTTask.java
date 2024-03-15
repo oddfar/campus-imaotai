@@ -2,6 +2,7 @@ package com.oddfar.campus.business.task;
 
 import com.oddfar.campus.business.service.IMTService;
 import com.oddfar.campus.business.service.IUserService;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,13 +18,13 @@ import javax.annotation.PostConstruct;
  */
 @Configuration
 @EnableScheduling
+@RequiredArgsConstructor
 public class CampusIMTTask {
     private static final Logger logger = LoggerFactory.getLogger(CampusIMTTask.class);
 
-    @Autowired
-    private IMTService imtService;
-    @Autowired
-    private IUserService iUserService;
+    private final IMTService imtService;
+
+    private final IUserService iUserService;
 
 
     /**
