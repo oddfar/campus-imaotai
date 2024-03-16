@@ -11,7 +11,7 @@ import com.oddfar.campus.common.domain.PageResult;
 import com.oddfar.campus.common.domain.R;
 import com.oddfar.campus.common.exception.ServiceException;
 import com.oddfar.campus.common.utils.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,15 +24,13 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/imt/user")
 @ApiResource(name = "I茅台用户Controller")
+@RequiredArgsConstructor
 public class IUserController {
-    @Autowired
-    private IUserService iUserService;
-    @Autowired
-    private IUserMapper iUserMapper;
-    @Autowired
-    private IMTService imtService;
-    @Autowired
-    private IShopService iShopService;
+
+    private final IUserService iUserService;
+    private final IUserMapper iUserMapper;
+    private final IMTService imtService;
+    private final IShopService iShopService;
 
     /**
      * 查询I茅台用户列表
