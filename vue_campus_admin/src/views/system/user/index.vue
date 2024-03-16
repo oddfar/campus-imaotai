@@ -39,7 +39,7 @@
             <el-date-picker
               v-model="dateRange"
               style="width: 240px"
-              value-format="yyyy-MM-dd"
+              value-format="yyyy-MM-dd HH:mm:ss"
               type="daterange"
               range-separator="-"
               start-placeholder="开始日期"
@@ -172,7 +172,7 @@
           :limit.sync="queryParams.pageSize"
           @pagination="getList"
         />
-      
+
 
 
     <!-- 添加或修改用户配置对话框 -->
