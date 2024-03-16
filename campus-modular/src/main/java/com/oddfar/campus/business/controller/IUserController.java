@@ -152,4 +152,13 @@ public class IUserController {
     public R remove(@PathVariable Long[] mobiles) {
         return R.ok(iUserMapper.deleteIUser(mobiles));
     }
+
+    /**
+     * 实时获取I茅台用户的小茅运&体力值
+     */
+    @PreAuthorize("@ss.resourceAuth()")
+    @GetMapping(value = "/coin/{mobiles}", name = "获取I茅台用户详细信息")
+    public R getUserCoin(@PathVariable Long[] mobiles) {
+        return R.ok(imtService.getUserCoin(mobiles));
+    }
 }

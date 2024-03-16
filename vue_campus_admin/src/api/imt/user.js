@@ -79,3 +79,11 @@ export function delUser(mobile) {
         method: 'delete'
     })
 }
+
+// 删除I茅台用户
+export function getUserCoin(mobile) {
+    return request({
+        url: '/imt/user/coin/' + mobile,
+        method: 'get'
+    })
+}
