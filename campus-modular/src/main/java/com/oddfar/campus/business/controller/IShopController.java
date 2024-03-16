@@ -6,7 +6,7 @@ import com.oddfar.campus.business.service.IShopService;
 import com.oddfar.campus.common.annotation.ApiResource;
 import com.oddfar.campus.common.domain.PageResult;
 import com.oddfar.campus.common.domain.R;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,11 +22,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/imt/shop")
 @ApiResource(name = "i茅台商品Controller")
+@RequiredArgsConstructor
 public class IShopController {
-    @Autowired
-    private IShopService iShopService;
-    @Autowired
-    private IShopMapper iShopMapper;
+    private final IShopService iShopService;
+    private final IShopMapper iShopMapper;
 
     /**
      * 查询i茅台商品列表
