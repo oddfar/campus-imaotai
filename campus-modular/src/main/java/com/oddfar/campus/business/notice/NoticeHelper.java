@@ -15,9 +15,6 @@ public class NoticeHelper {
 
     public static void sendNotice(IUser iUser, ILog operLog) {
         String token = iUser.getPushPlusToken();
-        if (StringUtils.isEmpty(token)) {
-            return;
-        }
         String title, content;
         if (operLog.getStatus() == 0) {
             //预约成功
