@@ -1,6 +1,9 @@
 package com.oddfar.campus.business.controller;
 
+import com.oddfar.campus.business.entity.ILog;
+import com.oddfar.campus.business.entity.IUser;
 import com.oddfar.campus.business.mapper.IUserMapper;
+import com.oddfar.campus.business.notice.NoticeHelper;
 import com.oddfar.campus.business.service.IMTService;
 import com.oddfar.campus.business.service.IShopService;
 import com.oddfar.campus.common.annotation.Anonymous;
@@ -8,6 +11,7 @@ import com.oddfar.campus.common.annotation.ApiResource;
 import com.oddfar.campus.common.annotation.Log;
 import com.oddfar.campus.common.domain.R;
 import com.oddfar.campus.common.enums.ResBizTypeEnum;
+import com.oddfar.campus.framework.manager.AsyncManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -34,6 +38,25 @@ public class TestController {
     @GetMapping(value = "/1", name = "测试1的接口")
     public R test1() {
 
+        return R.ok();
+    }
+
+    /**
+     * 需要接口权限
+     */
+    @PreAuthorize("@ss.resourceAuth()")
+    @GetMapping(value = "/sendNotice", name = "发送通知的测试")
+    public R sendNotice() {
+        IUser iUser = new IUser();
+        iUser.setToken("11111");
+        iUser.setPushPlusToken("222");
+        iUser.setMobile(131313131L);
+        iUser.setRemark("zs");
+        ILog iLog = new ILog();
+        iLog.setStatus(0);
+        iLog.setMobile(131313131L);
+        iLog.setLogContent("test ~~~~");
+        NoticeHelper.sendNotice(iUser, iLog);
         return R.ok();
     }
 
