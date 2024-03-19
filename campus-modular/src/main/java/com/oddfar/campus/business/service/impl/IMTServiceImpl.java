@@ -586,7 +586,7 @@ public class IMTServiceImpl implements IMTService {
                     JSONObject item = JSON.parseObject(itemVO.toString());
                     // 预约时间在24小时内的
                     if (item.getInteger("status") == 2 && DateUtil.between(item.getDate("reservationTime"), new Date(), DateUnit.HOUR) < 24) {
-                        String logContent = DateUtil.formatDate(item.getDate("reservationTime")) + " 申购" + item.getString("itemName") + "成功";
+                        String logContent = DateUtil.formatDate(item.getDate("reservationTime")) + " 申购" + item.getString("itemName") + "成功，中签了";
                         IMTLogFactory.reservation(iUser, logContent);
                     }
                 }
