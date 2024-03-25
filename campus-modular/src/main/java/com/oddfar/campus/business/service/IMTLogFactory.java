@@ -37,7 +37,7 @@ public class IMTLogFactory {
     }
     
     public static void reservation(IUser iUser, String logContent , String msghead) {
-        reservation(iUser, logContent , msghead + "成功"，msghead + "失败");
+        reservation(iUser, logContent , msghead + "成功" , msghead + "失败");
     }
     
     public static void reservation(IUser iUser, String logContent , String SCUmsghead , String FAUmsghead) {
@@ -58,7 +58,7 @@ public class IMTLogFactory {
 
         AsyncManager.me().execute(recordOper(operLog));
         //推送
-        PushPlusApi.sendNotice(iUser, operLog ,SCUmsghead，FAUmsghead);
+        PushPlusApi.sendNotice(iUser, operLog ,SCUmsghead,FAUmsghead);
     }
     
     /**
