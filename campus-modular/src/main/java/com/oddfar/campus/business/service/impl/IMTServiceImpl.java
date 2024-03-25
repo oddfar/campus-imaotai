@@ -40,6 +40,7 @@ import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.Random;
 
 @Service
 public class IMTServiceImpl implements IMTService {
@@ -191,6 +192,11 @@ public class IMTServiceImpl implements IMTService {
                 //预约
                 JSONObject json = reservation(iUser, itemId, shopId);
                 logContent += String.format("[预约项目]：%s\n[shopId]：%s\n[结果返回]：%s\n\n", itemId, shopId, json.toString());
+
+                //随机延迟3～5秒
+                Random random = new Random();
+                int sleepTime = random.nextInt(3) + 3;
+                Thread.sleep(sleepTime * 1000);
             } catch (Exception e) {
                 logContent += String.format("执行报错--[预约项目]：%s\n[结果返回]：%s\n\n", itemId, e.getMessage());
             }
