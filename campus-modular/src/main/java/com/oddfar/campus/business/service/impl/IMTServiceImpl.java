@@ -314,10 +314,10 @@ public class IMTServiceImpl implements IMTService {
             logContent += "执行报错--[获得旅行奖励]:" + e.getMessage();
         }
         //日志记录
-        if( ! logContent.contains(substring1)){
-            IMTLogFactory.reservation(iUser, logContent,"获得旅行奖励");
-        }else if( ! logContent.contains(substring2)){
+        if(logContent.contains(substring2)){
             IMTLogFactory.reservation(iUser, logContent,"","本月旅行奖励已满");
+        }else if( ! logContent.contains(substring1)){
+            IMTLogFactory.reservation(iUser, logContent,"获得旅行奖励");
         }
     }
 
