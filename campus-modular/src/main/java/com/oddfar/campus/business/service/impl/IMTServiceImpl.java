@@ -304,7 +304,8 @@ public class IMTServiceImpl implements IMTService {
     @Override
     public void getTravelReward(IUser iUser) {
         String logContent = "";
-        String substring = "耐力不足";
+        String substring1 = "耐力不足";
+        String substring2 = "无可领取";
         try {
             String s = travelReward(iUser);
             logContent += "[获得旅行奖励]:" + s;
@@ -313,8 +314,10 @@ public class IMTServiceImpl implements IMTService {
             logContent += "执行报错--[获得旅行奖励]:" + e.getMessage();
         }
         //日志记录
-        if( ! logContent.contains(substring)){
+        if( ! logContent.contains(substring1)){
             IMTLogFactory.reservation(iUser, logContent,"获得旅行奖励");
+        }else if( ! logContent.contains(substring2)){
+            IMTLogFactory.reservation(iUser, logContent,"","本月旅行奖励已满");
         }
     }
 
