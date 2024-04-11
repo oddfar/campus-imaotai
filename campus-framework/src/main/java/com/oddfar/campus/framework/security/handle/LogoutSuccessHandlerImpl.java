@@ -5,6 +5,7 @@ import com.oddfar.campus.common.constant.Constants;
 import com.oddfar.campus.common.constant.HttpStatus;
 import com.oddfar.campus.common.domain.R;
 import com.oddfar.campus.common.domain.model.LoginUser;
+import com.oddfar.campus.common.utils.MessageUtils;
 import com.oddfar.campus.common.utils.ServletUtils;
 import com.oddfar.campus.common.utils.StringUtils;
 import com.oddfar.campus.framework.manager.AsyncFactory;
@@ -42,8 +43,8 @@ public class LogoutSuccessHandlerImpl implements LogoutSuccessHandler {
             // 删除用户缓存记录
             tokenService.delLoginUser(loginUser.getToken());
             // 记录用户退出日志
-            AsyncManager.me().execute(AsyncFactory.recordLogininfor(loginUser.getUsername(), loginUser.getUserId(), Constants.LOGOUT, "退出成功"));
+            AsyncManager.me().execute(AsyncFactory.recordLogininfor(loginUser.getUsername(), loginUser.getUserId(), Constants.LOGOUT, MessageUtils.message("user.logout.success")));
         }
-        ServletUtils.renderString(response, JSON.toJSONString(R.error(HttpStatus.SUCCESS, "退出成功")));
+        ServletUtils.renderString(response, JSON.toJSONString(R.error(HttpStatus.SUCCESS, MessageUtils.message("user.logout.success"))));
     }
 }

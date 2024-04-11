@@ -40,6 +40,7 @@ import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.Random;
 
 @Service
 public class IMTServiceImpl implements IMTService {
@@ -191,6 +192,11 @@ public class IMTServiceImpl implements IMTService {
                 //预约
                 JSONObject json = reservation(iUser, itemId, shopId);
                 logContent += String.format("[预约项目]：%s\n[shopId]：%s\n[结果返回]：%s\n\n", itemId, shopId, json.toString());
+
+                //随机延迟3～5秒
+                Random random = new Random();
+                int sleepTime = random.nextInt(3) + 3;
+                Thread.sleep(sleepTime * 1000);
             } catch (Exception e) {
                 logContent += String.format("执行报错--[预约项目]：%s\n[结果返回]：%s\n\n", itemId, e.getMessage());
             }
@@ -256,6 +262,27 @@ public class IMTServiceImpl implements IMTService {
         }
     }
 
+    public void shareReward(IUser iUser){
+        logger.info("「领取每日首次分享获取耐力」："+iUser.getMobile());
+        String url = "https://h5.moutai519.com.cn/game/xmTravel/shareReward";
+        HttpRequest request = HttpUtil.createRequest(Method.POST, url);
+
+        request.header("MT-Device-ID", iUser.getDeviceId())
+                .header("MT-APP-Version", getMTVersion())
+                .header("User-Agent", "iOS;16.3;Apple;?unrecognized?")
+                .header("MT-Lat", iUser.getLat())
+                .header("MT-Lng", iUser.getLng())
+                .cookie("MT-Token-Wap=" + iUser.getCookie() + ";MT-Device-ID-Wap=" + iUser.getDeviceId() + ";");
+
+        HttpResponse execute = request.execute();
+        JSONObject body = JSONObject.parseObject(execute.body());
+
+        if(body.getInteger("code") != 2000){
+            String message = "领取每日首次分享获取耐力失败";
+            throw new ServiceException(message);
+        }
+    }
+
     //获取申购耐力值
     @Override
     public String getEnergyAward(IUser iUser) {
@@ -314,6 +341,8 @@ public class IMTServiceImpl implements IMTService {
             Double travelRewardXmy = getXmTravelReward(iUser);
             // 获取小茅运
             receiveReward(iUser);
+            //首次分享获取耐力
+            shareReward(iUser);
             //本次旅行奖励领取后, 当月实际剩余旅行奖励
             if (travelRewardXmy > currentPeriodCanConvertXmyNum) {
                 String message = "当月无可领取奖励";
