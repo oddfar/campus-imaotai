@@ -8,6 +8,7 @@ import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONException;
 import com.alibaba.fastjson2.JSONObject;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.oddfar.campus.business.domain.IMTCacheConstants;
 import com.oddfar.campus.business.domain.IMTItemInfo;
 import com.oddfar.campus.business.domain.MapPoint;
 import com.oddfar.campus.business.entity.IItem;
@@ -18,8 +19,7 @@ import com.oddfar.campus.business.service.IShopService;
 import com.oddfar.campus.common.core.RedisCache;
 import com.oddfar.campus.common.exception.ServiceException;
 import com.oddfar.campus.common.utils.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -33,9 +33,9 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 public class IShopServiceImpl extends ServiceImpl<IShopMapper, IShop> implements IShopService {
 
-    private static final Logger logger = LoggerFactory.getLogger(IShopServiceImpl.class);
 
     @Autowired
     IShopMapper iShopMapper;
@@ -48,7 +48,7 @@ public class IShopServiceImpl extends ServiceImpl<IShopMapper, IShop> implements
     @Override
     public List<IShop> selectShopList() {
 
-        List<IShop> shopList = redisCache.getCacheList("mt_shop_list");
+        List<IShop> shopList = redisCache.getCacheList(IMTCacheConstants.MT_SHOP_LIST);
 
         if (shopList != null && shopList.size() > 0) {
             return shopList;
@@ -74,7 +74,7 @@ public class IShopServiceImpl extends ServiceImpl<IShopMapper, IShop> implements
         String shopUrl = body.getJSONObject("data").getJSONObject("mtshops_pc").getString("url");
         //清空数据库
         iShopMapper.truncateShop();
-        redisCache.deleteObject("mt_shop_list");
+        redisCache.deleteObject(IMTCacheConstants.MT_SHOP_LIST);
 
         String s = HttpUtil.get(shopUrl);
 
@@ -88,12 +88,13 @@ public class IShopServiceImpl extends ServiceImpl<IShopMapper, IShop> implements
             list.add(iShop);
         }
         this.saveBatch(list);
-        redisCache.setCacheList("mt_shop_list", list);
+        redisCache.setCacheList(IMTCacheConstants.MT_SHOP_LIST, list);
+        redisCache.expire(IMTCacheConstants.MT_SHOP_LIST, 2, TimeUnit.HOURS);
     }
 
     @Override
     public String getCurrentSessionId() {
-        String mtSessionId = Convert.toStr(redisCache.getCacheObject("mt_session_id"));
+        String mtSessionId = Convert.toStr(redisCache.getCacheObject(IMTCacheConstants.MT_SESSION_ID));
 
         long dayTime = LocalDate.now().atStartOfDay().toInstant(ZoneOffset.of("+8")).toEpochMilli();
         if (StringUtils.isNotEmpty(mtSessionId)) {
@@ -107,7 +108,7 @@ public class IShopServiceImpl extends ServiceImpl<IShopMapper, IShop> implements
         if (jsonObject.getString("code").equals("2000")) {
             JSONObject data = jsonObject.getJSONObject("data");
             mtSessionId = data.getString("sessionId");
-            redisCache.setCacheObject("mt_session_id", mtSessionId);
+            redisCache.setCacheObject(IMTCacheConstants.MT_SESSION_ID, mtSessionId, 2, TimeUnit.HOURS);
 
             iItemMapper.truncateItem();
             //item插入数据库
@@ -126,7 +127,7 @@ public class IShopServiceImpl extends ServiceImpl<IShopMapper, IShop> implements
 
     @Override
     public void refreshItem() {
-        redisCache.deleteObject("mt_session_id");
+        redisCache.deleteObject(IMTCacheConstants.MT_SESSION_ID);
         getCurrentSessionId();
     }
 
@@ -138,7 +139,6 @@ public class IShopServiceImpl extends ServiceImpl<IShopMapper, IShop> implements
         } else {
             return null;
         }
-//        return iShopMapper.selectOne(IShop::getIShopId, iShopId);
     }
 
     @Override
@@ -167,14 +167,14 @@ public class IShopServiceImpl extends ServiceImpl<IShopMapper, IShop> implements
             res = JSONObject.parseObject(urlRes);
         } catch (JSONException jsonException) {
             String message = StringUtils.format("查询所在省市的投放产品和数量error: %s", url);
-            logger.error(message);
+            log.error(message);
             throw new ServiceException(message);
         }
 
 //        JSONObject res = JSONObject.parseObject(HttpUtil.get(url));
         if (!res.containsKey("code") || !res.getString("code").equals("2000")) {
             String message = StringUtils.format("查询所在省市的投放产品和数量error: %s", url);
-            logger.error(message);
+            log.error(message);
             throw new ServiceException(message);
         }
         //组合信息
