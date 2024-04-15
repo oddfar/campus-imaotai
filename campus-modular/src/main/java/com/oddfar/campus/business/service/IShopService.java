@@ -25,6 +25,17 @@ public interface IShopService extends IService<IShop> {
      */
     void refreshItem();
 
+    /**
+     * 根据 iShopId 查询门店信息
+     * <p>
+     * 预约选择门店时，根据城市、经纬度选择门店
+     * 之前这些参数是在账号配置里手动填写
+     * 现在是查询门店的信息，把门店的这些信息填到账号配置里
+     * 主要是这样避免用户填错信息
+     *
+     * @param iShopId
+     * @return 门店信息
+     */
     IShop selectByIShopId(String iShopId);
 
     /**
