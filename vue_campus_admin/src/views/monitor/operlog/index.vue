@@ -56,7 +56,7 @@
         <el-date-picker
           v-model="dateRange"
           style="width: 240px"
-          value-format="yyyy-MM-dd"
+          value-format="yyyy-MM-dd HH:mm:ss"
           type="daterange"
           range-separator="-"
           start-placeholder="开始日期"
@@ -109,7 +109,7 @@
       <el-table-column label="日志编号" align="center" prop="operId" />
       <el-table-column label="系统模块" align="center" prop="appName" />
       <el-table-column label="日志名称" align="center" prop="logName"/>
-       
+
       <el-table-column label="请求方式" align="center" prop="requestMethod" />
       <el-table-column label="操作人员" align="center" prop="operUserId" width="100" :show-overflow-tooltip="true" sortable="custom" :sort-orders="['descending', 'ascending']" >
         <template slot-scope="scope">
@@ -187,7 +187,7 @@
           <el-col :span="24">
             <el-form-item style="white-space: pre-wrap" label="日志内容："  >{{ form.logContent }}</el-form-item>
           </el-col>
-          
+
         </el-row>
       </el-form>
       <div slot="footer" class="dialog-footer">
