@@ -1,6 +1,6 @@
 package com.oddfar.campus.business.service;
 
-import com.oddfar.campus.business.api.PushPlusApi;
+import com.oddfar.campus.business.notice.NoticeHelper;
 import com.oddfar.campus.business.entity.ILog;
 import com.oddfar.campus.business.entity.IUser;
 import com.oddfar.campus.common.utils.SpringUtils;
@@ -33,7 +33,7 @@ public class IMTLogFactory {
 
         AsyncManager.me().execute(recordOper(operLog));
         //推送
-        PushPlusApi.sendNotice(iUser, operLog);
+        NoticeHelper.sendNotice(iUser, operLog);
     }
 
     /**
