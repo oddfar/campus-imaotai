@@ -23,8 +23,7 @@ import com.oddfar.campus.business.service.IUserService;
 import com.oddfar.campus.common.core.RedisCache;
 import com.oddfar.campus.common.exception.ServiceException;
 import com.oddfar.campus.common.utils.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -33,20 +32,17 @@ import javax.annotation.PostConstruct;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.Random;
 
+/**
+ * i茅台接口请求服务 实现类
+ */
 @Service
+@Slf4j
 public class IMTServiceImpl implements IMTService {
-
-    private static final Logger logger = LoggerFactory.getLogger(IMTServiceImpl.class);
 
     @Autowired
     private IUserMapper iUserMapper;
@@ -127,11 +123,11 @@ public class IMTServiceImpl implements IMTService {
         HttpResponse execute = request.body(JSONObject.toJSONString(data)).execute();
         JSONObject jsonObject = JSONObject.parseObject(execute.body());
         //成功返回 {"code":2000}
-        logger.info("「发送验证码返回」：" + jsonObject.toJSONString());
+        log.info("「发送验证码返回」：" + jsonObject.toJSONString());
         if (jsonObject.getString("code").equals("2000")) {
             return Boolean.TRUE;
         } else {
-            logger.error("「发送验证码-失败」：" + jsonObject.toJSONString());
+            log.error("「发送验证码-失败」：" + jsonObject.toJSONString());
             throw new ServiceException("发送验证码错误");
 //            return false;
         }
@@ -166,11 +162,11 @@ public class IMTServiceImpl implements IMTService {
         JSONObject body = JSONObject.parseObject(execute.body());
 
         if (body.getString("code").equals("2000")) {
-//            logger.info("「登录请求-成功」" + body.toJSONString());
+//            log.info("「登录请求-成功」" + body.toJSONString());
             iUserService.insertIUser(Long.parseLong(mobile), deviceId, body);
             return true;
         } else {
-            logger.error("「登录请求-失败」" + body.toJSONString());
+            log.error("「登录请求-失败」" + body.toJSONString());
             throw new ServiceException("登录失败，本地错误日志已记录");
 //            return false;
         }
@@ -265,7 +261,7 @@ public class IMTServiceImpl implements IMTService {
     }
 
     public void shareReward(IUser iUser) {
-        logger.info("「领取每日首次分享获取耐力」：" + iUser.getMobile());
+        log.info("「领取每日首次分享获取耐力」：" + iUser.getMobile());
         String url = "https://h5.moutai519.com.cn/game/xmTravel/shareReward";
         HttpRequest request = HttpUtil.createRequest(Method.POST, url);
 
@@ -505,7 +501,7 @@ public class IMTServiceImpl implements IMTService {
         List<IUser> iUsers = iUserService.selectReservationUserByMinute(minute);
 
         for (IUser iUser : iUsers) {
-            logger.info("「开始预约用户」" + iUser.getMobile());
+            log.info("「开始预约用户」" + iUser.getMobile());
             //预约
             reservation(iUser);
             //延时3秒
@@ -527,7 +523,7 @@ public class IMTServiceImpl implements IMTService {
 //        List<IUser> iUsers = iUserService.selectReservationUser();
 
             for (IUser iUser : iUsers) {
-                logger.info("「开始获得旅行奖励」" + iUser.getMobile());
+                log.info("「开始获得旅行奖励」" + iUser.getMobile());
                 getTravelReward(iUser);
                 //延时3秒
                 TimeUnit.SECONDS.sleep(3);
@@ -546,7 +542,7 @@ public class IMTServiceImpl implements IMTService {
 
     @Override
     public void appointmentResults() {
-        logger.info("申购结果查询开始=========================");
+        log.info("申购结果查询开始=========================");
         List<IUser> iUsers = iUserService.selectReservationUser();
         for (IUser iUser : iUsers) {
             try {
@@ -557,14 +553,14 @@ public class IMTServiceImpl implements IMTService {
                         .header("MT-Token", iUser.getToken())
                         .header("User-Agent", "iOS;16.3;Apple;?unrecognized?").execute().body();
                 JSONObject jsonObject = JSONObject.parseObject(body);
-                logger.info("查询申购结果回调: user->{},response->{}", iUser.getMobile(), body);
+                log.info("查询申购结果回调: user->{},response->{}", iUser.getMobile(), body);
                 if (jsonObject.getInteger("code") != 2000) {
                     String message = jsonObject.getString("message");
                     throw new ServiceException(message);
                 }
                 JSONArray itemVOs = jsonObject.getJSONObject("data").getJSONArray("reservationItemVOS");
                 if (Objects.isNull(itemVOs) || itemVOs.isEmpty()) {
-                    logger.info("申购记录为空: user->{}", iUser.getMobile());
+                    log.info("申购记录为空: user->{}", iUser.getMobile());
                     continue;
                 }
                 for (Object itemVO : itemVOs) {
@@ -576,11 +572,11 @@ public class IMTServiceImpl implements IMTService {
                     }
                 }
             } catch (Exception e) {
-                logger.error("查询申购结果失败:失败原因->{}", e.getMessage(), e);
+                log.error("查询申购结果失败:失败原因->{}", e.getMessage(), e);
             }
 
         }
-        logger.info("申购结果查询结束=========================");
+        log.info("申购结果查询结束=========================");
     }
 
     public JSONObject reservation(IUser iUser, String itemId, String shopId) {
@@ -621,7 +617,7 @@ public class IMTServiceImpl implements IMTService {
             String message = body.getString("message");
             throw new ServiceException(message);
         }
-//        logger.info(body.toJSONString());
+//        log.info(body.toJSONString());
         return body;
     }
 

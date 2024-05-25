@@ -3,9 +3,7 @@ package com.oddfar.campus.business.task;
 import com.oddfar.campus.business.service.IMTService;
 import com.oddfar.campus.business.service.IUserService;
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -17,8 +15,8 @@ import org.springframework.scheduling.annotation.Scheduled;
 @Configuration
 @EnableScheduling
 @RequiredArgsConstructor
+@Slf4j
 public class CampusIMTTask {
-    private static final Logger logger = LoggerFactory.getLogger(CampusIMTTask.class);
 
     private final IMTService imtService;
 
@@ -59,11 +57,11 @@ public class CampusIMTTask {
     @Async
     @Scheduled(cron = "0 10,55 7,8 ? * * ")
     public void refresh() {
-        logger.info("「刷新数据」开始刷新版本号，预约item，门店shop列表  ");
+        log.info("「刷新数据」开始刷新版本号，预约item，门店shop列表  ");
         try {
             imtService.refreshAll();
         } catch (Exception e) {
-            logger.info("「刷新数据执行报错」%s", e.getMessage());
+            log.info("「刷新数据执行报错」%s", e.getMessage());
         }
 
     }

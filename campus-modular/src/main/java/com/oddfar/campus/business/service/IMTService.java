@@ -2,11 +2,13 @@ package com.oddfar.campus.business.service;
 
 import com.oddfar.campus.business.entity.IUser;
 
+/**
+ * i茅台接口请求服务
+ */
 public interface IMTService {
+
     /**
      * 获取i茅台app版本号
-     *
-     * @return
      */
     String getMTVersion();
 
@@ -29,7 +31,6 @@ public interface IMTService {
      * @param mobile   手机号
      * @param code     验证码
      * @param deviceId 设备id
-     * @return
      */
     boolean login(String mobile, String code, String deviceId);
 
@@ -47,15 +48,8 @@ public interface IMTService {
      * 获得旅行奖励
      *
      * @param iUser
-     * @return
      */
     void getTravelReward(IUser iUser);
-//
-//    /**
-//     * 获取累计申购奖励
-//     * @param iUser
-//     */
-//    void getCumulatively(IUser iUser);
 
     /**
      * 批量预约

@@ -47,6 +47,8 @@ public interface IShopService extends IService<IShop> {
     List<IMTItemInfo> getShopsByProvince(String province, String itemId);
 
     /**
+     * 获取合适的shopId
+     *
      * @param shopType 1：预约本市出货量最大的门店，2：预约你的位置附近门店
      * @param itemId   项目id即预约项目code
      * @param province 省份，例如：河北省，北京市
