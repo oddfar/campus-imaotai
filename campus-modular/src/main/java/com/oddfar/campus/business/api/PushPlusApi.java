@@ -15,26 +15,13 @@ import java.util.TimerTask;
  */
 public class PushPlusApi {
 
-
-    public static void sendNotice(IUser iUser, ILog operLog) {
+    public static void sendNotice(IUser iUser, ILog operLog, String title) {
         String token = iUser.getPushPlusToken();
         if (StringUtils.isEmpty(token)) {
             return;
         }
-        String title, content;
-        if (operLog.getStatus() == 0) {
-            //预约成功
-            title = iUser.getRemark() + "-i茅台执行成功";
-            content = iUser.getMobile() + System.lineSeparator() + operLog.getLogContent();
-            AsyncManager.me().execute(sendNotice(token, title, content, "txt"));
-        } else {
-            //预约失败
-            title = iUser.getRemark() + "-i茅台执行失败";
-            content = iUser.getMobile() + System.lineSeparator() + operLog.getLogContent();
-            AsyncManager.me().execute(sendNotice(token, title, content, "txt"));
-        }
-
-
+        String content = iUser.getMobile() + System.lineSeparator() + operLog.getLogContent();
+        AsyncManager.me().execute(sendNotice(token, title, content, "txt"));
     }
 
     /**
