@@ -315,11 +315,11 @@ public class IMTServiceImpl implements IMTService {
         try {
             String s = travelReward(iUser);
             logContent += "[获得旅行奖励]:" + s;
-            title = "i茅台旅行活动执行: 成功";
+            title = "i茅台小茅运旅行: 成功";
         } catch (Exception e) {
 //            e.printStackTrace();
             logContent += "执行报错--[获得旅行奖励]:" + e.getMessage();
-            title = "i茅台旅行活动执行: 失败";
+            title = "i茅台小茅运旅行: 失败";
         }
         //日志记录
         IMTLogFactory.reservation(iUser, logContent, title);
@@ -574,14 +574,14 @@ public class IMTServiceImpl implements IMTService {
                     // 预约时间在24小时内的 成功
                     if (item.getInteger("status") == 2 && DateUtil.between(item.getDate("reservationTime"), new Date(), DateUnit.HOUR) < 24) {
                         String logContent = DateUtil.formatDate(item.getDate("reservationTime")) + " 申购" + item.getString("itemName") + "成功";
-                        String title = "申购结果查询成功: 申购成功!!!";
+                        String title = "i茅台今日申购: 成功!!!";
                         IMTLogFactory.reservation(iUser, logContent, title);
                     }
 
                     // 预约时间在24小时内的 失败
                     if (item.getInteger("status") == 1 && DateUtil.between(item.getDate("reservationTime"), new Date(), DateUnit.HOUR) < 24) {
                         String logContent = DateUtil.formatDate(item.getDate("reservationTime")) + " 申购" + item.getString("itemName") + "失败";
-                        String title = "申购结果查询成功: 申购失败";
+                        String title = "i茅台今日申购: 失败";
                         IMTLogFactory.reservation(iUser, logContent, title);
                     }
 
