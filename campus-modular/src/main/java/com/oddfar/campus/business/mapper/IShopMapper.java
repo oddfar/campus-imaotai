@@ -15,7 +15,7 @@ import org.apache.ibatis.annotations.Update;
 
 public interface IShopMapper extends BaseMapperX<IShop> {
     //清空指定表
-    @Update("truncate table i_shop")
+    @Update("delete from i_shop")
     void truncateShop();
 
     default PageResult<IShop> selectPage(IShop iShop) {

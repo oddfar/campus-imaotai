@@ -21,7 +21,7 @@
     </resultMap>
 
     <update id="cleanOperLog">
-        truncate table sys_log_oper
+        delete from sys_log_oper
     </update>
 
 </mapper>

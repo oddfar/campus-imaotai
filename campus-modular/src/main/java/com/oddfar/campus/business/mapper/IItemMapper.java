@@ -12,6 +12,6 @@ import org.apache.ibatis.annotations.Update;
  */
 public interface IItemMapper extends BaseMapperX<IItem> {
     //清空指定表
-    @Update("truncate table i_item")
+    @Update("delete from i_item")
     void truncateItem();
 }
