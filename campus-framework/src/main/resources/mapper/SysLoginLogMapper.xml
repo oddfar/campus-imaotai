@@ -19,7 +19,7 @@
 
 
     <update id="cleanLogininfor">
-        truncate table sys_log_login
+        delete from sys_log_login
     </update>
 
 </mapper>

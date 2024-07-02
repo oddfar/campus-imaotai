@@ -1,14 +1,20 @@
 package com.oddfar.campus.common.core;
 
+import cn.hutool.cache.CacheUtil;
+import cn.hutool.cache.impl.TimedCache;
+import cn.hutool.core.date.DateUnit;
+import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.BoundSetOperations;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 /**
  * spring redis 工具类
@@ -21,6 +27,14 @@ public class RedisCache {
     @Autowired
     public RedisTemplate redisTemplate;
 
+    @Value("${spring.redis.disabled:false}")
+    private boolean redisDisabled;
+
+
+    //创建字典本地缓存，过期时间10分钟
+    TimedCache<String, Object> dictLocalCache = CacheUtil.newTimedCache(DateUnit.HOUR.getMillis() * 10);
+
+
     /**
      * 缓存基本的对象，Integer、String、实体类等
      *
@@ -28,6 +42,10 @@ public class RedisCache {
      * @param value 缓存的值
      */
     public <T> void setCacheObject(final String key, final T value) {
+        if (redisDisabled) {
+            dictLocalCache.put(key, value);
+            return;
+        }
         redisTemplate.opsForValue().set(key, value);
     }
 
@@ -40,6 +58,10 @@ public class RedisCache {
      * @param timeUnit 时间颗粒度
      */
     public <T> void setCacheObject(final String key, final T value, final Integer timeout, final TimeUnit timeUnit) {
+        if (redisDisabled) {
+            dictLocalCache.put(key, value, timeUnit.toMillis(timeout));
+            return;
+        }
         redisTemplate.opsForValue().set(key, value, timeout, timeUnit);
     }
 
@@ -63,6 +85,14 @@ public class RedisCache {
      * @return true=设置成功；false=设置失败
      */
     public boolean expire(final String key, final long timeout, final TimeUnit unit) {
+        if (redisDisabled) {
+            Object value = dictLocalCache.get(key);
+            if (value == null) {
+                return true;
+            }
+            dictLocalCache.put(key, value, unit.toMillis(timeout));
+            return true;
+        }
         return redisTemplate.expire(key, timeout, unit);
     }
 
@@ -83,6 +113,9 @@ public class RedisCache {
      * @return true 存在 false不存在
      */
     public Boolean hasKey(String key) {
+        if (redisDisabled) {
+            return dictLocalCache.containsKey(key);
+        }
         return redisTemplate.hasKey(key);
     }
 
@@ -93,8 +126,19 @@ public class RedisCache {
      * @return 缓存键值对应的数据
      */
     public <T> T getCacheObject(final String key) {
-        ValueOperations<String, T> operation = redisTemplate.opsForValue();
-        return operation.get(key);
+        Object cachedObject = null;
+        if (redisDisabled) {
+            cachedObject = dictLocalCache.get(key);
+            if (cachedObject != null) {
+                return JSONObject.parseObject(JSON.toJSONString(cachedObject), (Class<T>) cachedObject.getClass());
+            }
+            return null;
+        }
+        cachedObject = redisTemplate.opsForValue().get(key);
+        if (cachedObject != null) {
+            return JSONObject.parseObject(JSON.toJSONString(cachedObject), (Class<T>) cachedObject.getClass());
+        }
+        return null;
     }
 
     /**
@@ -103,6 +147,10 @@ public class RedisCache {
      * @param key
      */
     public boolean deleteObject(final String key) {
+        if (redisDisabled) {
+            dictLocalCache.remove(key);
+            return true;
+        }
         return redisTemplate.delete(key);
     }
 
@@ -113,6 +161,12 @@ public class RedisCache {
      * @return
      */
     public boolean deleteObject(final Collection collection) {
+        if (redisDisabled) {
+            for (Object key : collection) {
+                dictLocalCache.remove(String.valueOf(key));
+            }
+            return true;
+        }
         return redisTemplate.delete(collection) > 0;
     }
 
@@ -124,6 +178,10 @@ public class RedisCache {
      * @return 缓存的对象
      */
     public <T> long setCacheList(final String key, final List<T> dataList) {
+        if (redisDisabled) {
+            dictLocalCache.put(key, JSON.toJSONString(dataList));
+            return dataList.size();
+        }
         Long count = redisTemplate.opsForList().rightPushAll(key, dataList);
         return count == null ? 0 : count;
     }
@@ -137,6 +195,10 @@ public class RedisCache {
      */
     public <T> long reSetCacheList(final String key, final List<T> dataList) {
         this.deleteObject(key);
+        if (redisDisabled) {
+            dictLocalCache.put(key, dataList);
+            return dataList.size();
+        }
         Long count = redisTemplate.opsForList().rightPushAll(key, dataList);
         return count == null ? 0 : count;
     }
@@ -148,6 +210,10 @@ public class RedisCache {
      * @return 缓存键值对应的数据
      */
     public <T> List<T> getCacheList(final String key) {
+        if (redisDisabled) {
+            Object obj = dictLocalCache.get(key);
+            return (List<T>) obj;
+        }
         return redisTemplate.opsForList().range(key, 0, -1);
     }
 
@@ -251,6 +317,17 @@ public class RedisCache {
      * @return 对象列表
      */
     public Collection<String> keys(final String pattern) {
+        if (redisDisabled) {
+            Set<String> stringSet = dictLocalCache.keySet();
+            // 将pattern转换为正则表达式，其中*表示任意数量的字符
+            String regex = String.format("^%s.*", pattern.replace("*", ".*"));
+            // 使用Java 8 Stream API和正则表达式过滤出匹配的键
+            Set<String> filteredKeys = stringSet.stream()
+                    .filter(key -> key.matches(regex))
+                    .collect(Collectors.toSet());
+
+            return filteredKeys;
+        }
         return redisTemplate.keys(pattern);
     }
 }
