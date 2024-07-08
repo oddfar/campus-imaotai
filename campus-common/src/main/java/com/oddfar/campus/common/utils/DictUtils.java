@@ -1,6 +1,5 @@
 package com.oddfar.campus.common.utils;
 
-import com.alibaba.fastjson2.JSONArray;
 import com.oddfar.campus.common.constant.CacheConstants;
 import com.oddfar.campus.common.core.RedisCache;
 import com.oddfar.campus.common.domain.entity.SysDictDataEntity;
@@ -10,7 +9,6 @@ import java.util.List;
 
 /**
  * 字典工具类
- *
  */
 public class DictUtils {
     /**
@@ -35,11 +33,9 @@ public class DictUtils {
      * @return dictDatas 字典数据列表
      */
     public static List<SysDictDataEntity> getDictCache(String key) {
-        JSONArray arrayCache = SpringUtils.getBean(RedisCache.class).getCacheObject(getCacheKey(key));
-        if (StringUtils.isNotNull(arrayCache)) {
-            return arrayCache.toList(SysDictDataEntity.class);
-        }
-        return null;
+        List<SysDictDataEntity> arrayCache = SpringUtils.getBean(RedisCache.class).getCacheObject(getCacheKey(key));
+
+        return arrayCache;
     }
 
     /**

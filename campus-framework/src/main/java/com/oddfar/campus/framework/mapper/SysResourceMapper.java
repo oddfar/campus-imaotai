@@ -20,7 +20,7 @@ public interface SysResourceMapper extends BaseMapperX<SysResourceEntity> {
     /**
      * 清空 sys_resource 数据库
      */
-    @Update("truncate table sys_resource")
+    @Update("delete from sys_resource")
     void truncateResource();
 
     /**

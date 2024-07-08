@@ -37,7 +37,7 @@ public interface ILogMapper extends BaseMapperX<ILog> {
 
     }
 
-    @Select("truncate table i_log")
+    @Select("delete from i_log")
     void cleanLog();
 
 }

@@ -16,12 +16,12 @@ spring:
         # 主库数据源
         master:
           type: ${spring.datasource.type}
-          driverClassName: com.mysql.cj.jdbc.Driver
+          driverClassName: org.sqlite.JDBC
           # jdbc 所有参数配置参考 https://lionli.blog.csdn.net/article/details/122018562
           # rewriteBatchedStatements=true 批处理优化 大幅提升批量插入更新删除性能(对数据库有性能损耗 使用批量操作应考虑性能问题)
-          url: jdbc:mysql://localhost:3306/campus_imaotai?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8&autoReconnect=true&rewriteBatchedStatements=true&allowPublicKeyRetrieval=true
-          username: root
-          password: 123456789
+          url: jdbc:sqlite:/home/campus/data/sqlite/imaotai.db
+          # username: root
+          # password: 123456789
         # 从库数据源
       #        slave:
       #          lazy: true
@@ -31,6 +31,10 @@ spring:
       #          username: root
       #          password: 123456789
       hikari:
+        #sqlite开启WAL模式，支持并发；使用MySQL时需注释掉
+        data-source-properties:
+          journal_mode: WAL
+          cache: shared
         # 最大连接池数量
         maxPoolSize: 20
         # 最小空闲线程数量
@@ -52,6 +56,8 @@ spring:
 --- # redis
 spring:
   redis:
+    #禁用redis，使用本地缓存
+    disabled: true
     # 地址
     host: localhost
     # 端口，默认为6379
