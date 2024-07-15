@@ -35,12 +35,12 @@ spring:
         data-source-properties:
           journal_mode: WAL
           cache: shared
-        # 最大连接池数量
-        maxPoolSize: 20
+        # 最大连接池数量（解决SQLITE_BUSY错误处理，SQLite 由于是文件数据库，不支持并发，最大线程数改为1，如果使用MySQL数据库，这里改为自定义数量）
+        maxPoolSize: 1
         # 最小空闲线程数量
-        minIdle: 10
+        minIdle: 1
         # 配置获取连接等待超时的时间
-        connectionTimeout: 30000
+        connectionTimeout: 300000
         # 校验超时时间
         validationTimeout: 5000
         # 空闲连接存活最大时间，默认10分钟
