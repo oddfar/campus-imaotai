@@ -179,7 +179,7 @@ public class RedisCache {
      */
     public <T> long setCacheList(final String key, final List<T> dataList) {
         if (redisDisabled) {
-            dictLocalCache.put(key, JSON.toJSONString(dataList));
+            dictLocalCache.put(key, dataList);
             return dataList.size();
         }
         Long count = redisTemplate.opsForList().rightPushAll(key, dataList);
@@ -211,8 +211,7 @@ public class RedisCache {
      */
     public <T> List<T> getCacheList(final String key) {
         if (redisDisabled) {
-            Object obj = dictLocalCache.get(key);
-            return (List<T>) obj;
+            return (List<T>) dictLocalCache.get(key);
         }
         return redisTemplate.opsForList().range(key, 0, -1);
     }
