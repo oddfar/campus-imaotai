@@ -3,6 +3,7 @@ package com.oddfar.campus.business.service;
 import com.alibaba.fastjson2.JSONObject;
 import com.oddfar.campus.business.entity.IUser;
 import com.oddfar.campus.common.domain.PageResult;
+import com.oddfar.campus.imt.http.entity.login.LoginResponse;
 
 import java.util.List;
 
@@ -63,4 +64,6 @@ public interface IUserService {
      * @return
      */
     int deleteIUser(Long[] iUserId);
+
+    int insertIUser(long mobile, String deviceId, LoginResponse response);
 }

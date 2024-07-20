@@ -8,6 +8,8 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.oddfar.campus.common.domain.BaseEntity;
 import com.oddfar.campus.common.utils.StringUtils;
+import com.oddfar.campus.imt.http.entity.login.LoginResponse;
+import com.oddfar.campus.imt.http.entity.login.LoginResponse.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -148,6 +150,23 @@ public class IUser extends BaseEntity {
         this.expireTime = thirtyDaysLater;
     }
 
+    public IUser(Long mobile, LoginResponse response) {
+        DataInfo data = response.getData();
+        this.userId = data.getUserId();
+        this.mobile = mobile;
+        this.token = data.getToken();
+        this.cookie = data.getCookie();
+        this.jsonResult = StringUtils.substring(response.toString(), 0, 2000);
+
+//        if (StringUtils.isEmpty(this.remark)) {
+//            this.remark = data.getString("userName");
+//        }
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.DAY_OF_MONTH, 30);
+        this.expireTime = calendar.getTime();
+    }
+
     public IUser(Long mobile, String deviceId, JSONObject jsonObject) {
         JSONObject data = jsonObject.getJSONObject("data");
         this.userId = data.getLong("userId");
@@ -165,6 +184,24 @@ public class IUser extends BaseEntity {
         calendar.add(Calendar.DAY_OF_MONTH, 30);
         Date thirtyDaysLater = calendar.getTime();
         this.expireTime = thirtyDaysLater;
+    }
+
+    public IUser(Long mobile, String deviceId, LoginResponse response) {
+        DataInfo data = response.getData();
+        this.userId = data.getUserId();
+        this.mobile = mobile;
+        this.token = data.getToken();
+        this.cookie = data.getCookie();
+        this.deviceId = deviceId.toLowerCase();
+        this.jsonResult = StringUtils.substring(response.toString(), 0, 2000);
+
+        if (StringUtils.isEmpty(this.remark)) {
+            this.remark = data.getUserName();
+        }
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.DAY_OF_MONTH, 30);
+        this.expireTime = calendar.getTime();
     }
 
     public Map<String, Object> getParams() {
