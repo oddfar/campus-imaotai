@@ -9,16 +9,18 @@ import com.oddfar.campus.common.domain.PageResult;
 import com.oddfar.campus.common.exception.ServiceException;
 import com.oddfar.campus.common.utils.SecurityUtils;
 import com.oddfar.campus.common.utils.StringUtils;
+import com.oddfar.campus.imt.http.entity.login.LoginResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.List;
 import java.util.UUID;
 
 @Service
 public class IUserServiceImpl implements IUserService {
-    @Autowired
+    @Resource
     private IUserMapper iUserMapper;
 
     @Override
@@ -52,6 +54,26 @@ public class IUserServiceImpl implements IUserService {
         }
 
 
+    }
+
+    @Override
+    public int insertIUser(long mobile, String deviceId, LoginResponse response) {
+        IUser user = iUserMapper.selectById(mobile);
+
+        if (user != null) {
+            //存在则更新
+            IUser iUser = new IUser(mobile, response);
+            iUser.setCreateUser(SecurityUtils.getUserId());
+            BeanUtil.copyProperties(iUser, user, "shopType", "minute");
+            return iUserMapper.updateById(user);
+        } else {
+            if (StringUtils.isEmpty(deviceId)) {
+                deviceId = UUID.randomUUID().toString().toLowerCase();
+            }
+            IUser iUser = new IUser(mobile, deviceId, response);
+            iUser.setCreateUser(SecurityUtils.getUserId());
+            return iUserMapper.insert(iUser);
+        }
     }
 
     @Override

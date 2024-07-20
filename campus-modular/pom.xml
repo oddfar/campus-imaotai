@@ -21,6 +21,12 @@
             <groupId>com.oddfar.campus</groupId>
             <artifactId>campus-admin</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.oddfar.campus</groupId>
+            <artifactId>campus-imt-sdk</artifactId>
+            <version>1.0.0</version>
+            <scope>compile</scope>
+        </dependency>
     </dependencies>
 
     <build>
