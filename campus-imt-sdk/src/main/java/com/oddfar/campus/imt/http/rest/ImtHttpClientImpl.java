@@ -7,6 +7,7 @@ import cn.hutool.http.Method;
 import com.oddfar.campus.imt.http.domain.ImtHttpClient;
 import com.oddfar.campus.imt.http.entity.ImtBaseRequest;
 import com.oddfar.campus.imt.http.entity.ImtBaseResponse;
+import com.oddfar.campus.imt.http.headenum.HeadEnum;
 import com.oddfar.campus.imt.http.util.GsonUtil;
 
 import java.util.HashMap;
@@ -21,11 +22,15 @@ public class ImtHttpClientImpl implements ImtHttpClient {
         HashMap<String, String> headMap = request.getHeadMap();
         Map<String, Object> formMap = request.getFormMap();
 
-        HttpRequest httpRequest = HttpUtil.createRequest(method,url);
-        if (CollectionUtil.isNotEmpty(formMap)){
+        HttpRequest httpRequest = HttpUtil.createRequest(method, url);
+        if (CollectionUtil.isNotEmpty(formMap)) {
             httpRequest.form(formMap);
         }
-        httpRequest.headerMap(headMap,true);
+        //如果是json
+        if (HeadEnum.CONTENT_TYPE.getHeadValue().equals(headMap.get(HeadEnum.CONTENT_TYPE.getHeadeName()))) {
+            httpRequest.body(GsonUtil.toJson(request));
+        }
+        httpRequest.headerMap(headMap, true);
         String body = httpRequest.execute().body();
         return GsonUtil.fromJson(body, request.getResponseClass());
     }
