@@ -19,8 +19,10 @@ import com.oddfar.campus.business.service.IUserService;
 import com.oddfar.campus.common.core.RedisCache;
 import com.oddfar.campus.common.exception.ServiceException;
 import com.oddfar.campus.common.utils.StringUtils;
+import com.oddfar.campus.imt.http.domain.ImtHttpClient;
 import com.oddfar.campus.imt.http.entity.appointment.AppointmentRequest;
 import com.oddfar.campus.imt.http.entity.appointment.AppointmentResponse;
+import com.oddfar.campus.imt.http.entity.appointment.AppointmentResponse.DataInfo.ReservationItemVO;
 import com.oddfar.campus.imt.http.entity.energyaward.EnergYawardRequest;
 import com.oddfar.campus.imt.http.entity.energyaward.EnergYawardResponse;
 import com.oddfar.campus.imt.http.entity.exchangerate.ExchangeRateInfoRequest;
@@ -45,8 +47,6 @@ import com.oddfar.campus.imt.http.entity.xmtravelreward.XmTravelRewardRequest;
 import com.oddfar.campus.imt.http.entity.xmtravelreward.XmTravelRewardResponse;
 import com.oddfar.campus.imt.http.headenum.CookieEnum;
 import com.oddfar.campus.imt.http.headenum.HeadEnum;
-import com.oddfar.campus.imt.http.rest.ImtHttpClientImpl;
-import com.oddfar.campus.imt.http.entity.appointment.AppointmentResponse.DataInfo.ReservationItemVO;
 import com.oddfar.campus.imt.http.util.GsonUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -81,7 +81,7 @@ public class IMTServiceImpl implements IMTService {
     @Autowired
     private IShopService iShopService;
     @Resource
-    private ImtHttpClientImpl imtHttpClient;
+    private ImtHttpClient imtHttpClient;
 
     private final static String SALT = "2af72f100c356273d46284f6fd1dfc08";
 
@@ -136,7 +136,7 @@ public class IMTServiceImpl implements IMTService {
         SendCodeRequest request = new SendCodeRequest();
         request.setMobile(mobile);
         long curTime = System.currentTimeMillis();
-        request.setMd5(signature(mobile,curTime));
+        request.setMd5(signature(mobile, curTime));
         request.setTimestamp(String.valueOf(curTime));
 
         HashMap<String, String> headMap = new HashMap<>();
@@ -169,7 +169,7 @@ public class IMTServiceImpl implements IMTService {
         Map<String, Object> formData = GsonUtil.objectToMap(request);
 
         IUser iUser = iUserMapper.selectById(mobile);
-        if (ObjectUtil.isNotNull(iUser)){
+        if (ObjectUtil.isNotNull(iUser)) {
             deviceId = iUser.getDeviceId();
         }
 
@@ -565,7 +565,7 @@ public class IMTServiceImpl implements IMTService {
                 request.setHeadMap(headMap);
                 AppointmentResponse response = imtHttpClient.execute(request);
                 log.info("查询申购结果回调: user->{},response->{}", iUser.getMobile(), response);
-                if (!"2000".equals(response.getCode())){
+                if (!"2000".equals(response.getCode())) {
                     String message = response.getMessage();
                     throw new ServiceException(message);
                 }
@@ -576,7 +576,7 @@ public class IMTServiceImpl implements IMTService {
                     continue;
                 }
                 for (ReservationItemVO itemVO : itemVOS) {
-                    if(Integer.valueOf(2).equals(itemVO.getStatus()) && DateUtil.between(itemVO.getReservationTime(), new Date(), DateUnit.HOUR) < 24){
+                    if (Integer.valueOf(2).equals(itemVO.getStatus()) && DateUtil.between(itemVO.getReservationTime(), new Date(), DateUnit.HOUR) < 24) {
                         String logContent = DateUtil.formatDate(itemVO.getReservationTime()) + " 申购" + itemVO.getItemName() + "成功";
                         IMTLogFactory.reservation(iUser, logContent);
                     }
@@ -616,9 +616,9 @@ public class IMTServiceImpl implements IMTService {
         headMap.put(HeadEnum.MT_TOKEN.getHeadeName(), iUser.getToken());
         headMap.put(HeadEnum.MT_INFO.getHeadeName(), HeadEnum.MT_INFO.getHeadValue());
         headMap.put(HeadEnum.MT_LNG.getHeadeName(), iUser.getLng());
-        headMap.put(HeadEnum.MT_LAT.getHeadeName(),  iUser.getLat());
-        headMap.put(HeadEnum.CONTENT_TYPE.getHeadeName(),  HeadEnum.CONTENT_TYPE.getHeadValue());
-        headMap.put(HeadEnum.USER_ID.getHeadeName(),  iUser.getUserId().toString());
+        headMap.put(HeadEnum.MT_LAT.getHeadeName(), iUser.getLat());
+        headMap.put(HeadEnum.CONTENT_TYPE.getHeadeName(), HeadEnum.CONTENT_TYPE.getHeadValue());
+        headMap.put(HeadEnum.USER_ID.getHeadeName(), iUser.getUserId().toString());
         headMap.put(HeadEnum.USER_AGENT.getHeadeName(), HeadEnum.USER_AGENT.getHeadValue());
         request.setHeadMap(headMap);
 
