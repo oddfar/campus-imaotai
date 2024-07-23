@@ -7,6 +7,7 @@ import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.crypto.Mode;
 import cn.hutool.crypto.Padding;
 import cn.hutool.crypto.symmetric.AES;
+import cn.hutool.http.HttpUtil;
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONArray;
 import com.oddfar.campus.business.domain.IMTCacheConstants;
@@ -29,8 +30,6 @@ import com.oddfar.campus.imt.http.entity.exchangerate.ExchangeRateInfoRequest;
 import com.oddfar.campus.imt.http.entity.exchangerate.ExchangeRateInfoResponse;
 import com.oddfar.campus.imt.http.entity.login.LoginRequest;
 import com.oddfar.campus.imt.http.entity.login.LoginResponse;
-import com.oddfar.campus.imt.http.entity.mtversion.MTVersionRequest;
-import com.oddfar.campus.imt.http.entity.mtversion.MTVersionResponse;
 import com.oddfar.campus.imt.http.entity.receive.ReceiverRewardRequest;
 import com.oddfar.campus.imt.http.entity.receive.ReceiverRewardResponse;
 import com.oddfar.campus.imt.http.entity.reservation.ReservationRequest;
@@ -109,10 +108,8 @@ public class IMTServiceImpl implements IMTService {
         if (StringUtils.isNotEmpty(mtVersion)) {
             return mtVersion;
         }
-        MTVersionRequest request = new MTVersionRequest();
-        MTVersionResponse response = imtHttpClient.execute(request);
-        String htmlContent = response.getHtmlContent();
-
+        String url = "https://apps.apple.com/cn/app/i%E8%8C%85%E5%8F%B0/id1600482450";
+        String htmlContent = HttpUtil.get(url);
         Pattern pattern = Pattern.compile("new__latest__version\">(.*?)</p>", Pattern.DOTALL);
         Matcher matcher = pattern.matcher(htmlContent);
         if (matcher.find()) {
@@ -122,6 +119,7 @@ public class IMTServiceImpl implements IMTService {
         redisCache.setCacheObject(IMTCacheConstants.MT_VERSION, mtVersion);
 
         return mtVersion;
+
 
     }
 
