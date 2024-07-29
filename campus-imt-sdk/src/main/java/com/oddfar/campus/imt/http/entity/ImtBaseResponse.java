@@ -6,4 +6,9 @@ import lombok.Data;
 public abstract class ImtBaseResponse {
     private String code;
     private String message;
+
+    public boolean isSuccess() {
+        return "2000".equals(code);
+    }
+
 }
