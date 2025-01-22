@@ -1,0 +1,12 @@
+
+pluginManagement {
+    repositories {
+        gradlePluginPortal()
+    }
+}
+
+rootProject.name = 'campus-imaotai'
+include(':campus-modular')
+include(':campus-framework')
+include(':campus-common')
+include(':campus-admin')

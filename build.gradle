@@ -1,0 +1,42 @@
+
+plugins {
+     id 'java-library'
+//          id "jacoco"
+}
+
+allprojects {
+
+    repositories {
+        maven {
+            url 'https://maven.aliyun.com/repository/public/'
+        }
+        mavenCentral()
+    }
+
+}
+
+subprojects {
+    apply plugin: 'java-library'
+
+    group = "$group"
+    version = "$version"
+
+    sourceCompatibility = "8"
+    targetCompatibility = "8"
+    //JavaVersion.VERSION_17
+
+    compileJava {
+        options.encoding = 'UTF-8'
+        options.compilerArgs << '-parameters'
+    }
+
+    dependencies {
+        compileOnly "org.projectlombok:lombok:${lombokVersion}"
+        annotationProcessor("org.projectlombok:lombok:${lombokVersion}")
+    }
+
+
+//  gradle allDeps > dep.txt
+    task allDeps(type: DependencyReportTask) {}
+
+}

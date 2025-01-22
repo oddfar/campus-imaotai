@@ -1,0 +1,11 @@
+
+
+dependencies {
+    api project(':campus-common')
+    api "org.springframework.boot:spring-boot-starter-web:$springBootVersion"
+    api "org.springframework.boot:spring-boot-starter-aop:$springBootVersion"
+    api 'com.github.penggle:kaptcha:2.3.2'
+    api 'mysql:mysql-connector-java:8.0.33'
+    api 'com.sun.mail:javax.mail:1.6.2'
+}
+

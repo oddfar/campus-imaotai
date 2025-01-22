@@ -1,0 +1,9 @@
+
+plugins {
+    id("org.springframework.boot") version "$springBootVersion"
+}
+
+dependencies {
+    api project(':campus-admin')
+}
+
