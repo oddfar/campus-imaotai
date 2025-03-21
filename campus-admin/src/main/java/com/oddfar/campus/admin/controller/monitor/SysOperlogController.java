@@ -43,4 +43,9 @@ public class SysOperlogController {
         operLogService.cleanOperLog();
         return R.ok();
     }
+
+    /**
+     * @author jamin
+     * 接下来要改造的是，将日志系统升级为elk 2025-03-21
+     */
 }
