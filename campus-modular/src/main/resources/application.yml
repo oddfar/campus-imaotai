@@ -95,6 +95,11 @@ mybatis-plus:
       logic-delete-value: 1
       logic-not-delete-value: 0
 
+notice:
+  config:
+    notice-type: 1
+    api-url: http://192.168.0.106:8080/bot/msg/send?access_token={token}&group_id=xxx
+    request-body: '{"message":"{content}"}'
 
 
 # Swagger配置
