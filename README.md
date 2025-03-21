@@ -89,4 +89,5 @@ i茅台app，每日自动预约茅台
 [<img src="https://gcore.jsdelivr.net/gh/oddfar/campus-imaotai/.github/jetbrains-variant.png" width="200"/>](https://www.jetbrains.com/?from=campus)
 
 
+[<img src="https://api.gitsponsors.com/api/badge/img?id=663458108" height="20">](https://api.gitsponsors.com/api/badge/link?p=B5hGpnclTmBJ3UZkEvdPGMFIr6mP8gfAX5zs5E7fvFS73izvYiiomLvUJSqDJ1PcIBTj9m7RAfJ+YSorEaTfDOXnqL5OsV3x5taooWf6/7j78cFmcDrgKyQYgKj41O17r5xkL3Nfi2mfpMBe5pGLpg==)
 
