@@ -186,12 +186,14 @@ public class IMTServiceImpl implements IMTService {
         String[] items = iUser.getItemCode().split("@");
 
         String logContent = "";
+        String title = "";
         for (String itemId : items) {
             try {
                 String shopId = iShopService.getShopId(iUser.getShopType(), itemId,
                         iUser.getProvinceName(), iUser.getCityName(), iUser.getLat(), iUser.getLng());
                 //预约
                 JSONObject json = reservation(iUser, itemId, shopId);
+                title = "i茅台预约申购: 成功";
                 logContent += String.format("[预约项目]：%s\n[shopId]：%s\n[结果返回]：%s\n\n", itemId, shopId, json.toString());
 
                 //随机延迟3～5秒
@@ -199,19 +201,13 @@ public class IMTServiceImpl implements IMTService {
                 int sleepTime = random.nextInt(3) + 3;
                 Thread.sleep(sleepTime * 1000);
             } catch (Exception e) {
+                title = "i茅台预约申购: 失败";
                 logContent += String.format("执行报错--[预约项目]：%s\n[结果返回]：%s\n\n", itemId, e.getMessage());
             }
         }
 
-//        try {
-//            //预约后领取耐力值
-//            String energyAward = getEnergyAward(iUser);
-//            logContent += "[申购耐力值]:" + energyAward;
-//        } catch (Exception e) {
-//            logContent += "执行报错--[申购耐力值]:" + e.getMessage();
-//        }
         //日志记录
-        IMTLogFactory.reservation(iUser, logContent);
+        IMTLogFactory.reservation(iUser, logContent, title);
         //预约后延迟领取耐力值
         getEnergyAwardDelay(iUser);
     }
@@ -226,17 +222,20 @@ public class IMTServiceImpl implements IMTService {
             @Override
             public void run() {
                 String logContent = "";
+                String title = "";
                 //sleep 10秒
                 try {
                     Thread.sleep(10000);
                     //预约后领取耐力值
                     String energyAward = getEnergyAward(iUser);
                     logContent += "[申购耐力值]:" + energyAward;
+                    title = "i茅台申购领耐力: 成功";
                 } catch (Exception e) {
                     logContent += "执行报错--[申购耐力值]:" + e.getMessage();
+                    title = "i茅台申购领耐力: 失败";
                 }
                 //日志记录
-                IMTLogFactory.reservation(iUser, logContent);
+                IMTLogFactory.reservation(iUser, logContent, title);
             }
         };
         new Thread(runnable).start();
@@ -312,15 +311,18 @@ public class IMTServiceImpl implements IMTService {
     @Override
     public void getTravelReward(IUser iUser) {
         String logContent = "";
+        String title = "";
         try {
             String s = travelReward(iUser);
             logContent += "[获得旅行奖励]:" + s;
+            title = "i茅台小茅运旅行: 成功";
         } catch (Exception e) {
 //            e.printStackTrace();
             logContent += "执行报错--[获得旅行奖励]:" + e.getMessage();
+            title = "i茅台小茅运旅行: 失败";
         }
         //日志记录
-        IMTLogFactory.reservation(iUser, logContent);
+        IMTLogFactory.reservation(iUser, logContent, title);
     }
 
     /**
@@ -569,11 +571,20 @@ public class IMTServiceImpl implements IMTService {
                 }
                 for (Object itemVO : itemVOs) {
                     JSONObject item = JSON.parseObject(itemVO.toString());
-                    // 预约时间在24小时内的
+                    // 预约时间在24小时内的 成功
                     if (item.getInteger("status") == 2 && DateUtil.between(item.getDate("reservationTime"), new Date(), DateUnit.HOUR) < 24) {
                         String logContent = DateUtil.formatDate(item.getDate("reservationTime")) + " 申购" + item.getString("itemName") + "成功";
-                        IMTLogFactory.reservation(iUser, logContent);
+                        String title = "i茅台今日申购: 成功!!!";
+                        IMTLogFactory.reservation(iUser, logContent, title);
                     }
+
+                    // 预约时间在24小时内的 失败
+                    if (item.getInteger("status") == 1 && DateUtil.between(item.getDate("reservationTime"), new Date(), DateUnit.HOUR) < 24) {
+                        String logContent = DateUtil.formatDate(item.getDate("reservationTime")) + " 申购" + item.getString("itemName") + "失败";
+                        String title = "i茅台今日申购: 失败";
+                        IMTLogFactory.reservation(iUser, logContent, title);
+                    }
+
                 }
             } catch (Exception e) {
                 logger.error("查询申购结果失败:失败原因->{}", e.getMessage(), e);
