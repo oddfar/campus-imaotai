@@ -1,0 +1,21 @@
+
+dependencies {
+    api 'io.jsonwebtoken:jjwt:0.9.1'
+    api 'org.apache.commons:commons-lang3:3.12.0'
+    api 'commons-fileupload:commons-fileupload:1.4'
+    api "org.springframework.boot:spring-boot-starter-data-redis:$springBootVersion"
+    api 'org.apache.commons:commons-pool2:2.9.0'
+    api "org.springframework.boot:spring-boot-starter-security:$springBootVersion"
+    api "org.springframework.boot:spring-boot-starter-validation:$springBootVersion"
+    api 'org.apache.poi:poi-ooxml:4.1.2'
+    api 'org.projectlombok:lombok:1.18.26'
+    api 'com.baomidou:mybatis-plus-boot-starter:3.5.4.1'
+    api 'p6spy:p6spy:3.9.1'
+    api 'com.baomidou:dynamic-datasource-spring-boot-starter:4.2.0'
+    api 'com.alibaba.fastjson2:fastjson2:2.0.42'
+    api 'cn.hutool:hutool-all:5.8.23'
+    api 'org.mapstruct:mapstruct:1.5.3.Final'
+    api 'eu.bitwalker:UserAgentUtils:1.21'
+    api 'javax.servlet:javax.servlet-api:4.0.1'
+    compileOnly 'jakarta.validation:jakarta.validation-api:2.0.2'
+}
