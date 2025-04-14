@@ -9,4 +9,18 @@
             #{id}
         </foreach>
     </delete>
+
+    <update id="batchUpdateUserMinute" parameterType="java.util.List">
+        UPDATE i_user
+        SET `minute` = CASE user_id
+        <foreach collection="list" item="user">
+            WHEN #{user.userId} THEN #{user.minute}
+        </foreach>
+        ELSE `minute`
+        END
+        WHERE user_id IN
+        <foreach collection="list" item="user" open="(" separator="," close=")">
+            #{user.userId}
+        </foreach>
+    </update>
 </mapper>

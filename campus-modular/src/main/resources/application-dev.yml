@@ -56,7 +56,7 @@ spring:
 --- # redis
 spring:
   redis:
-    #禁用redis，使用本地缓存
+    #是否禁用redis，true：禁用redis使用本地缓存
     disabled: true
     # 地址
     host: localhost
