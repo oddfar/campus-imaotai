@@ -4,6 +4,8 @@ import com.oddfar.campus.business.entity.IUser;
 import com.oddfar.campus.common.core.BaseMapperX;
 import com.oddfar.campus.common.core.LambdaQueryWrapperX;
 import com.oddfar.campus.common.domain.PageResult;
+import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
 import java.util.List;
@@ -74,6 +76,14 @@ public interface IUserMapper extends BaseMapperX<IUser> {
             "SET `minute` = (@row_number := @row_number + 1) % 50 + 1\n" +
             "ORDER BY RAND();")
     void updateUserMinuteEven();
+
+    // Mapper方法
+
+    void batchUpdateUserMinute(@Param("list") List<IUser> users);
+
+    // Mapper方法
+    @Select("SELECT * FROM i_user WHERE user_id > #{maxId} ORDER BY user_id LIMIT #{limit}")
+    List<IUser> selectUsersBatch(@Param("maxId") Long maxId, @Param("limit") int limit);
 
     int deleteIUser(Long[] iUserId);
 }
