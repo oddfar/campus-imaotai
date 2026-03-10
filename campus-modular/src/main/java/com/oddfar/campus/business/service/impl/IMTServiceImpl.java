@@ -27,6 +27,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
@@ -65,6 +66,12 @@ public class IMTServiceImpl implements IMTService {
     private final static String AES_IV = "2018534749963515";
 
     /**
+     * 兜底版本号，可通过环境变量 MT_APP_VERSION 覆盖
+     */
+    @Value("${mt.app.version:}")
+    private String defaultMTVersion;
+
+    /**
      * 项目启动时，初始化数据
      */
     @PostConstruct
@@ -85,18 +92,45 @@ public class IMTServiceImpl implements IMTService {
         if (StringUtils.isNotEmpty(mtVersion)) {
             return mtVersion;
         }
-        String url = "https://apps.apple.com/cn/app/i%E8%8C%85%E5%8F%B0/id1600482450";
-        String htmlContent = HttpUtil.get(url);
-        Pattern pattern = Pattern.compile("new__latest__version\">(.*?)</p>", Pattern.DOTALL);
-        Matcher matcher = pattern.matcher(htmlContent);
-        if (matcher.find()) {
-            mtVersion = matcher.group(1);
-            mtVersion = mtVersion.replace("版本 ", "");
+
+        mtVersion = fetchVersionFromiTunesAPI();
+        if (StringUtils.isEmpty(mtVersion)) {
+            mtVersion = fetchVersionFromAppStore();
         }
+        if (StringUtils.isEmpty(mtVersion)) {
+            mtVersion = defaultMTVersion;
+            logger.warn("均未获取到版本号，使用配置版本: {}", mtVersion);
+        }
+
         redisCache.setCacheObject(IMTCacheConstants.MT_VERSION, mtVersion);
-
         return mtVersion;
+    }
 
+    /**
+     * 通过iTunes Lookup API获取版本号
+     */
+    private String fetchVersionFromiTunesAPI() {
+        try {
+            String body = HttpUtil.get("https://itunes.apple.com/cn/lookup?id=1600482450");
+            return JSONObject.parseObject(body).getJSONArray("results").getJSONObject(0).getString("version");
+        } catch (Exception e) {
+            logger.error("通过iTunes API获取版本号失败: {}", e.getMessage());
+            return null;
+        }
+    }
+
+    /**
+     * 通过App Store页面解析获取版本号
+     */
+    private String fetchVersionFromAppStore() {
+        try {
+            String htmlContent = HttpUtil.get("https://apps.apple.com/cn/app/i%E8%8C%85%E5%8F%B0/id1600482450");
+            Matcher matcher = Pattern.compile("\"primarySubtitle\":\"版本 ([\\d.]+)\"").matcher(htmlContent);
+            return matcher.find() ? matcher.group(1) : null;
+        } catch (Exception e) {
+            logger.error("通过App Store页面获取版本号失败: {}", e.getMessage());
+            return null;
+        }
     }
 
     @Override
@@ -671,6 +705,5 @@ public class IMTServiceImpl implements IMTService {
         }
         return md5;
     }
-
 
 }
