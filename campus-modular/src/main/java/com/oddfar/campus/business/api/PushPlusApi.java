@@ -22,19 +22,41 @@ public class PushPlusApi {
             return;
         }
         String title, content;
+        String type = classifyOperType(operLog.getLogContent());
         if (operLog.getStatus() == 0) {
-            //预约成功
-            title = iUser.getRemark() + "-i茅台执行成功";
+            //执行成功
+            title = iUser.getRemark() + "-i茅台" + type + "成功";
             content = iUser.getMobile() + System.lineSeparator() + operLog.getLogContent();
             AsyncManager.me().execute(sendNotice(token, title, content, "txt"));
         } else {
-            //预约失败
-            title = iUser.getRemark() + "-i茅台执行失败";
+            //执行失败
+            title = iUser.getRemark() + "-i茅台" + type + "失败";
             content = iUser.getMobile() + System.lineSeparator() + operLog.getLogContent();
             AsyncManager.me().execute(sendNotice(token, title, content, "txt"));
         }
 
+    }
 
+    /**
+     * 根据日志内容识别本次操作的类型，用于推送标题分类（预约/旅行/申购耐力值）
+     *
+     * @param logContent 日志内容
+     * @return 操作类型名称
+     */
+    private static String classifyOperType(String logContent) {
+        if (StringUtils.isEmpty(logContent)) {
+            return "执行";
+        }
+        if (logContent.contains("旅行")) {
+            return "旅行";
+        }
+        if (logContent.contains("预约")) {
+            return "预约";
+        }
+        if (logContent.contains("申购耐力值") || logContent.contains("申购")) {
+            return "申购耐力值";
+        }
+        return "执行";
     }
 
     /**
