@@ -37,10 +37,11 @@ public class IUserServiceImpl implements IUserService {
         IUser user = iUserMapper.selectById(mobile);
 
         if (user != null) {
-            //存在则更新
+            //存在则更新（排除通知渠道等本地配置字段，防止登录响应缺字段时被置空）
             IUser iUser = new IUser(mobile, jsonObject);
             iUser.setCreateUser(SecurityUtils.getUserId());
-            BeanUtil.copyProperties(iUser, user, "shopType", "minute");
+            BeanUtil.copyProperties(iUser, user, "shopType", "minute",
+                    "pushPlusToken", "dingWebhook", "dingSecret", "mailAddr");
             return iUserMapper.updateById(user);
         } else {
             if (StringUtils.isEmpty(deviceId)) {
@@ -82,7 +83,10 @@ public class IUserServiceImpl implements IUserService {
 
     @Override
     public int updateIUser(IUser iUser) {
-        checkOwner(iUser);
+        //属主以数据库记录为准，防止请求体伪造 createUser 绕过校验 (#356)
+        IUser dbUser = iUserMapper.selectById(iUser.getMobile());
+        checkOwner(dbUser);
+        iUser.setCreateUser(dbUser.getCreateUser());
         return iUserMapper.updateById(iUser);
     }
 
