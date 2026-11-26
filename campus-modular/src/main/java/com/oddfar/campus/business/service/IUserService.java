@@ -50,6 +50,14 @@ public interface IUserService {
     int updateIUser(IUser iUser);
 
     /**
+     * 校验当前登录用户是否有权操作该账号 (#356)
+     * 属主或admin(userId=1)放行，否则抛出异常
+     *
+     * @param iUser I茅台用户
+     */
+    void checkOwner(IUser iUser);
+
+    /**
      * 批量修改用户随机预约的时间
      *
      * @return

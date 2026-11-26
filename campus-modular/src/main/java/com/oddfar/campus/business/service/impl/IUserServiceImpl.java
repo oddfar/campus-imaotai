@@ -82,10 +82,19 @@ public class IUserServiceImpl implements IUserService {
 
     @Override
     public int updateIUser(IUser iUser) {
-        if (SecurityUtils.getUserId() != 1 && !iUser.getCreateUser().equals(SecurityUtils.getUserId())) {
-            throw new ServiceException("只能修改自己创建的用户");
-        }
+        checkOwner(iUser);
         return iUserMapper.updateById(iUser);
+    }
+
+    @Override
+    public void checkOwner(IUser iUser) {
+        if (iUser == null) {
+            throw new ServiceException("用户不存在");
+        }
+        Long userId = SecurityUtils.getUserId();
+        if (userId != 1 && !userId.equals(iUser.getCreateUser())) {
+            throw new ServiceException("只能操作自己创建的用户");
+        }
     }
 
     @Override
@@ -101,6 +110,10 @@ public class IUserServiceImpl implements IUserService {
 
     @Override
     public int deleteIUser(Long[] iUserId) {
+        for (Long mobile : iUserId) {
+            IUser iUser = iUserMapper.selectById(mobile);
+            checkOwner(iUser);
+        }
         return iUserMapper.deleteIUser(iUserId);
     }
 }
