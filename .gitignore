@@ -40,4 +40,5 @@ build/
 ### mac ###
 .DS_Store
 
-.flattened-pom.xml.worktrees/
+.flattened-pom.xml
+.worktrees/
