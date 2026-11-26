@@ -38,6 +38,36 @@ public class PushPlusApi {
     }
 
     /**
+     * 构建推送标题 (#333)
+     *
+     * @param remark    用户备注
+     * @param eventType 事件类型 {@link com.oddfar.campus.business.service.IMTLogFactory}
+     * @param status    0成功 1失败
+     * @return 标题：{备注}-i茅台-{类型}-{成功|失败}，类型不识别时退化为 {备注}-i茅台{成功|失败}
+     */
+    public static String buildTitle(String remark, int eventType, int status) {
+        String typeName;
+        switch (eventType) {
+            case 1:
+                typeName = "-预约-";
+                break;
+            case 2:
+                typeName = "-耐力值-";
+                break;
+            case 3:
+                typeName = "-旅行-";
+                break;
+            case 4:
+                typeName = "-申购-";
+                break;
+            default:
+                typeName = "";
+                break;
+        }
+        return remark + "-i茅台" + typeName + (status == 0 ? "成功" : "失败");
+    }
+
+    /**
      * push推送
      *
      * @param token    token

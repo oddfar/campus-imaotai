@@ -14,6 +14,23 @@ import java.util.TimerTask;
  */
 public class IMTLogFactory {
 
+    /**
+     * 事件类型：预约
+     */
+    public static final int TYPE_RESERVE = 1;
+    /**
+     * 事件类型：申购耐力值
+     */
+    public static final int TYPE_ENERGY = 2;
+    /**
+     * 事件类型：旅行奖励
+     */
+    public static final int TYPE_TRAVEL = 3;
+    /**
+     * 事件类型：申购结果
+     */
+    public static final int TYPE_APPOINTMENT = 4;
+
 
     public static void reservation(IUser iUser, String logContent) {
         //{"code":2000,"data":{"successDesc":"申购完成，请于7月6日18:00查看预约申购结果","reservationList":[{"reservationId":17053404357,"sessionId":678,"shopId":"233331084001","reservationTime":1688608601720,"itemId":"10214","count":1}],"reservationDetail":{"desc":"申购成功后将以短信形式通知您，请您在申购成功次日18:00前确认支付方式，并在7天内完成提货。","lotteryTime":1688637600000,"cacheValidTime":1688637600000}}}
