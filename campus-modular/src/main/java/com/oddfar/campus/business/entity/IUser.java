@@ -107,6 +107,21 @@ public class IUser extends BaseEntity {
     private String pushPlusToken;
 
     /**
+     * 钉钉机器人webhook
+     */
+    private String dingWebhook;
+
+    /**
+     * 钉钉加签密钥
+     */
+    private String dingSecret;
+
+    /**
+     * 通知收件邮箱
+     */
+    private String mailAddr;
+
+    /**
      * 返回参数
      */
     @JsonIgnore

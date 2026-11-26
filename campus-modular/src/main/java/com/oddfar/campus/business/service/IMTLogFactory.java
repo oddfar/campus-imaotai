@@ -1,11 +1,17 @@
 package com.oddfar.campus.business.service;
 
+import com.oddfar.campus.business.api.DingTalkApi;
 import com.oddfar.campus.business.api.PushPlusApi;
 import com.oddfar.campus.business.entity.ILog;
 import com.oddfar.campus.business.entity.IUser;
 import com.oddfar.campus.common.utils.SpringUtils;
+import com.oddfar.campus.common.utils.StringUtils;
+import com.oddfar.campus.framework.api.mail.MailSendApi;
 import com.oddfar.campus.framework.manager.AsyncManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.util.Collections;
 import java.util.Date;
 import java.util.TimerTask;
 
@@ -13,6 +19,8 @@ import java.util.TimerTask;
  * i茅台日志记录
  */
 public class IMTLogFactory {
+
+    private static final Logger logger = LoggerFactory.getLogger(IMTLogFactory.class);
 
     /**
      * 事件类型：预约
@@ -49,8 +57,26 @@ public class IMTLogFactory {
         operLog.setLogContent(logContent);
 
         AsyncManager.me().execute(recordOper(operLog));
-        //推送
-        PushPlusApi.sendNotice(iUser, operLog, eventType);
+        //推送，按账号配置的渠道逐个发送，单渠道失败不影响其他渠道
+        String title = PushPlusApi.buildTitle(iUser.getRemark(), eventType, operLog.getStatus());
+        String content = iUser.getMobile() + System.lineSeparator() + logContent;
+        try {
+            PushPlusApi.sendNotice(iUser, operLog, eventType);
+        } catch (Exception e) {
+            logger.error("pushplus推送失败:{}", e.getMessage(), e);
+        }
+        try {
+            DingTalkApi.sendNotice(iUser, operLog, eventType);
+        } catch (Exception e) {
+            logger.error("钉钉推送失败:{}", e.getMessage(), e);
+        }
+        try {
+            if (!StringUtils.isEmpty(iUser.getMailAddr())) {
+                SpringUtils.getBean(MailSendApi.class).sendQQMail(Collections.singletonList(iUser.getMailAddr()), title, content, false);
+            }
+        } catch (Exception e) {
+            logger.error("邮件推送失败:{}", e.getMessage(), e);
+        }
     }
 
     /**
