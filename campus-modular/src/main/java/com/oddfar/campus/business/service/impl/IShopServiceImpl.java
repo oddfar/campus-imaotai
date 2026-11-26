@@ -113,10 +113,12 @@ public class IShopServiceImpl extends ServiceImpl<IShopMapper, IShop> implements
             iItemMapper.truncateItem();
             //item插入数据库
             JSONArray itemList = data.getJSONArray("itemList");
-            for (Object obj : itemList) {
-                JSONObject item = (JSONObject) obj;
-                IItem iItem = new IItem(item);
-                iItemMapper.insert(iItem);
+            if (itemList != null && !itemList.isEmpty()) {
+                for (Object obj : itemList) {
+                    JSONObject item = (JSONObject) obj;
+                    IItem iItem = new IItem(item);
+                    iItemMapper.insert(iItem);
+                }
             }
 
         }
@@ -166,14 +168,14 @@ public class IShopServiceImpl extends ServiceImpl<IShopMapper, IShop> implements
         try {
             res = JSONObject.parseObject(urlRes);
         } catch (JSONException jsonException) {
-            String message = StringUtils.format("查询所在省市的投放产品和数量error: %s", url);
+            String message = StringUtils.format("查询所在省市的投放产品和数量error: {}", url);
             log.error(message);
             throw new ServiceException(message);
         }
 
 //        JSONObject res = JSONObject.parseObject(HttpUtil.get(url));
         if (!res.containsKey("code") || !res.getString("code").equals("2000")) {
-            String message = StringUtils.format("查询所在省市的投放产品和数量error: %s", url);
+            String message = StringUtils.format("查询所在省市的投放产品和数量error: {}", url);
             log.error(message);
             throw new ServiceException(message);
         }
@@ -286,6 +288,9 @@ public class IShopServiceImpl extends ServiceImpl<IShopMapper, IShop> implements
 
         List<IShop> collect = iShopList.stream().sorted(Comparator.comparing(IShop::getDistance)).collect(Collectors.toList());
 
+        if (collect.isEmpty()) {
+            return null;
+        }
         return collect.get(0).getIShopId();
 
     }
