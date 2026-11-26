@@ -211,7 +211,7 @@ public class IMTServiceImpl implements IMTService {
 //            logContent += "执行报错--[申购耐力值]:" + e.getMessage();
 //        }
         //日志记录
-        IMTLogFactory.reservation(iUser, logContent);
+        IMTLogFactory.reservation(iUser, IMTLogFactory.TYPE_RESERVE, logContent);
         //预约后延迟领取耐力值
         getEnergyAwardDelay(iUser);
     }
@@ -236,7 +236,7 @@ public class IMTServiceImpl implements IMTService {
                     logContent += "执行报错--[申购耐力值]:" + e.getMessage();
                 }
                 //日志记录
-                IMTLogFactory.reservation(iUser, logContent);
+                IMTLogFactory.reservation(iUser, IMTLogFactory.TYPE_ENERGY, logContent);
             }
         };
         new Thread(runnable).start();
@@ -320,7 +320,7 @@ public class IMTServiceImpl implements IMTService {
             logContent += "执行报错--[获得旅行奖励]:" + e.getMessage();
         }
         //日志记录
-        IMTLogFactory.reservation(iUser, logContent);
+        IMTLogFactory.reservation(iUser, IMTLogFactory.TYPE_TRAVEL, logContent);
     }
 
     /**
@@ -572,7 +572,7 @@ public class IMTServiceImpl implements IMTService {
                     // 预约时间在24小时内的
                     if (item.getInteger("status") == 2 && DateUtil.between(item.getDate("reservationTime"), new Date(), DateUnit.HOUR) < 24) {
                         String logContent = DateUtil.formatDate(item.getDate("reservationTime")) + " 申购" + item.getString("itemName") + "成功";
-                        IMTLogFactory.reservation(iUser, logContent);
+                        IMTLogFactory.reservation(iUser, IMTLogFactory.TYPE_APPOINTMENT, logContent);
                     }
                 }
             } catch (Exception e) {
