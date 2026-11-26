@@ -38,10 +38,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.concurrent.TimeUnit;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.Random;
+import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 @Service
 public class IMTServiceImpl implements IMTService {
@@ -85,13 +84,20 @@ public class IMTServiceImpl implements IMTService {
         if (StringUtils.isNotEmpty(mtVersion)) {
             return mtVersion;
         }
-        String url = "https://apps.apple.com/cn/app/i%E8%8C%85%E5%8F%B0/id1600482450";
-        String htmlContent = HttpUtil.get(url);
-        Pattern pattern = Pattern.compile("new__latest__version\">(.*?)</p>", Pattern.DOTALL);
-        Matcher matcher = pattern.matcher(htmlContent);
-        if (matcher.find()) {
-            mtVersion = matcher.group(1);
-            mtVersion = mtVersion.replace("版本 ", "");
+        //通过 iTunes 官方接口获取版本号（App Store 页面改版后 HTML 正则抓取失效）
+        String url = "https://itunes.apple.com/cn/lookup?id=1600482450";
+        try {
+            String response = HttpUtil.get(url);
+            JSONArray results = JSON.parseObject(response).getJSONArray("results");
+            if (results != null && !results.isEmpty()) {
+                mtVersion = results.getJSONObject(0).getString("version");
+            }
+        } catch (Exception e) {
+            logger.error("「获取版本号-失败」", e);
+        }
+        if (StringUtils.isEmpty(mtVersion)) {
+            //接口异常时使用已知可用版本号兜底
+            mtVersion = "1.9.19";
         }
         redisCache.setCacheObject(IMTCacheConstants.MT_VERSION, mtVersion);
 
@@ -153,8 +159,12 @@ public class IMTServiceImpl implements IMTService {
         HttpRequest request = HttpUtil.createRequest(Method.POST,
                 "https://app.moutai519.com.cn/xhr/front/user/register/login");
         IUser user = iUserMapper.selectById(mobile);
-        if (user != null) {
+        // 已有用户沿用其设备ID；新用户或历史空设备ID则保证非空，避免 MT-Device-ID 为空被 Moutai 拒绝（#350）
+        if (user != null && StringUtils.isNotEmpty(user.getDeviceId())) {
             deviceId = user.getDeviceId();
+        }
+        if (StringUtils.isEmpty(deviceId)) {
+            deviceId = UUID.randomUUID().toString().toLowerCase();
         }
         request.header("MT-Device-ID", deviceId);
         request.header("MT-APP-Version", getMTVersion());
@@ -301,7 +311,9 @@ public class IMTServiceImpl implements IMTService {
         String body = request.execute().body();
 
         JSONObject jsonObject = JSONObject.parseObject(body);
-        if (jsonObject.getInteger("code") != 200) {
+        Integer code = jsonObject.getInteger("code");
+        // iMaotai 不同接口的成功码不一（有的返回 200，有的返回 2000），两者均视为成功
+        if (code != null && code != 200 && code != 2000) {
             String message = jsonObject.getString("message");
             throw new ServiceException(message);
         }
@@ -505,9 +517,15 @@ public class IMTServiceImpl implements IMTService {
         List<IUser> iUsers = iUserService.selectReservationUserByMinute(minute);
 
         for (IUser iUser : iUsers) {
-            logger.info("「开始预约用户」" + iUser.getMobile());
-            //预约
-            reservation(iUser);
+            try {
+                logger.info("「开始预约用户」" + iUser.getMobile());
+                //预约
+                reservation(iUser);
+            } catch (Exception e) {
+                //单个用户预约失败不应中断整个批次，记录失败后继续处理下一个用户
+                logger.error("预约用户失败: mobile={}, error={}", iUser.getMobile(), e.getMessage(), e);
+                IMTLogFactory.reservation(iUser, "执行报错--[预约]：" + e.getMessage());
+            }
             //延时3秒
             try {
                 TimeUnit.SECONDS.sleep(3);

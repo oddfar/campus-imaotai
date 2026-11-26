@@ -1,6 +1,7 @@
 package com.oddfar.campus.common.utils;
 
 import com.alibaba.fastjson2.JSONArray;
+import com.alibaba.fastjson2.JSONException;
 import com.oddfar.campus.common.constant.CacheConstants;
 import com.oddfar.campus.common.core.RedisCache;
 import com.oddfar.campus.common.domain.entity.SysDictDataEntity;
@@ -35,9 +36,14 @@ public class DictUtils {
      * @return dictDatas 字典数据列表
      */
     public static List<SysDictDataEntity> getDictCache(String key) {
-        JSONArray arrayCache = SpringUtils.getBean(RedisCache.class).getCacheObject(getCacheKey(key));
-        if (StringUtils.isNotNull(arrayCache)) {
-            return arrayCache.toList(SysDictDataEntity.class);
+        try {
+            JSONArray arrayCache = SpringUtils.getBean(RedisCache.class).getCacheObject(getCacheKey(key));
+            if (StringUtils.isNotNull(arrayCache)) {
+                return arrayCache.toList(SysDictDataEntity.class);
+            }
+        } catch (JSONException | ClassCastException e) {
+            //旧版本序列化方式写入的脏缓存无法反序列化，清除后由调用方回源数据库重建
+            SpringUtils.getBean(RedisCache.class).deleteObject(getCacheKey(key));
         }
         return null;
     }

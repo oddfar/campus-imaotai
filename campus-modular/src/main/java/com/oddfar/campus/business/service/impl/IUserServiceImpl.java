@@ -40,6 +40,8 @@ public class IUserServiceImpl implements IUserService {
             //存在则更新
             IUser iUser = new IUser(mobile, jsonObject);
             iUser.setCreateUser(SecurityUtils.getUserId());
+            // 登录响应（2-arg构造器未设置deviceId）不得覆盖已有设备ID；历史空设备ID则采用本次传入值（#350）
+            iUser.setDeviceId(StringUtils.isNotEmpty(user.getDeviceId()) ? user.getDeviceId() : deviceId);
             BeanUtil.copyProperties(iUser, user, "shopType", "minute");
             return iUserMapper.updateById(user);
         } else {
