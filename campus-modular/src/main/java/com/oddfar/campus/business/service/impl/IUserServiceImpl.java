@@ -37,10 +37,11 @@ public class IUserServiceImpl implements IUserService {
         IUser user = iUserMapper.selectById(mobile);
 
         if (user != null) {
-            //存在则更新
+            //存在则更新（排除通知渠道等本地配置字段，防止登录响应缺字段时被置空）
             IUser iUser = new IUser(mobile, jsonObject);
             iUser.setCreateUser(SecurityUtils.getUserId());
-            BeanUtil.copyProperties(iUser, user, "shopType", "minute");
+            BeanUtil.copyProperties(iUser, user, "shopType", "minute",
+                    "pushPlusToken", "dingWebhook", "dingSecret", "mailAddr");
             return iUserMapper.updateById(user);
         } else {
             if (StringUtils.isEmpty(deviceId)) {
@@ -82,10 +83,22 @@ public class IUserServiceImpl implements IUserService {
 
     @Override
     public int updateIUser(IUser iUser) {
-        if (SecurityUtils.getUserId() != 1 && !iUser.getCreateUser().equals(SecurityUtils.getUserId())) {
-            throw new ServiceException("只能修改自己创建的用户");
-        }
+        //属主以数据库记录为准，防止请求体伪造 createUser 绕过校验 (#356)
+        IUser dbUser = iUserMapper.selectById(iUser.getMobile());
+        checkOwner(dbUser);
+        iUser.setCreateUser(dbUser.getCreateUser());
         return iUserMapper.updateById(iUser);
+    }
+
+    @Override
+    public void checkOwner(IUser iUser) {
+        if (iUser == null) {
+            throw new ServiceException("用户不存在");
+        }
+        Long userId = SecurityUtils.getUserId();
+        if (userId != 1 && !userId.equals(iUser.getCreateUser())) {
+            throw new ServiceException("只能操作自己创建的用户");
+        }
     }
 
     @Override
@@ -101,6 +114,10 @@ public class IUserServiceImpl implements IUserService {
 
     @Override
     public int deleteIUser(Long[] iUserId) {
+        for (Long mobile : iUserId) {
+            IUser iUser = iUserMapper.selectById(mobile);
+            checkOwner(iUser);
+        }
         return iUserMapper.deleteIUser(iUserId);
     }
 }

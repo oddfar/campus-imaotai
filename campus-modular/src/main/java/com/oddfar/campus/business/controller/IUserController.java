@@ -64,6 +64,7 @@ public class IUserController {
         if (user == null) {
             return R.error("用户不存在");
         }
+        iUserService.checkOwner(user);
         if (StringUtils.isEmpty(user.getItemCode())) {
             return R.error("商品预约code为空");
         }
@@ -82,6 +83,7 @@ public class IUserController {
         if (user == null) {
             return R.error("用户不存在");
         } else {
+            iUserService.checkOwner(user);
             imtService.getTravelReward(user);
             return R.ok();
         }
@@ -105,7 +107,12 @@ public class IUserController {
     @PreAuthorize("@ss.resourceAuth()")
     @GetMapping(value = "/{mobile}", name = "获取I茅台用户详细信息")
     public R getInfo(@PathVariable("mobile") Long mobile) {
-        return R.ok(iUserMapper.selectById(mobile));
+        IUser user = iUserMapper.selectById(mobile);
+        if (user == null) {
+            return R.error("用户不存在");
+        }
+        iUserService.checkOwner(user);
+        return R.ok(user);
     }
 
     /**
@@ -150,6 +157,6 @@ public class IUserController {
     @PreAuthorize("@ss.resourceAuth()")
     @DeleteMapping(value = "/{mobiles}", name = "删除I茅台用户")
     public R remove(@PathVariable Long[] mobiles) {
-        return R.ok(iUserMapper.deleteIUser(mobiles));
+        return R.ok(iUserService.deleteIUser(mobiles));
     }
 }

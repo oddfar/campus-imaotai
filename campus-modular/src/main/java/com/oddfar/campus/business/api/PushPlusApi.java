@@ -16,25 +16,44 @@ import java.util.TimerTask;
 public class PushPlusApi {
 
 
-    public static void sendNotice(IUser iUser, ILog operLog) {
+    public static void sendNotice(IUser iUser, ILog operLog, int eventType) {
         String token = iUser.getPushPlusToken();
         if (StringUtils.isEmpty(token)) {
             return;
         }
-        String title, content;
-        if (operLog.getStatus() == 0) {
-            //预约成功
-            title = iUser.getRemark() + "-i茅台执行成功";
-            content = iUser.getMobile() + System.lineSeparator() + operLog.getLogContent();
-            AsyncManager.me().execute(sendNotice(token, title, content, "txt"));
-        } else {
-            //预约失败
-            title = iUser.getRemark() + "-i茅台执行失败";
-            content = iUser.getMobile() + System.lineSeparator() + operLog.getLogContent();
-            AsyncManager.me().execute(sendNotice(token, title, content, "txt"));
+        String title = buildTitle(iUser.getRemark(), eventType, operLog.getStatus());
+        String content = iUser.getMobile() + System.lineSeparator() + operLog.getLogContent();
+        AsyncManager.me().execute(sendNotice(token, title, content, "txt"));
+    }
+
+    /**
+     * 构建推送标题 (#333)
+     *
+     * @param remark    用户备注
+     * @param eventType 事件类型 {@link com.oddfar.campus.business.service.IMTLogFactory}
+     * @param status    0成功 1失败
+     * @return 标题：{备注}-i茅台-{类型}-{成功|失败}，类型不识别时退化为 {备注}-i茅台{成功|失败}
+     */
+    public static String buildTitle(String remark, int eventType, int status) {
+        String typeName;
+        switch (eventType) {
+            case 1:
+                typeName = "-预约-";
+                break;
+            case 2:
+                typeName = "-耐力值-";
+                break;
+            case 3:
+                typeName = "-旅行-";
+                break;
+            case 4:
+                typeName = "-申购-";
+                break;
+            default:
+                typeName = "";
+                break;
         }
-
-
+        return remark + "-i茅台" + typeName + (status == 0 ? "成功" : "失败");
     }
 
     /**
