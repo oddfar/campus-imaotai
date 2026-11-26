@@ -156,16 +156,15 @@ public class IMTServiceImpl implements IMTService {
         map.put("timestamp", String.valueOf(curTime));
         map.put("MT-APP-Version", getMTVersion());
 
-        // 保证 MT-Device-ID 不为空，避免新用户首次登录时 header 为空导致 Moutai 拒绝（#350）
-        if (StringUtils.isEmpty(deviceId)) {
-            deviceId = UUID.randomUUID().toString().toLowerCase();
-        }
-
         HttpRequest request = HttpUtil.createRequest(Method.POST,
                 "https://app.moutai519.com.cn/xhr/front/user/register/login");
         IUser user = iUserMapper.selectById(mobile);
-        if (user != null) {
+        // 已有用户沿用其设备ID；新用户或历史空设备ID则保证非空，避免 MT-Device-ID 为空被 Moutai 拒绝（#350）
+        if (user != null && StringUtils.isNotEmpty(user.getDeviceId())) {
             deviceId = user.getDeviceId();
+        }
+        if (StringUtils.isEmpty(deviceId)) {
+            deviceId = UUID.randomUUID().toString().toLowerCase();
         }
         request.header("MT-Device-ID", deviceId);
         request.header("MT-APP-Version", getMTVersion());
