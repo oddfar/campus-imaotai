@@ -47,14 +47,18 @@ public class PushPlusApi {
         if (StringUtils.isEmpty(logContent)) {
             return "执行";
         }
+        // 预约日志的“结果返回”中 successDesc 含“申购”字样，故“预约”需优先于“申购”判断
         if (logContent.contains("旅行")) {
             return "旅行";
         }
         if (logContent.contains("预约")) {
             return "预约";
         }
-        if (logContent.contains("申购耐力值") || logContent.contains("申购")) {
+        if (logContent.contains("申购耐力值")) {
             return "申购耐力值";
+        }
+        if (logContent.contains("申购")) {
+            return "申购";
         }
         return "执行";
     }
