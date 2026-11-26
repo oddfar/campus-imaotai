@@ -38,8 +38,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.concurrent.TimeUnit;
 import java.util.Random;
+import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 @Service
 public class IMTServiceImpl implements IMTService {
@@ -154,6 +155,11 @@ public class IMTServiceImpl implements IMTService {
 
         map.put("timestamp", String.valueOf(curTime));
         map.put("MT-APP-Version", getMTVersion());
+
+        // 保证 MT-Device-ID 不为空，避免新用户首次登录时 header 为空导致 Moutai 拒绝（#350）
+        if (StringUtils.isEmpty(deviceId)) {
+            deviceId = UUID.randomUUID().toString().toLowerCase();
+        }
 
         HttpRequest request = HttpUtil.createRequest(Method.POST,
                 "https://app.moutai519.com.cn/xhr/front/user/register/login");
@@ -306,7 +312,9 @@ public class IMTServiceImpl implements IMTService {
         String body = request.execute().body();
 
         JSONObject jsonObject = JSONObject.parseObject(body);
-        if (jsonObject.getInteger("code") != 200) {
+        Integer code = jsonObject.getInteger("code");
+        // iMaotai 不同接口的成功码不一（有的返回 200，有的返回 2000），两者均视为成功
+        if (code != null && code != 200 && code != 2000) {
             String message = jsonObject.getString("message");
             throw new ServiceException(message);
         }
@@ -510,9 +518,15 @@ public class IMTServiceImpl implements IMTService {
         List<IUser> iUsers = iUserService.selectReservationUserByMinute(minute);
 
         for (IUser iUser : iUsers) {
-            logger.info("「开始预约用户」" + iUser.getMobile());
-            //预约
-            reservation(iUser);
+            try {
+                logger.info("「开始预约用户」" + iUser.getMobile());
+                //预约
+                reservation(iUser);
+            } catch (Exception e) {
+                //单个用户预约失败不应中断整个批次，记录失败后继续处理下一个用户
+                logger.error("预约用户失败: mobile={}, error={}", iUser.getMobile(), e.getMessage(), e);
+                IMTLogFactory.reservation(iUser, "执行报错--[预约]：" + e.getMessage());
+            }
             //延时3秒
             try {
                 TimeUnit.SECONDS.sleep(3);
