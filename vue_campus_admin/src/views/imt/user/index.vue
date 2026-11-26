@@ -170,6 +170,19 @@
                   props.row.pushPlusToken.substring(0, 5) + "......"
                 }}</span>
             </el-form-item>
+            <el-form-item label="钉钉webhook">
+              <span v-if="props.row.dingWebhook">{{
+                  props.row.dingWebhook.substring(0, 20) + "......"
+                }}</span>
+            </el-form-item>
+            <el-form-item label="钉钉加签密钥">
+              <span v-if="props.row.dingSecret">{{
+                  props.row.dingSecret.substring(0, 5) + "......"
+                }}</span>
+            </el-form-item>
+            <el-form-item label="通知邮箱">
+              <span>{{ props.row.mailAddr }}</span>
+            </el-form-item>
             <el-form-item label="设备id">
               <span>{{ props.row.deviceId }}</span>
             </el-form-item>
@@ -434,6 +447,32 @@
             </el-form-item>
           </el-col>
         </el-row>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="钉钉webhook" prop="dingWebhook">
+              <el-input
+                v-model="form.dingWebhook"
+                placeholder="请输入钉钉机器人webhook"
+              />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="钉钉加签密钥" prop="dingSecret">
+              <el-input
+                v-model="form.dingSecret"
+                placeholder="机器人开启加签时必填"
+              />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="通知邮箱" prop="mailAddr">
+              <el-input
+                v-model="form.mailAddr"
+                placeholder="请输入接收通知的邮箱"
+              />
+            </el-form-item>
+          </el-col>
+        </el-row>
 
         <!-- <el-form-item label="完整地址" prop="address">
           <el-input v-model="form.address" placeholder="请输入完整地址" />
@@ -673,6 +712,9 @@ export default {
         remark: null,
         expireTime: null,
         pushPlusToken: null,
+        dingWebhook: null,
+        dingSecret: null,
+        mailAddr: null,
       };
       this.resetForm("form");
     },
