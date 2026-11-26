@@ -39,8 +39,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.Random;
 
 @Service
@@ -85,13 +83,20 @@ public class IMTServiceImpl implements IMTService {
         if (StringUtils.isNotEmpty(mtVersion)) {
             return mtVersion;
         }
-        String url = "https://apps.apple.com/cn/app/i%E8%8C%85%E5%8F%B0/id1600482450";
-        String htmlContent = HttpUtil.get(url);
-        Pattern pattern = Pattern.compile("new__latest__version\">(.*?)</p>", Pattern.DOTALL);
-        Matcher matcher = pattern.matcher(htmlContent);
-        if (matcher.find()) {
-            mtVersion = matcher.group(1);
-            mtVersion = mtVersion.replace("版本 ", "");
+        //通过 iTunes 官方接口获取版本号（App Store 页面改版后 HTML 正则抓取失效）
+        String url = "https://itunes.apple.com/cn/lookup?id=1600482450";
+        try {
+            String response = HttpUtil.get(url);
+            JSONArray results = JSON.parseObject(response).getJSONArray("results");
+            if (results != null && !results.isEmpty()) {
+                mtVersion = results.getJSONObject(0).getString("version");
+            }
+        } catch (Exception e) {
+            logger.error("「获取版本号-失败」", e);
+        }
+        if (StringUtils.isEmpty(mtVersion)) {
+            //接口异常时使用已知可用版本号兜底
+            mtVersion = "1.9.19";
         }
         redisCache.setCacheObject(IMTCacheConstants.MT_VERSION, mtVersion);
 
